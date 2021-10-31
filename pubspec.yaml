@@ -1,0 +1,72 @@
+name: tuneone
+description: A new Flutter application.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.0.0
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+
+  cupertino_icons: ^1.0.3
+  get: ^4.3.4
+  flutter_animator: ^3.1.2
+  auto_size_text: ^3.0.0-nullsafety.0
+  line_icons: ^2.0.1
+  cached_network_image: ^3.1.0
+  http: ^0.13.3
+  audio_manager: ^0.8.1
+  day_night_switcher: ^0.2.0+1
+  path_provider: ^2.0.1
+  audio_session: ^0.1.2
+  just_audio: ^0.9.15
+  flutter_tts: ^3.0.0
+  rxdart:
+  audio_service: ^0.18.1
+  theme_provider: ^0.5.0
+  marquee_text: ^2.0.0
+  flutter_svg:
+  adobe_xd:
+  rename: ^1.3.1
+path: ../
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+
+  uses-material-design: true
+
+
+  assets:
+     - assets/
+     - assets/fonts/
+
+
+  fonts:
+   - family: Aeonik
+     fonts:
+       - asset: assets/fonts/Aeonik-Medium.otf
+         weight: 600
+       - asset: assets/fonts/Aeonik-Bold.otf
+         weight: 700
+
+   - family: Aeonik-medium
+     fonts:
+       - asset: assets/fonts/Aeonik-Medium.otf
+         weight: 600
+
+   - family: Aeonik-Light
+     fonts:
+       - asset: assets/fonts/Aeonik-Light.otf
+         weight: 300
