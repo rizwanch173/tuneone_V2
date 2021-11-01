@@ -4,6 +4,8 @@ import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/models/home_model.dart';
 import 'package:get/get.dart';
 
+import '../main.dart';
+
 class HomeController extends GetxController {
   final DataController dataController = Get.find();
   var isLoading = true.obs;
@@ -30,6 +32,10 @@ class HomeController extends GetxController {
     } else {
       return 'Good Night';
     }
+  }
+
+  queUpdater() {
+    audioHandler.updateQueue(dataController.mediaListRadio);
   }
 
   updateView() {

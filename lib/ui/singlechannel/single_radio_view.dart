@@ -43,7 +43,11 @@ class SingleRadioView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    audioHandler.updateQueue(dataController.mediaListRadio);
+    Future<void> radioQueUpdater() async {
+      await audioHandler.updateQueue(dataController.mediaListRadio);
+      audioHandler.play();
+    }
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -68,7 +72,7 @@ class SingleRadioView extends StatelessWidget {
                     stream: audioHandler.mediaItem,
                     builder: (context, snapshot) {
                       final running = snapshot.data ?? false;
-
+                      //  audioHandler.updateQueue(dataController.mediaListRadio);
                       // final mediaItem = snapshot.data;
                       return Container(
                           child: Padding(
@@ -315,7 +319,114 @@ class SingleRadioView extends StatelessWidget {
                                               child:
                                                   const CupertinoActivityIndicator(),
                                             );
-                                          } else if (playing != true) {
+                                          } else if (playing == true) {
+                                            if (audioHandler
+                                                    .mediaItem.value!.id ==
+                                                dataController
+                                                    .radioList[homeController
+                                                        .indexToPlayRadio]
+                                                    .stream) {
+                                              print("matched");
+                                              return Container(
+                                                height: 40,
+                                                width: 40,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                ),
+                                                child: IconButton(
+                                                    icon:
+                                                        const Icon(Icons.pause),
+                                                    onPressed: () {
+                                                      audioHandler.pause();
+                                                    }),
+                                              );
+                                            } else {
+                                              return Container(
+                                                height: 40,
+                                                width: 40,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                ),
+                                                child: IconButton(
+                                                  icon: const Icon(
+                                                      Icons.play_arrow),
+                                                  onPressed: () async {
+                                                    dataController.addRecently(
+                                                        dataController
+                                                                .radioList[
+                                                            homeController
+                                                                .indexToPlayRadio],
+                                                        false);
+                                                    radioController.indexX =
+                                                        homeController
+                                                            .indexToPlayRadio;
+
+                                                    if (homeController
+                                                            .whoAccess.value ==
+                                                        "pod") {
+                                                      print(
+                                                          "accesssed by pods");
+                                                      await audioHandler
+                                                          .updateQueue(
+                                                              dataController
+                                                                  .mediaListRadio);
+                                                      await audioHandler
+                                                          .skipToQueueItem(
+                                                              homeController
+                                                                  .indexToPlayRadio);
+                                                      audioHandler.play();
+                                                      homeController.whoAccess
+                                                          .value = "radio";
+                                                    } else {
+                                                      print(
+                                                          "accesssed by radio");
+                                                      print(homeController
+                                                          .indexToPlayRadio);
+                                                      // await audioHandler
+                                                      //     .updateQueue(
+                                                      //         dataController
+                                                      //             .mediaListRadio)
+                                                      //     .then((value) async {
+                                                      //   final queue = audioHandler
+                                                      //       .queueState;
+                                                      //   print(queue.length);
+                                                      //
+                                                      //
+                                                      //
+                                                      //   //  audioHandler.play();
+                                                      // });
+                                                      // final _mediaLibrary =
+                                                      //     MediaLibrary();
+                                                      // audioHandler.updateQueue(
+                                                      //     _mediaLibrary.items[
+                                                      //         MediaLibrary
+                                                      //             .albumsRootId2]!);
+                                                      await audioHandler
+                                                          .updateQueue(
+                                                              dataController
+                                                                  .mediaListRadio);
+                                                      await audioHandler
+                                                          .skipToQueueItem(
+                                                              homeController
+                                                                  .indexToPlayRadio);
+                                                      audioHandler.play();
+                                                      // audioHandler.playFromMediaId(
+                                                      //     "https://radio.tuneonehosting.com/radio/8010/radio.mp3?azuracast");
+                                                      // await audioHandler
+                                                      //     .skipToQueueItem(
+                                                      //         homeController
+                                                      //             .indexToPlayRadio);
+
+                                                      homeController.whoAccess
+                                                          .value = "radio";
+                                                    }
+                                                  },
+                                                ),
+                                              );
+                                            }
+                                          } else {
                                             return Container(
                                               height: 40,
                                               width: 40,
@@ -326,20 +437,74 @@ class SingleRadioView extends StatelessWidget {
                                               child: IconButton(
                                                 icon: const Icon(
                                                     Icons.play_arrow),
-                                                onPressed: audioHandler.play,
-                                              ),
-                                            );
-                                          } else {
-                                            return Container(
-                                              height: 40,
-                                              width: 40,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                              ),
-                                              child: IconButton(
-                                                icon: const Icon(Icons.pause),
-                                                onPressed: audioHandler.pause,
+                                                onPressed: () async {
+                                                  dataController.addRecently(
+                                                      dataController.radioList[
+                                                          homeController
+                                                              .indexToPlayRadio],
+                                                      false);
+                                                  radioController.indexX =
+                                                      homeController
+                                                          .indexToPlayRadio;
+
+                                                  if (homeController
+                                                          .whoAccess.value ==
+                                                      "pod") {
+                                                    print("accesssed by pods");
+                                                    await audioHandler
+                                                        .updateQueue(
+                                                            dataController
+                                                                .mediaListRadio);
+                                                    await audioHandler
+                                                        .skipToQueueItem(
+                                                            homeController
+                                                                .indexToPlayRadio);
+                                                    audioHandler.play();
+                                                    homeController.whoAccess
+                                                        .value = "radio";
+                                                  } else {
+                                                    print("accesssed by radio");
+                                                    print(homeController
+                                                        .indexToPlayRadio);
+                                                    // await audioHandler
+                                                    //     .updateQueue(
+                                                    //         dataController
+                                                    //             .mediaListRadio)
+                                                    //     .then((value) async {
+                                                    //   final queue = audioHandler
+                                                    //       .queueState;
+                                                    //   print(queue.length);
+                                                    //
+                                                    //
+                                                    //
+                                                    //   //  audioHandler.play();
+                                                    // });
+                                                    // final _mediaLibrary =
+                                                    //     MediaLibrary();
+                                                    // audioHandler.updateQueue(
+                                                    //     _mediaLibrary.items[
+                                                    //         MediaLibrary
+                                                    //             .albumsRootId2]!);
+                                                    await audioHandler
+                                                        .updateQueue(
+                                                            dataController
+                                                                .mediaListRadio);
+                                                    await audioHandler
+                                                        .skipToQueueItem(
+                                                            homeController
+                                                                .indexToPlayRadio);
+                                                    audioHandler.play();
+                                                    // audioHandler.playFromMediaId(
+                                                    //     "https://radio.tuneonehosting.com/radio/8010/radio.mp3?azuracast");
+                                                    // await audioHandler
+                                                    //     .skipToQueueItem(
+                                                    //         homeController
+                                                    //             .indexToPlayRadio);
+
+                                                    homeController.whoAccess
+                                                        .value = "radio";
+                                                  }
+                                                },
                                               ),
                                             );
                                           }
@@ -653,8 +818,10 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
 
   @override
   Future<void> updateQueue(List<MediaItem> newQueue) async {
+    print("called update");
     await _playlist.clear();
     await _playlist.addAll(_itemsToSources(newQueue));
+    print(_playlist.length);
   }
 
   @override
@@ -984,12 +1151,18 @@ class Seeker {
 /// from a database or web service.
 class MediaLibrary {
   static const albumsRootId = 'albums';
+  static const albumsRootId2 = 'albums2';
 
   final items = <String, List<MediaItem>>{
     AudioService.browsableRootId: const [
       MediaItem(
         id: albumsRootId,
         title: "Albums",
+        playable: false,
+      ),
+      MediaItem(
+        id: albumsRootId2,
+        title: "albums2",
         playable: false,
       ),
     ],
@@ -999,6 +1172,17 @@ class MediaLibrary {
         album: "Science Friday",
         title: "From Cat Rheology To Operatic Incompetence",
         artist: "Science Friday and WNYC Studios",
+        duration: Duration(milliseconds: 2856950),
+        artUri: Uri.parse(
+            "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
+      ),
+    ],
+    albumsRootId2: [
+      MediaItem(
+        id: "https://radio.tuneonehosting.com/radio/8010/radio.mp3?azuracast",
+        album: "ri Fridayfgfdshgh",
+        title: "From Cat Rheology To Operatic Incompetencefdhfhd",
+        artist: "Science Friday and WNYC Studiosdsggdfs",
         duration: Duration(milliseconds: 2856950),
         artUri: Uri.parse(
             "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),

@@ -29,7 +29,7 @@ dependencies:
   just_audio: ^0.9.15
   flutter_tts: ^3.0.0
   rxdart:
-  audio_service: ^0.18.1
+  audio_service: ^0.18.0
   theme_provider: ^0.5.0
   marquee_text: ^2.0.0
   flutter_svg:
