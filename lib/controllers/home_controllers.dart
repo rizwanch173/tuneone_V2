@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
@@ -14,6 +15,7 @@ class HomeController extends GetxController {
   var indexToPlayRadio = -1.obs;
   var indexToPlayPod = -2.obs;
   var podAppbar = "Podcasts".obs;
+  var colorX = Colors.white.obs;
 
   @override
   void onInit() {
