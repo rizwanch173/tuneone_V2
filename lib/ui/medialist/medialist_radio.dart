@@ -97,13 +97,10 @@ class MediaListRadioView extends StatelessWidget {
                     Expanded(
                       child: dataController.islogin.isTrue
                           ? Padding(
-                              // padding: EdgeInsets.only(
-                              //   bottom: running
-                              //       ? Get.height * 0.080
-                              //       : 1,
-                              // ),
                               padding: EdgeInsets.only(
-                                bottom: 1,
+                                bottom: homeController.whoAccess.value == "none"
+                                    ? 0
+                                    : Get.height * 0.080,
                               ),
                               child: ListView.builder(
                                   itemCount:
@@ -403,278 +400,314 @@ class MediaListRadioView extends StatelessWidget {
                                     }
                                   }),
                             )
-                          : ListView.builder(
-                              itemCount:
-                                  dataController.radioListMasterCopy.length,
-                              itemBuilder: (_, index) {
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 3),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      border: Border.all(
-                                        color:
-                                            ThemeProvider.themeOf(context).id ==
-                                                    "light"
-                                                ? Color(0xffF2F2F2)
-                                                : darkTxt.withOpacity(0.2),
-                                      ),
-                                    ),
-                                    child: ListTile(
-                                      onTap: () {},
-                                      dense: true,
-                                      leading: Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: ClipRRect(
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                bottom: homeController.whoAccess.value == "none"
+                                    ? 0
+                                    : Get.height * 0.080,
+                              ),
+                              child: ListView.builder(
+                                  itemCount:
+                                      dataController.radioListMasterCopy.length,
+                                  itemBuilder: (_, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 3),
+                                      child: Container(
+                                        decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: StyledCachedNetworkImage(
-                                            url: dataController
-                                                .radioListMasterCopy[index]
-                                                .thumbnail,
-                                            height: Get.height * 0.10,
-                                            width: Get.width * 0.12,
+                                              BorderRadius.circular(10.0),
+                                          border: Border.all(
+                                            color:
+                                                ThemeProvider.themeOf(context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Color(0xffF2F2F2)
+                                                    : darkTxt.withOpacity(0.2),
                                           ),
                                         ),
-                                      ),
-                                      trailing: Container(
-                                          height: 40,
-                                          width: 40,
+                                        child: ListTile(
+                                          onTap: () {},
+                                          dense: true,
+                                          leading: Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              child: StyledCachedNetworkImage(
+                                                url: dataController
+                                                    .radioListMasterCopy[index]
+                                                    .thumbnail,
+                                                height: Get.height * 0.10,
+                                                width: Get.width * 0.12,
+                                              ),
+                                            ),
+                                          ),
+                                          trailing: Container(
+                                              height: 40,
+                                              width: 40,
 
-                                          // padding: EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                (ThemeProvider.themeOf(context)
+                                              // padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: (ThemeProvider.themeOf(
+                                                                context)
                                                             .id ==
                                                         "light")
                                                     ? Colors.grey[400]
                                                     : Theme.of(context)
                                                         .primaryColor,
-                                          ),
-                                          child: StreamBuilder<PlaybackState>(
-                                              stream:
-                                                  audioHandler.playbackState,
-                                              builder: (context, snapshot) {
-                                                final playbackState =
-                                                    snapshot.data;
-                                                final processingState =
-                                                    playbackState
-                                                        ?.processingState;
-                                                final playing =
-                                                    playbackState?.playing;
-                                                if ((processingState ==
-                                                            AudioProcessingState
-                                                                .loading ||
-                                                        processingState ==
-                                                            AudioProcessingState
-                                                                .buffering) &&
-                                                    index ==
-                                                        radioController
-                                                            .indexX) {
-                                                  return Container(
-                                                    width: 40.0,
-                                                    height: 40.0,
-                                                    child:
-                                                        const CupertinoActivityIndicator(),
-                                                  );
-                                                } else if (playing == true) {
-                                                  if (audioHandler.mediaItem
-                                                          .value!.id ==
-                                                      dataController
-                                                          .radioListMasterCopy[
-                                                              index]
-                                                          .stream) {
-                                                    print("matched");
-                                                    return Container(
-                                                      height: 40,
-                                                      width: 40,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.white,
-                                                      ),
-                                                      child: IconButton(
-                                                          icon: const Icon(
-                                                              Icons.pause),
-                                                          onPressed: () {
-                                                            audioHandler
-                                                                .pause();
-                                                          }),
-                                                    );
-                                                  } else {
-                                                    return Container(
-                                                      height: 40,
-                                                      width: 40,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: (ThemeProvider
-                                                                        .themeOf(
-                                                                            context)
-                                                                    .id ==
-                                                                "light")
-                                                            ? Colors.grey[400]
-                                                            : Theme.of(context)
-                                                                .primaryColor,
-                                                      ),
-                                                      child: IconButton(
-                                                        icon: const Icon(
-                                                            Icons.play_arrow),
-                                                        onPressed: () async {
-                                                          radioController
-                                                              .indexX = index;
-
-                                                          if (homeController
-                                                                      .whoAccess
-                                                                      .value ==
-                                                                  "pod" ||
-                                                              homeController
-                                                                      .whoAccess
-                                                                      .value ==
-                                                                  "none") {
-                                                            await audioHandler
-                                                                .updateQueue(
-                                                                    dataController
-                                                                        .mediaListRadio);
-                                                            await audioHandler
-                                                                .skipToQueueItem(
-                                                                    index);
-                                                            audioHandler.play();
-                                                            homeController
-                                                                    .whoAccess
-                                                                    .value =
-                                                                "radio";
-                                                          } else {
-                                                            await audioHandler
-                                                                .skipToQueueItem(
-                                                                    index);
-                                                            audioHandler.play();
-                                                            homeController
-                                                                    .whoAccess
-                                                                    .value =
-                                                                "radio";
-                                                          }
+                                              ),
+                                              child: StreamBuilder<
+                                                      PlaybackState>(
+                                                  stream: audioHandler
+                                                      .playbackState,
+                                                  builder: (context, snapshot) {
+                                                    final playbackState =
+                                                        snapshot.data;
+                                                    final processingState =
+                                                        playbackState
+                                                            ?.processingState;
+                                                    final playing =
+                                                        playbackState?.playing;
+                                                    if ((processingState ==
+                                                                AudioProcessingState
+                                                                    .loading ||
+                                                            processingState ==
+                                                                AudioProcessingState
+                                                                    .buffering) &&
+                                                        index ==
+                                                            radioController
+                                                                .indexX) {
+                                                      return Container(
+                                                        width: 40.0,
+                                                        height: 40.0,
+                                                        child:
+                                                            const CupertinoActivityIndicator(),
+                                                      );
+                                                    } else if (playing ==
+                                                        true) {
+                                                      if (audioHandler.mediaItem
+                                                              .value!.id ==
                                                           dataController
-                                                              .addRecently(
+                                                              .radioListMasterCopy[
+                                                                  index]
+                                                              .stream) {
+                                                        print("matched");
+                                                        return Container(
+                                                          height: 40,
+                                                          width: 40,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            color: Colors.white,
+                                                          ),
+                                                          child: IconButton(
+                                                              icon: const Icon(
+                                                                  Icons.pause),
+                                                              onPressed: () {
+                                                                audioHandler
+                                                                    .pause();
+                                                              }),
+                                                        );
+                                                      } else {
+                                                        return Container(
+                                                          height: 40,
+                                                          width: 40,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            color: (ThemeProvider.themeOf(
+                                                                            context)
+                                                                        .id ==
+                                                                    "light")
+                                                                ? Colors
+                                                                    .grey[400]
+                                                                : Theme.of(
+                                                                        context)
+                                                                    .primaryColor,
+                                                          ),
+                                                          child: IconButton(
+                                                            icon: const Icon(
+                                                                Icons
+                                                                    .play_arrow),
+                                                            onPressed:
+                                                                () async {
+                                                              radioController
+                                                                      .indexX =
+                                                                  index;
+
+                                                              if (homeController
+                                                                          .whoAccess
+                                                                          .value ==
+                                                                      "pod" ||
+                                                                  homeController
+                                                                          .whoAccess
+                                                                          .value ==
+                                                                      "none") {
+                                                                await audioHandler
+                                                                    .updateQueue(
+                                                                        dataController
+                                                                            .mediaListRadio);
+                                                                await audioHandler
+                                                                    .skipToQueueItem(
+                                                                        index);
+                                                                audioHandler
+                                                                    .play();
+                                                                homeController
+                                                                        .whoAccess
+                                                                        .value =
+                                                                    "radio";
+                                                              } else {
+                                                                await audioHandler
+                                                                    .skipToQueueItem(
+                                                                        index);
+                                                                audioHandler
+                                                                    .play();
+                                                                homeController
+                                                                        .whoAccess
+                                                                        .value =
+                                                                    "radio";
+                                                              }
+                                                              dataController.addRecently(
                                                                   dataController
                                                                           .radioListMasterCopy[
                                                                       index],
                                                                   false);
-                                                        },
-                                                      ),
-                                                    );
-                                                  }
-                                                } else
-                                                  return Container(
-                                                    height: 40,
-                                                    width: 40,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: (ThemeProvider
-                                                                      .themeOf(
-                                                                          context)
-                                                                  .id ==
-                                                              "light")
-                                                          ? Colors.grey[400]
-                                                          : Theme.of(context)
-                                                              .primaryColor,
-                                                    ),
-                                                    child: IconButton(
-                                                      icon: const Icon(
-                                                          Icons.play_arrow),
-                                                      onPressed: () async {
-                                                        radioController.indexX =
-                                                            index;
-                                                        print(dataController
-                                                            .mediaListRadio
-                                                            .length);
-                                                        if (homeController
-                                                                    .whoAccess
-                                                                    .value ==
-                                                                "pod" ||
-                                                            homeController
-                                                                    .whoAccess
-                                                                    .value ==
-                                                                "none") {
-                                                          print("pod or none");
-                                                          await audioHandler
-                                                              .updateQueue(
-                                                                  dataController
-                                                                      .mediaListRadio);
-                                                          await audioHandler
-                                                              .skipToQueueItem(
-                                                                  index);
-                                                          audioHandler.play();
-                                                          homeController
-                                                              .whoAccess
-                                                              .value = "radio";
-                                                        } else {
-                                                          print("radio access");
-                                                          print(dataController
-                                                              .radioListMasterCopy[
-                                                                  index]
-                                                              .stream);
-                                                          await audioHandler
-                                                              .updateQueue(
-                                                                  dataController
-                                                                      .mediaListRadio);
-                                                          await audioHandler
-                                                              .skipToQueueItem(
-                                                                  index);
-                                                          audioHandler.play();
-                                                          homeController
-                                                              .whoAccess
-                                                              .value = "radio";
-                                                        }
-                                                        dataController.addRecently(
+                                                            },
+                                                          ),
+                                                        );
+                                                      }
+                                                    } else
+                                                      return Container(
+                                                        height: 40,
+                                                        width: 40,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: (ThemeProvider
+                                                                          .themeOf(
+                                                                              context)
+                                                                      .id ==
+                                                                  "light")
+                                                              ? Colors.grey[400]
+                                                              : Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                        ),
+                                                        child: IconButton(
+                                                          icon: const Icon(
+                                                              Icons.play_arrow),
+                                                          onPressed: () async {
+                                                            radioController
+                                                                .indexX = index;
+                                                            print(dataController
+                                                                .mediaListRadio
+                                                                .length);
+                                                            if (homeController
+                                                                        .whoAccess
+                                                                        .value ==
+                                                                    "pod" ||
+                                                                homeController
+                                                                        .whoAccess
+                                                                        .value ==
+                                                                    "none") {
+                                                              print(
+                                                                  "pod or none");
+                                                              await audioHandler
+                                                                  .updateQueue(
+                                                                      dataController
+                                                                          .mediaListRadio);
+                                                              await audioHandler
+                                                                  .skipToQueueItem(
+                                                                      index);
+                                                              audioHandler
+                                                                  .play();
+                                                              homeController
+                                                                      .whoAccess
+                                                                      .value =
+                                                                  "radio";
+                                                            } else {
+                                                              print(
+                                                                  "radio access");
+                                                              print(dataController
+                                                                  .radioListMasterCopy[
+                                                                      index]
+                                                                  .stream);
+                                                              await audioHandler
+                                                                  .updateQueue(
+                                                                      dataController
+                                                                          .mediaListRadio);
+                                                              await audioHandler
+                                                                  .skipToQueueItem(
+                                                                      index);
+                                                              audioHandler
+                                                                  .play();
+                                                              homeController
+                                                                      .whoAccess
+                                                                      .value =
+                                                                  "radio";
+                                                            }
                                                             dataController
-                                                                    .radioListMasterCopy[
-                                                                index],
-                                                            false);
-                                                      },
-                                                    ),
-                                                  );
-                                              })),
-                                      title: AutoSizeText(
-                                        dataController.radioList[index].title,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: "Aeonik-medium",
-                                          color: ThemeProvider.themeOf(context)
-                                                      .id ==
-                                                  "light"
-                                              ? darkBg
-                                              : Colors.white,
+                                                                .addRecently(
+                                                                    dataController
+                                                                            .radioListMasterCopy[
+                                                                        index],
+                                                                    false);
+                                                          },
+                                                        ),
+                                                      );
+                                                  })),
+                                          title: AutoSizeText(
+                                            dataController
+                                                .radioList[index].title,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: "Aeonik-medium",
+                                              color:
+                                                  ThemeProvider.themeOf(context)
+                                                              .id ==
+                                                          "light"
+                                                      ? darkBg
+                                                      : Colors.white,
+                                            ),
+                                          ),
+                                          subtitle: AutoSizeText(
+                                            dataController.radioList[index]
+                                                .author.displayName,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w100,
+                                              fontSize: 8,
+                                              fontFamily: "Aeonik-medium",
+                                              color:
+                                                  ThemeProvider.themeOf(context)
+                                                              .id ==
+                                                          "light"
+                                                      ? Color(0xffA4A4A4)
+                                                      : darkTxt
+                                                          .withOpacity(0.5),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      subtitle: AutoSizeText(
-                                        dataController.radioList[index].author
-                                            .displayName,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w100,
-                                          fontSize: 8,
-                                          fontFamily: "Aeonik-medium",
-                                          color: ThemeProvider.themeOf(context)
-                                                      .id ==
-                                                  "light"
-                                              ? Color(0xffA4A4A4)
-                                              : darkTxt.withOpacity(0.5),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
+                                    );
+                                  }),
+                            ),
                     )
                   ]),
                 ),
               ],
             ),
           ),
-          Positioned(
-            bottom: 0,
-            child: MiniPlayer(),
-          ),
+          homeController.whoAccess.value != "none"
+              ? Positioned(
+                  bottom: 0,
+                  child: MiniPlayer(),
+                )
+              : SizedBox(),
         ],
       );
     }));

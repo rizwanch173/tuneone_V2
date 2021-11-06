@@ -1,5 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart' as Rxt;
@@ -12,6 +13,8 @@ import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:marquee_text/marquee_text.dart';
 
+import '../../main.dart';
+
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({Key? key}) : super(key: key);
 
@@ -20,12 +23,13 @@ class MiniPlayer extends StatelessWidget {
     final DataController dataController = Get.find();
     final HomeController homeController = Get.find();
     return Container(
-      child: StreamBuilder<QueueState>(
-        stream: _queueStateStream,
+      child: StreamBuilder<MediaItem?>(
+        stream: audioHandler.mediaItem,
         builder: (context, snapshot) {
-          final queueState = snapshot.data;
-          final queue = queueState?.queue ?? [];
-          final mediaItem = queueState?.mediaItem;
+          // final queueState = snapshot.data;
+          // final queue = queueState?.queue ?? [];
+          // final mediaItem = queueState?.mediaItem;
+          final mediaItem = snapshot.data;
           return GestureDetector(
             onTap: () {
               if (mediaItem?.duration == null) {
@@ -136,24 +140,40 @@ class MiniPlayer extends StatelessWidget {
                   if (mediaItem?.title != null)
                     Expanded(
                       flex: 1,
-                      child: StreamBuilder<bool>(
-                        stream: AudioService.playbackStateStream
-                            .map((state) => state.playing)
-                            .distinct(),
+                      child: StreamBuilder<PlaybackState>(
+                        stream: audioHandler.playbackState,
                         builder: (context, snapshot) {
-                          final playing = snapshot.data ?? false;
-                          return Padding(
-                            padding: const EdgeInsets.only(),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (playing)
-                                  pauseButton(context)
-                                else
-                                  playButton(context),
-                              ],
-                            ),
-                          );
+                          final playbackState = snapshot.data;
+                          final processingState =
+                              playbackState?.processingState;
+                          final playing = playbackState?.playing;
+                          if (processingState == AudioProcessingState.loading ||
+                              processingState ==
+                                  AudioProcessingState.buffering) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              width: 40.0,
+                              height: 40.0,
+                              child: const CupertinoActivityIndicator(),
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.only(),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (playing == true)
+                                    pauseButton(context)
+                                  else
+                                    playButton(
+                                        context, mediaItem, dataController),
+                                ],
+                              ),
+                            );
+                          }
                         },
                       ),
                     ),
@@ -166,19 +186,7 @@ class MiniPlayer extends StatelessWidget {
     );
   }
 
-  Widget playX() => MaterialButton(
-        onPressed: () {},
-        color: Colors.blue,
-        textColor: Colors.white,
-        child: Icon(
-          Icons.camera_alt,
-          size: 24,
-        ),
-        padding: EdgeInsets.all(16),
-        shape: CircleBorder(),
-      );
-
-  Widget playButton(context) => Container(
+  Widget playButton(context, mediaItem, dataController) => Container(
         height: 40,
         width: 40,
         decoration: BoxDecoration(
@@ -188,7 +196,15 @@ class MiniPlayer extends StatelessWidget {
         child: IconButton(
           icon: Icon(Icons.play_arrow),
           color: Theme.of(context).primaryColor,
-          onPressed: AudioService.play,
+          onPressed: () async {
+            if (mediaItem?.duration == null) {
+              var radioIndex = dataController.radioListMasterCopy
+                  .indexWhere((w) => w.stream == mediaItem!.id);
+              await audioHandler.skipToQueueItem(radioIndex);
+              print("radio");
+            }
+            audioHandler.play();
+          },
         ),
       );
   Widget pauseButton(context) => Container(
@@ -201,22 +217,7 @@ class MiniPlayer extends StatelessWidget {
         child: IconButton(
           icon: Icon(Icons.pause),
           color: Theme.of(context).primaryColor,
-          onPressed: AudioService.pause,
+          onPressed: audioHandler.pause,
         ),
       );
-}
-
-/// A stream reporting the combined state of the current queue and the current
-/// media item within that queue.
-Stream<QueueState> get _queueStateStream =>
-    Rxt.Rx.combineLatest2<List<MediaItem>?, MediaItem?, QueueState>(
-        AudioService.queueStream,
-        AudioService.currentMediaItemStream,
-        (queue, mediaItem) => QueueState(queue, mediaItem));
-
-class QueueState {
-  final List<MediaItem>? queue;
-  final MediaItem? mediaItem;
-
-  QueueState(this.queue, this.mediaItem);
 }

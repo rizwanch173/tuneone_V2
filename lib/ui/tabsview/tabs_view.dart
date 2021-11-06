@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:tuneone/ui/styled_widgets/mini_player.dart';
 import 'package:tuneone/ui/tabsview/tabs_viewmodel.dart';
@@ -11,6 +12,7 @@ import 'package:tuneone/ui/tabsview/tabs_viewmodel.dart';
 class TabsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final HomeController homeController = Get.find();
     return GetBuilder<TabsViewModel>(builder: (_) {
       return Scaffold(
         body: Stack(
@@ -19,13 +21,15 @@ class TabsView extends StatelessWidget {
               height: Get.height,
               child: _.items[_.index],
             ),
-            Positioned(
-              bottom: 0,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: MiniPlayer(),
-              ),
-            )
+            homeController.whoAccess.value != "none"
+                ? Positioned(
+                    bottom: 0,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: MiniPlayer(),
+                    ),
+                  )
+                : SizedBox()
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

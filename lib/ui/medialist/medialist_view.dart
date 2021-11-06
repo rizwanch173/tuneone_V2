@@ -91,12 +91,12 @@ class MediaListView extends StatelessWidget {
                     Expanded(
                         child: dataController.islogin.isTrue
                             ? Padding(
-                                // padding: EdgeInsets.only(
-                                // bottom: running
-                                // ? Get.height * 0.080
-                                //     : 1,
-                                // ),
-                                padding: EdgeInsets.all(0),
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      homeController.whoAccess.value == "none"
+                                          ? 0
+                                          : Get.height * 0.080,
+                                ),
                                 child: ListView.builder(
                                     itemCount: dataController
                                         .podcastListMasterCopy.length,
@@ -406,259 +406,288 @@ class MediaListView extends StatelessWidget {
                                       }
                                     }),
                               )
-                            : ListView.builder(
-                                itemCount:
-                                    dataController.podcastListMasterCopy.length,
-                                itemBuilder: (_, index) {
-                                  return ListTile(
-                                    onTap: () {},
-                                    dense: true,
-                                    leading: Padding(
-                                      padding: const EdgeInsets.all(2.0),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: StyledCachedNetworkImage(
-                                          url: dataController
-                                              .podcastList[index].thumbnail,
-                                          height: Get.height * 0.10,
-                                          width: Get.width * 0.12,
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      homeController.whoAccess.value == "none"
+                                          ? 0
+                                          : Get.height * 0.080,
+                                ),
+                                child: ListView.builder(
+                                    itemCount: dataController
+                                        .podcastListMasterCopy.length,
+                                    itemBuilder: (_, index) {
+                                      return ListTile(
+                                        onTap: () {},
+                                        dense: true,
+                                        leading: Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            child: StyledCachedNetworkImage(
+                                              url: dataController
+                                                  .podcastList[index].thumbnail,
+                                              height: Get.height * 0.10,
+                                              width: Get.width * 0.12,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    trailing: Container(
-                                      height: 40,
-                                      width: 40,
+                                        trailing: Container(
+                                          height: 40,
+                                          width: 40,
 
-                                      // padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: (ThemeProvider.themeOf(context)
-                                                    .id ==
-                                                "light")
-                                            ? Colors.grey[400]
-                                            : Theme.of(context).primaryColor,
-                                      ),
-                                      child: StreamBuilder<PlaybackState>(
-                                          stream: audioHandler.playbackState,
-                                          builder: (context, snapshot) {
-                                            final playbackState = snapshot.data;
-                                            final processingState =
-                                                playbackState?.processingState;
-                                            final playing =
-                                                playbackState?.playing;
-                                            if ((processingState ==
-                                                        AudioProcessingState
-                                                            .loading ||
-                                                    processingState ==
-                                                        AudioProcessingState
-                                                            .buffering) &&
-                                                index ==
-                                                    podcastController.indexX) {
-                                              return Container(
-                                                width: 40.0,
-                                                height: 40.0,
-                                                child:
-                                                    const CupertinoActivityIndicator(),
-                                              );
-                                            } else if (playing == true) {
-                                              if (audioHandler
-                                                      .mediaItem.value!.id ==
-                                                  dataController
-                                                      .podcastListMasterCopy[
-                                                          index]
-                                                      .stream) {
-                                                print("matched");
-                                                return Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color:
-                                                        (ThemeProvider.themeOf(
-                                                                        context)
+                                          // padding: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color:
+                                                (ThemeProvider.themeOf(context)
+                                                            .id ==
+                                                        "light")
+                                                    ? Colors.grey[400]
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                          ),
+                                          child: StreamBuilder<PlaybackState>(
+                                              stream:
+                                                  audioHandler.playbackState,
+                                              builder: (context, snapshot) {
+                                                final playbackState =
+                                                    snapshot.data;
+                                                final processingState =
+                                                    playbackState
+                                                        ?.processingState;
+                                                final playing =
+                                                    playbackState?.playing;
+                                                if ((processingState ==
+                                                            AudioProcessingState
+                                                                .loading ||
+                                                        processingState ==
+                                                            AudioProcessingState
+                                                                .buffering) &&
+                                                    index ==
+                                                        podcastController
+                                                            .indexX) {
+                                                  return Container(
+                                                    width: 40.0,
+                                                    height: 40.0,
+                                                    child:
+                                                        const CupertinoActivityIndicator(),
+                                                  );
+                                                } else if (playing == true) {
+                                                  if (audioHandler.mediaItem
+                                                          .value!.id ==
+                                                      dataController
+                                                          .podcastListMasterCopy[
+                                                              index]
+                                                          .stream) {
+                                                    print("matched");
+                                                    return Container(
+                                                      height: 40,
+                                                      width: 40,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: (ThemeProvider
+                                                                        .themeOf(
+                                                                            context)
                                                                     .id ==
                                                                 "light")
                                                             ? Colors.grey[400]
                                                             : Theme.of(context)
                                                                 .primaryColor,
-                                                  ),
-                                                  child: IconButton(
-                                                      icon: const Icon(
-                                                          Icons.pause),
-                                                      onPressed: () {
-                                                        audioHandler.pause();
-                                                      }),
-                                                );
-                                              } else {
-                                                return Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color:
-                                                        (ThemeProvider.themeOf(
-                                                                        context)
+                                                      ),
+                                                      child: IconButton(
+                                                          icon: const Icon(
+                                                              Icons.pause),
+                                                          onPressed: () {
+                                                            audioHandler
+                                                                .pause();
+                                                          }),
+                                                    );
+                                                  } else {
+                                                    return Container(
+                                                      height: 40,
+                                                      width: 40,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: (ThemeProvider
+                                                                        .themeOf(
+                                                                            context)
                                                                     .id ==
                                                                 "light")
                                                             ? Colors.grey[400]
                                                             : Theme.of(context)
                                                                 .primaryColor,
-                                                  ),
-                                                  child: IconButton(
-                                                    icon: const Icon(
-                                                        Icons.play_arrow),
-                                                    onPressed: () async {
-                                                      podcastController.indexX =
-                                                          index;
+                                                      ),
+                                                      child: IconButton(
+                                                        icon: const Icon(
+                                                            Icons.play_arrow),
+                                                        onPressed: () async {
+                                                          podcastController
+                                                              .indexX = index;
 
-                                                      if (homeController
-                                                                  .whoAccess
-                                                                  .value ==
-                                                              "radio" ||
-                                                          homeController
-                                                                  .whoAccess
-                                                                  .value ==
-                                                              "none") {
-                                                        await audioHandler
-                                                            .updateQueue(
+                                                          if (homeController
+                                                                      .whoAccess
+                                                                      .value ==
+                                                                  "radio" ||
+                                                              homeController
+                                                                      .whoAccess
+                                                                      .value ==
+                                                                  "none") {
+                                                            await audioHandler
+                                                                .updateQueue(
+                                                                    dataController
+                                                                        .mediaListPodcast);
+                                                            await audioHandler
+                                                                .skipToQueueItem(
+                                                                    index);
+                                                            audioHandler.play();
+                                                            homeController
+                                                                .whoAccess
+                                                                .value = "pod";
+                                                          } else {
+                                                            if (audioHandler
+                                                                    .mediaItem
+                                                                    .value!
+                                                                    .id !=
                                                                 dataController
-                                                                    .mediaListPodcast);
-                                                        await audioHandler
-                                                            .skipToQueueItem(
-                                                                index);
-                                                        audioHandler.play();
-                                                        homeController.whoAccess
-                                                            .value = "pod";
-                                                      } else {
-                                                        if (audioHandler
-                                                                .mediaItem
-                                                                .value!
-                                                                .id !=
-                                                            dataController
-                                                                .mediaListPodcast[
-                                                                    podcastController
-                                                                        .indexX]
-                                                                .id) {
-                                                          print(
-                                                              "pod access 2 + same");
+                                                                    .mediaListPodcast[
+                                                                        podcastController
+                                                                            .indexX]
+                                                                    .id) {
+                                                              print(
+                                                                  "pod access 2 + same");
+                                                              await audioHandler
+                                                                  .skipToQueueItem(
+                                                                      index);
+                                                            }
+                                                            audioHandler.play();
+                                                          }
+
+                                                          dataController
+                                                              .addRecently(
+                                                                  dataController
+                                                                          .podcastListMasterCopy[
+                                                                      index],
+                                                                  true);
+                                                        },
+                                                      ),
+                                                    );
+                                                  }
+                                                } else
+                                                  return Container(
+                                                    height: 40,
+                                                    width: 40,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: (ThemeProvider
+                                                                      .themeOf(
+                                                                          context)
+                                                                  .id ==
+                                                              "light")
+                                                          ? Colors.grey[400]
+                                                          : Theme.of(context)
+                                                              .primaryColor,
+                                                    ),
+                                                    child: IconButton(
+                                                      icon: const Icon(
+                                                          Icons.play_arrow),
+                                                      onPressed: () async {
+                                                        podcastController
+                                                            .indexX = index;
+
+                                                        if (homeController
+                                                                    .whoAccess
+                                                                    .value ==
+                                                                "radio" ||
+                                                            homeController
+                                                                    .whoAccess
+                                                                    .value ==
+                                                                "none") {
+                                                          print("pod or none");
+                                                          await audioHandler
+                                                              .updateQueue(
+                                                                  dataController
+                                                                      .mediaListPodcast);
                                                           await audioHandler
                                                               .skipToQueueItem(
                                                                   index);
+                                                          audioHandler.play();
+                                                          homeController
+                                                              .whoAccess
+                                                              .value = "pod";
+                                                        } else {
+                                                          print(
+                                                              "pod access 2 + same");
+                                                          if (audioHandler
+                                                                  .mediaItem
+                                                                  .value!
+                                                                  .id !=
+                                                              dataController
+                                                                  .mediaListPodcast[
+                                                                      index]
+                                                                  .id) {
+                                                            print(
+                                                                "pod access 2 + same");
+                                                            await audioHandler
+                                                                .skipToQueueItem(
+                                                                    index);
+                                                          }
                                                         }
                                                         audioHandler.play();
-                                                      }
-
-                                                      dataController.addRecently(
-                                                          dataController
-                                                                  .podcastListMasterCopy[
-                                                              index],
-                                                          true);
-                                                    },
-                                                  ),
-                                                );
-                                              }
-                                            } else
-                                              return Container(
-                                                height: 40,
-                                                width: 40,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: (ThemeProvider.themeOf(
-                                                                  context)
-                                                              .id ==
-                                                          "light")
-                                                      ? Colors.grey[400]
-                                                      : Theme.of(context)
-                                                          .primaryColor,
-                                                ),
-                                                child: IconButton(
-                                                  icon: const Icon(
-                                                      Icons.play_arrow),
-                                                  onPressed: () async {
-                                                    podcastController.indexX =
-                                                        index;
-
-                                                    if (homeController.whoAccess
-                                                                .value ==
-                                                            "radio" ||
-                                                        homeController.whoAccess
-                                                                .value ==
-                                                            "none") {
-                                                      print("pod or none");
-                                                      await audioHandler
-                                                          .updateQueue(
-                                                              dataController
-                                                                  .mediaListPodcast);
-                                                      await audioHandler
-                                                          .skipToQueueItem(
-                                                              index);
-                                                      audioHandler.play();
-                                                      homeController.whoAccess
-                                                          .value = "pod";
-                                                    } else {
-                                                      print(
-                                                          "pod access 2 + same");
-                                                      if (audioHandler.mediaItem
-                                                              .value!.id !=
-                                                          dataController
-                                                              .mediaListPodcast[
-                                                                  index]
-                                                              .id) {
-                                                        print(
-                                                            "pod access 2 + same");
-                                                        await audioHandler
-                                                            .skipToQueueItem(
-                                                                index);
-                                                      }
-                                                    }
-                                                    audioHandler.play();
-                                                    dataController.addRecently(
-                                                        dataController
-                                                                .podcastListMasterCopy[
-                                                            index],
-                                                        true);
-                                                  },
-                                                ),
-                                              );
-                                          }),
-                                    ),
-                                    title: AutoSizeText(
-                                      dataController.podcastList[index].title,
-                                      presetFontSizes: [14, 12],
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w100,
-                                        fontFamily: "Aeonik-medium",
-                                        color:
-                                            ThemeProvider.themeOf(context).id ==
-                                                    "light"
-                                                ? darkBg
-                                                : Colors.white,
-                                      ),
-                                    ),
-                                    subtitle: AutoSizeText(
-                                      dataController.podcastList[index].author
-                                          .displayName,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w100,
-                                        fontFamily: "Aeonik-medium",
-                                        color:
-                                            ThemeProvider.themeOf(context).id ==
-                                                    "light"
-                                                ? Color(0xffA4A4A4)
-                                                : darkTxt.withOpacity(0.5),
-                                      ),
-                                    ),
-                                  );
-                                }))
+                                                        dataController.addRecently(
+                                                            dataController
+                                                                    .podcastListMasterCopy[
+                                                                index],
+                                                            true);
+                                                      },
+                                                    ),
+                                                  );
+                                              }),
+                                        ),
+                                        title: AutoSizeText(
+                                          dataController
+                                              .podcastList[index].title,
+                                          presetFontSizes: [14, 12],
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w100,
+                                            fontFamily: "Aeonik-medium",
+                                            color:
+                                                ThemeProvider.themeOf(context)
+                                                            .id ==
+                                                        "light"
+                                                    ? darkBg
+                                                    : Colors.white,
+                                          ),
+                                        ),
+                                        subtitle: AutoSizeText(
+                                          dataController.podcastList[index]
+                                              .author.displayName,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w100,
+                                            fontFamily: "Aeonik-medium",
+                                            color:
+                                                ThemeProvider.themeOf(context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Color(0xffA4A4A4)
+                                                    : darkTxt.withOpacity(0.5),
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                              ))
                   ]),
                 ),
               ],
             ),
           ),
-          Positioned(
-            bottom: 0,
-            child: MiniPlayer(),
-          ),
+          homeController.whoAccess.value != "none"
+              ? Positioned(
+                  bottom: 0,
+                  child: MiniPlayer(),
+                )
+              : SizedBox(),
         ],
       );
     }));
