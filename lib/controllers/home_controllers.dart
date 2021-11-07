@@ -36,6 +36,18 @@ class HomeController extends GetxController {
     }
   }
 
+  prepareAuthorList({String? authorId}) {
+    dataController.currentRadioCopy.value = dataController.radioListMasterCopy
+        .where((u) => (u.author.authorId == authorId))
+        .toList();
+    dataController.currentPodCopy.value = dataController.podcastListMasterCopy
+        .where((u) => (u.author.authorId == authorId))
+        .toList();
+    print("prepareAuthorList");
+    print(dataController.currentRadioCopy.length);
+    print(dataController.currentPodCopy.length);
+  }
+
   queUpdater() {
     audioHandler.updateQueue(dataController.mediaListRadio);
   }

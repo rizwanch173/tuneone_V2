@@ -63,6 +63,7 @@ class PodcastModel {
 
 class Author {
   Author({
+    required this.authorId,
     required this.username,
     required this.email,
     required this.displayName,
@@ -71,8 +72,10 @@ class Author {
   String username;
   String email;
   String displayName;
+  String authorId;
 
   factory Author.fromJson(Map<String, dynamic> json) => Author(
+        authorId: json["author_id"],
         username: json["username"],
         email: json["email"],
         displayName: json["display_name"],

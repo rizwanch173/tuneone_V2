@@ -7,13 +7,13 @@ import 'package:get/get.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
+import 'package:tuneone/ui/authar_page/author_radio.dart';
 import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/medialist/medialist_view.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:tuneone/ui/singlechannel/single_podcast_view.dart';
 import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
-import 'package:adobe_xd/pinned.dart';
 
 class HomePageView extends StatelessWidget {
   final DataController dataController = Get.find();
@@ -62,15 +62,20 @@ class HomePageView extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    AutoSizeText(
-                                      homeController
-                                          .greetingMessage()
-                                          .toString(),
-                                      presetFontSizes: [22, 24],
-                                      style: TextStyle(
-                                        color: darkTxt,
-                                        fontWeight: FontWeight.w700,
+                                    GestureDetector(
+                                      child: AutoSizeText(
+                                        homeController
+                                            .greetingMessage()
+                                            .toString(),
+                                        presetFontSizes: [22, 24],
+                                        style: TextStyle(
+                                          color: darkTxt,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Get.to(AuthorRadio());
+                                      },
                                     ),
                                     SizedBox(
                                       height: 5,

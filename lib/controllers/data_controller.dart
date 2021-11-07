@@ -18,6 +18,9 @@ class DataController extends GetxController {
   var mediaListRadio = <MediaItem>[].obs;
   late UserLoginModel userList;
 
+  var currentPodCopy = <PodcastModel>[].obs;
+  var currentRadioCopy = <RadioModel>[].obs;
+
   var likeList = <dynamic>[].obs;
   //var recentlyList = <int>[].obs;
   var recentlyList = <RecentlyModel>[].obs;
