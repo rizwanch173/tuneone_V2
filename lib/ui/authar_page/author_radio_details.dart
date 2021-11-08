@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +14,6 @@ import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/controllers/podcast_controller.dart';
 import 'package:tuneone/controllers/radio_controller.dart';
-import 'package:tuneone/ui/authar_page/author_radio_details.dart';
 import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,15 +22,16 @@ import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:tuneone/ui/styled_widgets/mini_player.dart';
 import 'package:tuneone/ui/styled_widgets/styled_button.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../main.dart';
 
-class AuthorRadio extends StatelessWidget {
+class AuthorRadioDetails extends StatelessWidget {
   final DataController dataController = Get.find();
   final HomeController homeController = Get.find();
   final int currentIndex;
 
-  AuthorRadio({Key? key, required this.currentIndex}) : super(key: key);
+  AuthorRadioDetails({Key? key, required this.currentIndex}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     print(homeController.indexToPlayRadio);
@@ -84,12 +85,18 @@ class AuthorRadio extends StatelessWidget {
                                         Get.back();
                                       }),
                                 ),
-                                AutoSizeText(
-                                  "Radio",
-                                  style: TextStyle(
-                                      color: darkTxt,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w800),
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: AutoSizeText(
+                                      dataController.radioList[currentIndex]
+                                          .author.displayName,
+                                      style: TextStyle(
+                                          color: darkTxt,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                  ),
                                 ),
                                 SizedBox(
                                   width: Get.height * 0.05,
@@ -119,7 +126,7 @@ class AuthorRadio extends StatelessWidget {
                                 aspectRatio: 1 / 1,
                                 child: StyledCachedNetworkImage2(
                                   url: dataController
-                                      .radioList[currentIndex].thumbnail,
+                                      .radioList[currentIndex].author.avtarUrl,
                                 ),
                               ),
                             ),
@@ -136,27 +143,6 @@ class AuthorRadio extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              dataController.radioList[currentIndex].copyright,
-                              style: TextStyle(
-                                fontFamily: 'Aeonik',
-                                fontSize: 15,
-                                color:
-                                    ThemeProvider.themeOf(context).id == "light"
-                                        ? Color(0xffa4a4a4)
-                                        : darkTxt,
-                                fontWeight: FontWeight.w300,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
                           height: 15,
                         ),
                         Align(
@@ -166,8 +152,8 @@ class AuthorRadio extends StatelessWidget {
                               alignment: Alignment.center,
                               child: MarqueeText(
                                 text: TextSpan(
-                                  text: dataController
-                                      .radioList[currentIndex].title,
+                                  text: dataController.radioList[currentIndex]
+                                      .author.displayName,
                                 ),
                                 style: TextStyle(
                                   color: ThemeProvider.themeOf(context).id ==
@@ -182,10 +168,32 @@ class AuthorRadio extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: 15,
+                          height: 5,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            dataController
+                                .radioList[currentIndex].author.description,
+                            style: TextStyle(
+                              fontFamily: 'Aeonik',
+                              fontSize: 13,
+                              color:
+                                  ThemeProvider.themeOf(context).id == "light"
+                                      ? Color(0xffa4a4a4)
+                                      : darkTxt,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            maxLines: 5,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(
+                          height: Get.height * 0.025,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               height: 40,
@@ -394,24 +402,13 @@ class AuthorRadio extends StatelessWidget {
                             SizedBox(
                               width: 20,
                             ),
-                            dataController.islogin.isFalse
-                                ? Container(
-                                    height: 40,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50.0),
-                                      border: Border.all(
-                                        width: 1,
-                                        color:
-                                            ThemeProvider.themeOf(context).id ==
-                                                    "light"
-                                                ? Colors.grey.shade400
-                                                : darkTxt,
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: GestureDetector(
-                                        onTap: () {
+                            Container(
+                              height: 40,
+                              child: dataController.islogin.isFalse
+                                  ? Container(
+                                      width: Get.width * 0.25,
+                                      child: StyledButton(
+                                        onPressed: () {
                                           homeController.showAlertDialog(
                                               context: context,
                                               title: "ATTENTION!",
@@ -420,96 +417,48 @@ class AuthorRadio extends StatelessWidget {
                                               cancelActionText: "CANCEL",
                                               defaultActionText: "LOG IN");
                                         },
-                                        child: Icon(
-                                          Icons.favorite_outline_sharp,
-                                          color: (ThemeProvider.themeOf(context)
-                                                      .id ==
-                                                  "light")
-                                              ? Colors.grey.shade400
-                                              : darkTxt,
-                                          size: 30,
-                                        ),
+                                        title: "Follow",
+                                        backgroundColor: backGroundColor,
+                                        titleColor: Colors.white,
+                                        borderRadius: BorderRadius.circular(50),
+                                        fontSize: 16,
                                       ),
+                                    )
+                                  : Obx(
+                                      () => !dataController
+                                              .radioList[currentIndex]
+                                              .author
+                                              .follow
+                                              .contains(dataController
+                                                  .userList.user.id)
+                                          ? Container(
+                                              width: Get.width * 0.25,
+                                              child: StyledButton(
+                                                onPressed: () {},
+                                                title: "Follow",
+                                                backgroundColor:
+                                                    backGroundColor,
+                                                titleColor: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                fontSize: 16,
+                                              ),
+                                            )
+                                          : Container(
+                                              width: Get.width * 0.20,
+                                              child: StyledButton(
+                                                onPressed: () {},
+                                                title: "Unfollow",
+                                                backgroundColor:
+                                                    backGroundColor,
+                                                titleColor: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                fontSize: 16,
+                                              ),
+                                            ),
                                     ),
-                                  )
-                                : Obx(
-                                    () => !dataController.likeList.contains(
-                                            dataController
-                                                .radioList[currentIndex].id)
-                                        ? Container(
-                                            height: 40,
-                                            width: 40,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(50.0),
-                                              border: Border.all(
-                                                width: 1,
-                                                color: ThemeProvider.themeOf(
-                                                                context)
-                                                            .id ==
-                                                        "light"
-                                                    ? Colors.grey.shade400
-                                                    : darkTxt,
-                                              ),
-                                            ),
-                                            child: GestureDetector(
-                                              onTap: () async {
-                                                await RemoteServices
-                                                    .likeDislike(
-                                                        like: true,
-                                                        postId: dataController
-                                                            .radioList[
-                                                                currentIndex]
-                                                            .id);
-                                              },
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.favorite_outline_sharp,
-                                                  color: (ThemeProvider.themeOf(
-                                                                  context)
-                                                              .id ==
-                                                          "light")
-                                                      ? Colors.grey.shade400
-                                                      : darkTxt,
-                                                  size: 30,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        : Container(
-                                            height: 40,
-                                            width: 40,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(50.0),
-                                              border: Border.all(
-                                                width: 1,
-                                                color: ThemeProvider.themeOf(
-                                                                context)
-                                                            .id ==
-                                                        "light"
-                                                    ? Colors.grey.shade400
-                                                    : darkTxt,
-                                              ),
-                                            ),
-                                            child: GestureDetector(
-                                              onTap: () async {
-                                                await RemoteServices
-                                                    .likeDislike(
-                                                        like: false,
-                                                        postId: dataController
-                                                            .radioList[
-                                                                currentIndex]
-                                                            .id);
-                                              },
-                                              child: Icon(
-                                                Icons.favorite_outlined,
-                                                color: Colors.white,
-                                                size: 30,
-                                              ),
-                                            ),
-                                          ),
-                                  ),
+                            ),
                             SizedBox(
                               width: 20,
                             ),
@@ -536,135 +485,53 @@ class AuthorRadio extends StatelessWidget {
                                 ),
                                 onTap: () async {
                                   Share.share(
-                                      ' ${dataController.radioList[currentIndex].link}');
+                                      ' ${dataController.radioList[currentIndex].author.link}');
                                 },
                               ),
                             ),
                           ],
                         ),
                         SizedBox(
-                          height: 15,
+                          height: Get.height * 0.02,
                         ),
-                        Container(
-                          height: Get.height * 0.080,
-                          decoration: BoxDecoration(
-                            color: ThemeProvider.themeOf(context).id == "light"
-                                ? Colors.white
-                                : darkBg,
-                            borderRadius: BorderRadius.circular(10.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0x14000000),
-                                offset: Offset(0, 5),
-                                blurRadius: 20,
+                        Row(
+                          children: [
+                            Text(
+                              'Total played:  ',
+                              style: TextStyle(
+                                fontFamily: 'Aeonik',
+                                fontSize: 15,
+                                color:
+                                    ThemeProvider.themeOf(context).id == "light"
+                                        ? Color(0xffa4a4a4)
+                                        : darkTxt,
+                                fontWeight: FontWeight.w300,
                               ),
-                            ],
-                          ),
-                          child: Center(
-                            child: ListTile(
-                              onTap: () {
-                                Get.to(AuthorRadioDetails(
-                                  currentIndex: currentIndex,
-                                ));
-                              },
-                              leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: AspectRatio(
-                                  aspectRatio: 1 / 1,
-                                  child: StyledCachedNetworkImage2(
-                                    url: dataController.radioList[currentIndex]
-                                        .author.avtarUrl,
-                                  ),
-                                ),
-                              ),
-                              title: AutoSizeText(
-                                dataController
-                                    .radioList[currentIndex].author.displayName,
-                                style: TextStyle(
-                                    color: ThemeProvider.themeOf(context).id ==
-                                            "light"
-                                        ? darkBg
-                                        : darkTxt),
-                                presetFontSizes: [18, 16],
-                              ),
-                              subtitle: AutoSizeText(
-                                dataController.radioList[currentIndex].author
-                                        .follow.length
-                                        .toString() +
-                                    " Followers",
-                                style: TextStyle(
-                                  fontFamily: 'Aeonik',
-                                  fontSize: 13,
-                                  color: ThemeProvider.themeOf(context).id ==
-                                          "light"
-                                      ? Color(0xffa4a4a4)
-                                      : darkTxt,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                                presetFontSizes: [12, 14],
-                              ),
-                              trailing: dataController.islogin.isFalse
-                                  ? Container(
-                                      width: Get.width * 0.25,
-                                      child: StyledButton(
-                                        onPressed: () {
-                                          homeController.showAlertDialog(
-                                              context: context,
-                                              title: "ATTENTION!",
-                                              content:
-                                                  "Please Sign In To Continue This Action",
-                                              cancelActionText: "CANCEL",
-                                              defaultActionText: "LOG IN");
-                                        },
-                                        title: "Follow",
-                                        backgroundColor: backGroundColor,
-                                        titleColor: Colors.white,
-                                        borderRadius: BorderRadius.circular(5),
-                                        fontSize: 16,
-                                      ),
-                                    )
-                                  : Obx(
-                                      () => !dataController
-                                              .radioList[currentIndex]
-                                              .author
-                                              .follow
-                                              .contains(dataController
-                                                  .userList.user.id)
-                                          ? Container(
-                                              width: Get.width * 0.25,
-                                              child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Follow",
-                                                backgroundColor:
-                                                    backGroundColor,
-                                                titleColor: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                fontSize: 16,
-                                              ),
-                                            )
-                                          : Container(
-                                              width: Get.width * 0.25,
-                                              child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Unfollow",
-                                                backgroundColor:
-                                                    backGroundColor,
-                                                titleColor: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                    ),
+                              textAlign: TextAlign.left,
                             ),
-                          ),
+                            Text(
+                              dataController
+                                  .radioList[currentIndex].author.totalPlayed,
+                              style: TextStyle(
+                                fontFamily: 'Aeonik',
+                                fontSize: 15,
+                                color:
+                                    ThemeProvider.themeOf(context).id == "light"
+                                        ? Color(0xffa4a4a4)
+                                        : darkTxt,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                         ),
                         SizedBox(
-                          height: Get.height * 0.01,
+                          height: Get.height * 0.02,
                         ),
                         Container(
-                          height: Get.height * 0.11,
+                          height: Get.height * 0.16,
                           width: Get.width,
                           decoration: BoxDecoration(
                             color: ThemeProvider.themeOf(context).id == "light"
@@ -770,7 +637,131 @@ class AuthorRadio extends StatelessWidget {
                                       textAlign: TextAlign.left,
                                     ),
                                   ],
-                                )
+                                ),
+                                SizedBox(
+                                  height: Get.height * 0.018,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Social:',
+                                      style: TextStyle(
+                                        fontFamily: 'Aeonik',
+                                        fontSize: 15,
+                                        color:
+                                            ThemeProvider.themeOf(context).id ==
+                                                    "light"
+                                                ? Color(0xffa4a4a4)
+                                                : darkTxt,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    Spacer(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          child: IconButton(
+                                            padding: EdgeInsets.zero,
+                                            icon: SvgPicture.asset(
+                                              "assets/Icon awesome-facebook.svg",
+                                              color:
+                                                  ThemeProvider.themeOf(context)
+                                                              .id ==
+                                                          "light"
+                                                      ? Colors.grey
+                                                      : darkTxt,
+                                            ),
+                                            onPressed: () async {
+                                              await canLaunch(
+                                                dataController
+                                                    .radioList[currentIndex]
+                                                    .author
+                                                    .facebook[0],
+                                              )
+                                                  ? await launch(dataController
+                                                      .radioList[currentIndex]
+                                                      .author
+                                                      .facebook[0])
+                                                  : throw 'Could not launch ${dataController.radioList[currentIndex].author.facebook[0]}';
+                                            },
+                                          ),
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Container(
+                                          child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              icon: SvgPicture.asset(
+                                                "assets/Icon awesome-instagram.svg",
+                                                color: ThemeProvider.themeOf(
+                                                                context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Colors.grey
+                                                    : darkTxt,
+                                              ),
+                                              onPressed: () async {
+                                                await canLaunch(
+                                                  dataController
+                                                      .radioList[currentIndex]
+                                                      .author
+                                                      .instagram,
+                                                )
+                                                    ? await launch(
+                                                        dataController
+                                                            .radioList[
+                                                                currentIndex]
+                                                            .author
+                                                            .instagram,
+                                                        universalLinksOnly:
+                                                            true,
+                                                      )
+                                                    : throw 'Could not launch ${dataController.radioList[currentIndex].author.instagram}';
+                                              }),
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Container(
+                                          child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              icon: SvgPicture.asset(
+                                                "assets/Icon ionic-logo-whatsapp.svg",
+                                                color: ThemeProvider.themeOf(
+                                                                context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Colors.grey
+                                                    : darkTxt,
+                                              ),
+                                              onPressed: () async {
+                                                if (Platform.isIOS) {
+                                                  await launch(
+                                                    "whatsapp://wa.me/${dataController.radioList[currentIndex].author.whatsapp}/?text=${Uri.encodeFull("Hi" + "${dataController.radioList[currentIndex].author.displayName}")}",
+                                                    universalLinksOnly: true,
+                                                  );
+                                                } else {
+                                                  await launch(
+                                                    "whatsapp://send?phone=${dataController.radioList[currentIndex].author.whatsapp}&text=${Uri.encodeFull("Hi" + "${dataController.radioList[currentIndex].author.whatsapp}")}",
+                                                    universalLinksOnly: true,
+                                                  );
+                                                }
+                                              }),
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),

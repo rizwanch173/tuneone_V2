@@ -33,6 +33,11 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>https</string>
+      <string>http</string>
+    </array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>this is radio and podcast app so for recording new podcast its require to access the microphone</string>
 	<key>UIBackgroundModes</key>
