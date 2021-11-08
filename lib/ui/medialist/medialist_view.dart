@@ -56,11 +56,11 @@ class MediaListView extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            GestureDetector(
-                              onTap: () {
+                            IconButton(
+                              onPressed: () {
                                 Get.back();
                               },
-                              child: Icon(
+                              icon: Icon(
                                 Icons.arrow_back_ios,
                                 color: Colors.white,
                               ),

@@ -36,7 +36,7 @@ class MiniPlayer extends StatelessWidget {
                 var radioIndex = dataController.radioListMasterCopy
                     .indexWhere((w) => w.stream == mediaItem!.id);
 
-                homeController.indexToPlayRadio = radioIndex;
+                homeController.indexToPlayRadio.value = radioIndex;
 
                 print(radioIndex);
                 Get.to(SingleRadioView());

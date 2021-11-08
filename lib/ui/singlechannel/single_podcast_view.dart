@@ -489,7 +489,13 @@ class SinglePodcastView extends StatelessWidget {
                                     dataController.islogin.isFalse
                                         ? GestureDetector(
                                             onTap: () {
-                                              Get.toNamed("/authoption");
+                                              homeController.showAlertDialog(
+                                                  context: context,
+                                                  title: "ATTENTION!",
+                                                  content:
+                                                      "Please Sign In To Continue This Action",
+                                                  cancelActionText: "CANCEL",
+                                                  defaultActionText: "LOG IN");
                                             },
                                             child: Icon(
                                               Icons.favorite_outline_sharp,

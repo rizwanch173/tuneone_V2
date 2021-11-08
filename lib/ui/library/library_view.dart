@@ -176,7 +176,7 @@ class LibraryView extends StatelessWidget {
                                             .radioListMasterCopy[indexR].id)) {
                                       return GestureDetector(
                                         onTap: () {
-                                          homeController.indexToPlayRadio =
+                                          homeController.indexToPlayRadio.value =
                                               indexR;
                                           Get.to(SingleRadioView());
                                         },

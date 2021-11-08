@@ -62,20 +62,15 @@ class HomePageView extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    GestureDetector(
-                                      child: AutoSizeText(
-                                        homeController
-                                            .greetingMessage()
-                                            .toString(),
-                                        presetFontSizes: [22, 24],
-                                        style: TextStyle(
-                                          color: darkTxt,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                    AutoSizeText(
+                                      homeController
+                                          .greetingMessage()
+                                          .toString(),
+                                      presetFontSizes: [22, 24],
+                                      style: TextStyle(
+                                        color: darkTxt,
+                                        fontWeight: FontWeight.w700,
                                       ),
-                                      onTap: () {
-                                        Get.to(AuthorRadio());
-                                      },
                                     ),
                                     SizedBox(
                                       height: 5,
@@ -245,7 +240,7 @@ class HomePageView extends StatelessWidget {
                                             w.id ==
                                             dataController.radioList[index].id);
 
-                                    homeController.indexToPlayRadio =
+                                    homeController.indexToPlayRadio.value =
                                         radioIndex;
 
                                     print(radioIndex);
@@ -530,7 +525,7 @@ class HomePageView extends StatelessWidget {
                                               dataController
                                                   .recentlyList[index].id);
 
-                                      homeController.indexToPlayRadio =
+                                      homeController.indexToPlayRadio.value =
                                           radioIndex;
                                       Get.to(SingleRadioView());
                                       print(radioIndex);

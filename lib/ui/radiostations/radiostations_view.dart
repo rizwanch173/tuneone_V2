@@ -311,7 +311,7 @@ class RadioStationsView extends StatelessWidget {
                                                     dataController
                                                         .radioList[index].id);
 
-                                            homeController.indexToPlayRadio =
+                                            homeController.indexToPlayRadio.value =
                                                 radioIndex;
                                             print(radioIndex);
                                             dataController.radioList.value =
