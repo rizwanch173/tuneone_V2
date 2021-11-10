@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:get/get.dart';
+import 'package:tuneone/models/genre_model.dart';
 import 'package:tuneone/models/podcast_model.dart';
 import 'package:tuneone/models/radio_model.dart';
 import 'package:tuneone/models/recently_model.dart';
@@ -17,7 +18,7 @@ class DataController extends GetxController {
   var mediaListPodcast = <MediaItem>[].obs;
   var mediaListRadio = <MediaItem>[].obs;
   late UserLoginModel userList;
-
+  var genrelist = <GenreModel>[].obs;
   var currentPodCopy = <PodcastModel>[].obs;
   var currentRadioCopy = <RadioModel>[].obs;
 

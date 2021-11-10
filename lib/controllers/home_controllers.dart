@@ -14,7 +14,7 @@ class HomeController extends GetxController {
   var productList = <Product>[].obs;
   var whoAccess = "none".obs;
   var indexToPlayRadio = 0.obs;
-  var indexToPlayPod = -2.obs;
+  var indexToPlayPod = 0.obs;
   var podAppbar = "Podcasts".obs;
   var colorX = Colors.white.obs;
 

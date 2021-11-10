@@ -237,7 +237,7 @@ class PodCastsView extends StatelessWidget {
                                             w.id ==
                                             dataController
                                                 .podcastList[index].id);
-                                    homeController.indexToPlayPod = podIndex;
+                                    homeController.indexToPlayPod .value= podIndex;
 
                                     dataController.podcastList.value =
                                         dataController.podcastListMasterCopy;

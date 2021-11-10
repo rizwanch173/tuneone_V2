@@ -1,9 +1,7 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rxdart/rxdart.dart' as Rxt;
 import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
@@ -12,7 +10,6 @@ import 'package:tuneone/ui/singlechannel/single_podcast_view.dart';
 import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:marquee_text/marquee_text.dart';
-
 import '../../main.dart';
 
 class MiniPlayer extends StatelessWidget {
@@ -44,7 +41,7 @@ class MiniPlayer extends StatelessWidget {
                 var podIndex = dataController.podcastListMasterCopy
                     .indexWhere((w) => w.stream == mediaItem!.id);
 
-                homeController.indexToPlayPod = podIndex;
+                homeController.indexToPlayPod .value= podIndex;
 
                 print(podIndex);
                 Get.to(SinglePodcastView());

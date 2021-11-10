@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -8,27 +9,31 @@ import 'package:get/get.dart';
 import 'package:marquee_text/marquee_text.dart';
 import 'package:share/share.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
+import 'package:tuneone/controllers/podcast_controller.dart';
+import 'package:tuneone/controllers/radio_controller.dart';
 import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/shared/styles.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tuneone/ui/singlechannel/single_podcast_view.dart';
 import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:tuneone/ui/styled_widgets/mini_player.dart';
 import 'package:tuneone/ui/styled_widgets/styled_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../main.dart';
 
-class AuthorRadioDetails extends StatelessWidget {
+class AuthorPodDetails extends StatelessWidget {
   final DataController dataController = Get.find();
   final HomeController homeController = Get.find();
   final int currentIndex;
 
-  AuthorRadioDetails({Key? key, required this.currentIndex}) : super(key: key);
+  AuthorPodDetails({Key? key, required this.currentIndex}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    print(homeController.indexToPlayRadio);
     return Scaffold(
       body: Stack(
         children: [
@@ -83,7 +88,7 @@ class AuthorRadioDetails extends StatelessWidget {
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: AutoSizeText(
-                                      dataController.radioList[currentIndex]
+                                      dataController.podcastList[currentIndex]
                                           .author.displayName,
                                       style: TextStyle(
                                           color: darkTxt,
@@ -119,8 +124,8 @@ class AuthorRadioDetails extends StatelessWidget {
                               child: AspectRatio(
                                 aspectRatio: 1 / 1,
                                 child: StyledCachedNetworkImage2(
-                                  url: dataController
-                                      .radioList[currentIndex].author.avtarUrl,
+                                  url: dataController.podcastList[currentIndex]
+                                      .author.avtarUrl,
                                 ),
                               ),
                             ),
@@ -146,7 +151,7 @@ class AuthorRadioDetails extends StatelessWidget {
                               alignment: Alignment.center,
                               child: MarqueeText(
                                 text: TextSpan(
-                                  text: dataController.radioList[currentIndex]
+                                  text: dataController.podcastList[currentIndex]
                                       .author.displayName,
                                 ),
                                 style: TextStyle(
@@ -168,7 +173,7 @@ class AuthorRadioDetails extends StatelessWidget {
                           padding: EdgeInsets.symmetric(horizontal: 15),
                           child: Text(
                             dataController
-                                .radioList[currentIndex].author.description,
+                                .podcastList[currentIndex].author.description,
                             style: TextStyle(
                               fontFamily: 'Aeonik',
                               fontSize: 13,
@@ -187,7 +192,6 @@ class AuthorRadioDetails extends StatelessWidget {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               height: 40,
@@ -233,7 +237,7 @@ class AuthorRadioDetails extends StatelessWidget {
                                   } else if (playing == true) {
                                     if (audioHandler.mediaItem.value!.id ==
                                         dataController
-                                            .radioList[currentIndex].stream) {
+                                            .podcastList[currentIndex].stream) {
                                       print("matched");
                                       return Container(
                                           height: 40,
@@ -300,32 +304,39 @@ class AuthorRadioDetails extends StatelessWidget {
                                               onPressed: () async {
                                                 if (homeController
                                                             .whoAccess.value ==
-                                                        "pod" ||
+                                                        "radio" ||
                                                     homeController
                                                             .whoAccess.value ==
                                                         "none") {
-                                                  await audioHandler
-                                                      .updateQueue(
-                                                          dataController
-                                                              .mediaListRadio);
+                                                  await audioHandler.updateQueue(
+                                                      dataController
+                                                          .mediaListPodcast);
                                                   await audioHandler
                                                       .skipToQueueItem(
                                                           currentIndex);
                                                   audioHandler.play();
-                                                  homeController.whoAccess
-                                                      .value = "radio";
+                                                  homeController
+                                                      .whoAccess.value = "pod";
                                                 } else {
-                                                  await audioHandler
-                                                      .skipToQueueItem(
-                                                          currentIndex);
+                                                  if (audioHandler.mediaItem
+                                                          .value!.id !=
+                                                      dataController
+                                                          .mediaListPodcast[
+                                                              currentIndex]
+                                                          .id) {
+                                                    await audioHandler
+                                                        .skipToQueueItem(
+                                                            currentIndex);
+                                                  }
+
                                                   audioHandler.play();
-                                                  homeController.whoAccess
-                                                      .value = "radio";
+                                                  homeController
+                                                      .whoAccess.value = "pod";
                                                 }
                                                 dataController.addRecently(
-                                                    dataController.radioList[
+                                                    dataController.podcastList[
                                                         currentIndex],
-                                                    false);
+                                                    true);
                                               },
                                             ),
                                           ));
@@ -360,31 +371,39 @@ class AuthorRadioDetails extends StatelessWidget {
                                           onPressed: () async {
                                             if (homeController
                                                         .whoAccess.value ==
-                                                    "pod" ||
+                                                    "radio" ||
                                                 homeController
                                                         .whoAccess.value ==
                                                     "none") {
                                               await audioHandler.updateQueue(
                                                   dataController
-                                                      .mediaListRadio);
+                                                      .mediaListPodcast);
                                               await audioHandler
                                                   .skipToQueueItem(
                                                       currentIndex);
                                               audioHandler.play();
                                               homeController.whoAccess.value =
-                                                  "radio";
+                                                  "pod";
                                             } else {
-                                              await audioHandler
-                                                  .skipToQueueItem(
-                                                      currentIndex);
+                                              if (audioHandler
+                                                      .mediaItem.value!.id !=
+                                                  dataController
+                                                      .mediaListPodcast[
+                                                          currentIndex]
+                                                      .id) {
+                                                await audioHandler
+                                                    .skipToQueueItem(
+                                                        currentIndex);
+                                              }
+
                                               audioHandler.play();
                                               homeController.whoAccess.value =
-                                                  "radio";
+                                                  "pod";
                                             }
                                             dataController.addRecently(
                                                 dataController
-                                                    .radioList[currentIndex],
-                                                false);
+                                                    .podcastList[currentIndex],
+                                                true);
                                           },
                                         ),
                                       ),
@@ -396,13 +415,24 @@ class AuthorRadioDetails extends StatelessWidget {
                             SizedBox(
                               width: 20,
                             ),
-                            Container(
-                              height: 40,
-                              child: dataController.islogin.isFalse
-                                  ? Container(
-                                      width: Get.width * 0.25,
-                                      child: StyledButton(
-                                        onPressed: () {
+                            dataController.islogin.isFalse
+                                ? Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      border: Border.all(
+                                        width: 1,
+                                        color:
+                                            ThemeProvider.themeOf(context).id ==
+                                                    "light"
+                                                ? Colors.grey.shade400
+                                                : darkTxt,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: GestureDetector(
+                                        onTap: () {
                                           homeController.showAlertDialog(
                                               context: context,
                                               title: "ATTENTION!",
@@ -411,48 +441,96 @@ class AuthorRadioDetails extends StatelessWidget {
                                               cancelActionText: "CANCEL",
                                               defaultActionText: "LOG IN");
                                         },
-                                        title: "Follow",
-                                        backgroundColor: backGroundColor,
-                                        titleColor: Colors.white,
-                                        borderRadius: BorderRadius.circular(50),
-                                        fontSize: 16,
+                                        child: Icon(
+                                          Icons.favorite_outline_sharp,
+                                          color: (ThemeProvider.themeOf(context)
+                                                      .id ==
+                                                  "light")
+                                              ? Colors.grey.shade400
+                                              : darkTxt,
+                                          size: 30,
+                                        ),
                                       ),
-                                    )
-                                  : Obx(
-                                      () => !dataController
-                                              .radioList[currentIndex]
-                                              .author
-                                              .follow
-                                              .contains(dataController
-                                                  .userList.user.id)
-                                          ? Container(
-                                              width: Get.width * 0.25,
-                                              child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Follow",
-                                                backgroundColor:
-                                                    backGroundColor,
-                                                titleColor: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(25),
-                                                fontSize: 16,
-                                              ),
-                                            )
-                                          : Container(
-                                              width: Get.width * 0.20,
-                                              child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Unfollow",
-                                                backgroundColor:
-                                                    backGroundColor,
-                                                titleColor: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                fontSize: 16,
+                                    ),
+                                  )
+                                : Obx(
+                                    () => !dataController.likeList.contains(
+                                            dataController
+                                                .podcastList[currentIndex].id)
+                                        ? Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                              border: Border.all(
+                                                width: 1,
+                                                color: ThemeProvider.themeOf(
+                                                                context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Colors.grey.shade400
+                                                    : darkTxt,
                                               ),
                                             ),
-                                    ),
-                            ),
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                await RemoteServices
+                                                    .likeDislike(
+                                                        like: true,
+                                                        postId: dataController
+                                                            .podcastList[
+                                                                currentIndex]
+                                                            .id);
+                                              },
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.favorite_outline_sharp,
+                                                  color: (ThemeProvider.themeOf(
+                                                                  context)
+                                                              .id ==
+                                                          "light")
+                                                      ? Colors.grey.shade400
+                                                      : darkTxt,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                              border: Border.all(
+                                                width: 1,
+                                                color: ThemeProvider.themeOf(
+                                                                context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Colors.grey.shade400
+                                                    : darkTxt,
+                                              ),
+                                            ),
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                await RemoteServices
+                                                    .likeDislike(
+                                                        like: false,
+                                                        postId: dataController
+                                                            .podcastList[
+                                                                currentIndex]
+                                                            .id);
+                                              },
+                                              child: Icon(
+                                                Icons.favorite_outlined,
+                                                color: Colors.white,
+                                                size: 30,
+                                              ),
+                                            ),
+                                          ),
+                                  ),
                             SizedBox(
                               width: 20,
                             ),
@@ -479,7 +557,7 @@ class AuthorRadioDetails extends StatelessWidget {
                                 ),
                                 onTap: () async {
                                   Share.share(
-                                      ' ${dataController.radioList[currentIndex].author.link}');
+                                      ' ${dataController.podcastList[currentIndex].link}');
                                 },
                               ),
                             ),
@@ -505,7 +583,7 @@ class AuthorRadioDetails extends StatelessWidget {
                             ),
                             Text(
                               dataController
-                                  .radioList[currentIndex].author.totalPlayed,
+                                  .podcastList[currentIndex].author.totalPlayed,
                               style: TextStyle(
                                 fontFamily: 'Aeonik',
                                 fontSize: 15,
@@ -579,7 +657,7 @@ class AuthorRadioDetails extends StatelessWidget {
                                     ),
                                     Spacer(),
                                     Text(
-                                      dataController.radioList[currentIndex]
+                                      dataController.podcastList[currentIndex]
                                           .author.whatsapp,
                                       style: TextStyle(
                                         fontFamily: 'Aeonik',
@@ -616,8 +694,8 @@ class AuthorRadioDetails extends StatelessWidget {
                                     ),
                                     Spacer(),
                                     Text(
-                                      dataController
-                                          .radioList[currentIndex].author.email,
+                                      dataController.podcastList[currentIndex]
+                                          .author.email,
                                       style: TextStyle(
                                         fontFamily: 'Aeonik',
                                         fontSize: 15,
@@ -671,15 +749,15 @@ class AuthorRadioDetails extends StatelessWidget {
                                             onPressed: () async {
                                               await canLaunch(
                                                 dataController
-                                                    .radioList[currentIndex]
+                                                    .podcastList[currentIndex]
                                                     .author
                                                     .facebook[0],
                                               )
                                                   ? await launch(dataController
-                                                      .radioList[currentIndex]
+                                                      .podcastList[currentIndex]
                                                       .author
                                                       .facebook[0])
-                                                  : throw 'Could not launch ${dataController.radioList[currentIndex].author.facebook[0]}';
+                                                  : throw 'Could not launch ${dataController.podcastList[currentIndex].author.facebook[0]}';
                                             },
                                           ),
                                           height: 30,
@@ -703,20 +781,20 @@ class AuthorRadioDetails extends StatelessWidget {
                                               onPressed: () async {
                                                 await canLaunch(
                                                   dataController
-                                                      .radioList[currentIndex]
+                                                      .podcastList[currentIndex]
                                                       .author
                                                       .instagram,
                                                 )
                                                     ? await launch(
                                                         dataController
-                                                            .radioList[
+                                                            .podcastList[
                                                                 currentIndex]
                                                             .author
                                                             .instagram,
                                                         universalLinksOnly:
                                                             true,
                                                       )
-                                                    : throw 'Could not launch ${dataController.radioList[currentIndex].author.instagram}';
+                                                    : throw 'Could not launch ${dataController.podcastList[currentIndex].author.instagram}';
                                               }),
                                           height: 30,
                                           width: 30,
@@ -739,12 +817,12 @@ class AuthorRadioDetails extends StatelessWidget {
                                               onPressed: () async {
                                                 if (Platform.isIOS) {
                                                   await launch(
-                                                    "whatsapp://wa.me/${dataController.radioList[currentIndex].author.whatsapp}/?text=${Uri.encodeFull("Hi" + "${dataController.radioList[currentIndex].author.displayName}")}",
+                                                    "whatsapp://wa.me/${dataController.podcastList[currentIndex].author.whatsapp}/?text=${Uri.encodeFull("Hi" + "${dataController.podcastList[currentIndex].author.displayName}")}",
                                                     universalLinksOnly: true,
                                                   );
                                                 } else {
                                                   await launch(
-                                                    "whatsapp://send?phone=${dataController.radioList[currentIndex].author.whatsapp}&text=${Uri.encodeFull("Hi" + "${dataController.radioList[currentIndex].author.whatsapp}")}",
+                                                    "whatsapp://send?phone=${dataController.podcastList[currentIndex].author.whatsapp}&text=${Uri.encodeFull("Hi" + "${dataController.podcastList[currentIndex].author.whatsapp}")}",
                                                     universalLinksOnly: true,
                                                   );
                                                 }
@@ -790,8 +868,10 @@ class AuthorRadioDetails extends StatelessWidget {
                                   children: [
                                     AutoSizeText(
                                       "More from: " +
-                                          dataController.radioList[currentIndex]
-                                              .author.displayName,
+                                          dataController
+                                              .podcastList[currentIndex]
+                                              .author
+                                              .displayName,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "Aeonik-medium",

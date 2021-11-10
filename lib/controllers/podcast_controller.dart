@@ -7,6 +7,7 @@ class PodcastController extends GetxController {
   var indexX = -2.obs;
   var appBar = "podcast".obs;
   final DataController dataController = Get.find();
+  var height = (Get.height * 0.06).obs;
 
   @override
   void onInit() {

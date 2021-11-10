@@ -8,6 +8,7 @@ import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/login_controller.dart';
 import 'package:tuneone/controllers/signup_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tuneone/models/genre_model.dart';
 import 'package:tuneone/models/podcast_model.dart';
 import 'package:tuneone/models/radio_model.dart';
 import 'package:tuneone/models/userLoginModel.dart';
@@ -232,6 +233,19 @@ class RemoteServices {
       }
       print(response.body);
 
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool?> getGenre() async {
+    var response = await client.get(Uri.parse(
+        'https://tuneoneradio.com/wp-json/wp/v2/genre?&per_page=100'));
+
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      dataController.genrelist.value = genreModelFromJson(jsonString);
       return true;
     } else {
       return false;

@@ -367,7 +367,7 @@ class LibraryView extends StatelessWidget {
                                             .podcastListMasterCopy[index].id)) {
                                       return GestureDetector(
                                         onTap: () {
-                                          homeController.indexToPlayPod = index;
+                                          homeController.indexToPlayPod.value = index;
                                           Get.to(SinglePodcastView());
                                         },
                                         child: Container(

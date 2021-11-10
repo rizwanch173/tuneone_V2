@@ -877,7 +877,7 @@ class AuthorRadio extends StatelessWidget {
                                                     dataController
                                                         .morefromList[index]
                                                         .id);
-                                            homeController.indexToPlayPod =
+                                            homeController.indexToPlayPod.value =
                                                 podIndex;
                                             print("podIndex");
                                             print(podIndex);

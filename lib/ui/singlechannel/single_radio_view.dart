@@ -318,6 +318,8 @@ class SingleRadioView extends StatelessWidget {
                                                     color: Colors.white,
                                                   ),
                                                   child: IconButton(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
                                                       icon: const Icon(
                                                           Icons.pause),
                                                       onPressed: () {
@@ -333,6 +335,8 @@ class SingleRadioView extends StatelessWidget {
                                                     color: Colors.white,
                                                   ),
                                                   child: IconButton(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                     icon: const Icon(
                                                         Icons.play_arrow),
                                                     onPressed: () async {
@@ -391,6 +395,8 @@ class SingleRadioView extends StatelessWidget {
                                                   color: Colors.white,
                                                 ),
                                                 child: IconButton(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
                                                   icon: const Icon(
                                                       Icons.play_arrow),
                                                   onPressed: () async {

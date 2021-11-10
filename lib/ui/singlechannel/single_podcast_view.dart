@@ -7,12 +7,14 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:marquee_text/marquee_text.dart';
+import 'package:share/share.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/controllers/podcast_controller.dart';
 import 'package:tuneone/controllers/radio_controller.dart';
+import 'package:tuneone/ui/authar_page/author_pod.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:rxdart/rxdart.dart' as rxt;
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
@@ -56,20 +58,99 @@ class SinglePodcastView extends StatelessWidget {
         child: Obx(() {
           return Column(
             children: [
-              Container(
-                height: 0,
-                width: 0,
-                child: Text(
-                  radioController.platformVersion.value,
+              SizedBox(height: podcastController.height.value),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    color: Colors.white,
+                    onPressed: () async {
+                      Get.back();
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: Get.height * 0.03),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      child: Icon(
+                        LineIcons.stepBackward,
+                        color: Colors.white,
+                      ),
+                      onTap: () async {
+                        if (homeController.indexToPlayPod.value == 0) {
+                          homeController.indexToPlayPod.value =
+                              dataController.podcastList.length - 1;
+                          await audioHandler.skipToQueueItem(
+                              homeController.indexToPlayPod.value);
+                        } else {
+                          homeController.indexToPlayPod -= 1;
+                          await audioHandler.skipToQueueItem(
+                              homeController.indexToPlayPod.value);
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Obx(
+                      () => Align(
+                        child: Container(
+                          width: Get.width * 0.60,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: MarqueeText(
+                              text: TextSpan(
+                                text: dataController
+                                    .podcastList[
+                                        homeController.indexToPlayPod.value]
+                                    .title,
+                              ),
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                              speed: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    GestureDetector(
+                      child: Icon(
+                        LineIcons.stepForward,
+                        color: Colors.white,
+                      ),
+                      onTap: () async {
+                        if (homeController.indexToPlayPod.value ==
+                            dataController.podcastList.length - 1) {
+                          homeController.indexToPlayPod =
+                              homeController.indexToPlayPod = RxInt(0);
+                          await audioHandler.skipToQueueItem(
+                              homeController.indexToPlayPod.value);
+                        } else {
+                          homeController.indexToPlayPod += 1;
+                          await audioHandler.skipToQueueItem(
+                              homeController.indexToPlayPod.value);
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
               Expanded(
                 child: StreamBuilder<MediaItem?>(
                     stream: audioHandler.mediaItem,
                     builder: (context, snapshot) {
-                      final running = snapshot.data ?? false;
-                      //  audioHandler.updateQueue(dataController.mediaListRadio);
-                      // final mediaItem = snapshot.data;
+                      // final running = snapshot.data ?? false;
                       return Container(
                           child: Padding(
                               padding: EdgeInsets.symmetric(
@@ -78,96 +159,7 @@ class SinglePodcastView extends StatelessWidget {
                                 SizedBox(
                                   height: kToolbarHeight,
                                 ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: IconButton(
-                                    icon: Icon(Icons.arrow_back_ios),
-                                    color: Colors.white,
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.02,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      child: Icon(
-                                        LineIcons.stepBackward,
-                                        color: Colors.white,
-                                      ),
-                                      onTap: () async {
-                                        if (homeController.indexToPlayPod ==
-                                            0) {
-                                          homeController.indexToPlayPod =
-                                              dataController
-                                                      .podcastList.length -
-                                                  1;
-                                          await audioHandler.skipToQueueItem(
-                                              homeController.indexToPlayPod);
-                                        } else {
-                                          homeController.indexToPlayPod -= 1;
-                                          await audioHandler.skipToQueueItem(
-                                              homeController.indexToPlayPod);
-                                        }
-                                      },
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Obx(
-                                      () => Align(
-                                        child: Container(
-                                          width: Get.width * 0.60,
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: MarqueeText(
-                                              text: TextSpan(
-                                                text: dataController
-                                                    .podcastList[homeController
-                                                        .indexToPlayPod]
-                                                    .title,
-                                              ),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                              speed: 18,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    GestureDetector(
-                                      child: Icon(
-                                        LineIcons.stepForward,
-                                        color: Colors.white,
-                                      ),
-                                      onTap: () async {
-                                        if (homeController.indexToPlayPod ==
-                                            dataController.podcastList.length -
-                                                1) {
-                                          homeController.indexToPlayPod =
-                                              homeController.indexToPlayPod = 0;
-                                          await audioHandler.skipToQueueItem(
-                                              homeController.indexToPlayPod);
-                                        } else {
-                                          homeController.indexToPlayPod += 1;
-                                          await audioHandler.skipToQueueItem(
-                                              homeController.indexToPlayPod);
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.12,
-                                ),
+                                SizedBox(height: Get.height * 0.05),
                                 Obx(
                                   () => Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -194,7 +186,7 @@ class SinglePodcastView extends StatelessWidget {
                                             child: StyledCachedNetworkImage2(
                                               url: dataController
                                                   .podcastList[homeController
-                                                      .indexToPlayPod]
+                                                      .indexToPlayPod.value]
                                                   .thumbnail,
                                             ),
                                           ),
@@ -203,20 +195,34 @@ class SinglePodcastView extends StatelessWidget {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      AutoSizeText(
-                                        dataController
-                                            .podcastList[
-                                                homeController.indexToPlayPod]
-                                            .author
-                                            .displayName,
-                                        style: TextStyle(color: Colors.white),
-                                        presetFontSizes: [18, 16],
+                                      TextButton(
+                                        onPressed: () {
+                                          homeController.prepareAuthorList(
+                                              authorId: dataController
+                                                  .podcastList[homeController
+                                                      .indexToPlayPod.value]
+                                                  .author
+                                                  .authorId);
+                                          Get.to(AuthorPodcast(
+                                            currentIndex: homeController
+                                                .indexToPlayPod.value,
+                                          ));
+                                        },
+                                        child: AutoSizeText(
+                                          dataController
+                                              .podcastList[homeController
+                                                  .indexToPlayPod.value]
+                                              .author
+                                              .displayName,
+                                          style: TextStyle(color: Colors.white),
+                                          presetFontSizes: [18, 16],
+                                        ),
                                       )
                                     ],
                                   ),
                                 ),
                                 SizedBox(
-                                  height: Get.height * 0.05,
+                                  height: Get.height * 0.02,
                                 ),
                                 StreamBuilder<PositionData>(
                                   stream: _positionDataStream,
@@ -242,37 +248,34 @@ class SinglePodcastView extends StatelessWidget {
                                   children: [
                                     GestureDetector(
                                       child: Icon(
-                                        Icons.replay,
+                                        Icons.ios_share,
                                         color: Colors.white,
-                                        size: 40,
+                                        size: 35,
                                       ),
                                       onTap: () async {
-                                        // AudioPlayer _player =
-                                        // new AudioPlayer();
-                                        //
-                                        // if (running) {
-                                        //   AudioService.seekTo(Duration());
-                                        //   await _player.seek(Duration(
-                                        //       seconds: _player.position
-                                        //           .inMinutes +
-                                        //           0));
-                                        // }
+                                        Share.share(dataController
+                                            .radioList[homeController
+                                                .indexToPlayPod.value]
+                                            .link);
                                       },
                                     ),
                                     GestureDetector(
                                       onTap: () async {
-                                        if (homeController.indexToPlayPod ==
+                                        if (homeController
+                                                .indexToPlayPod.value ==
                                             0) {
-                                          homeController.indexToPlayPod =
+                                          homeController.indexToPlayPod.value =
                                               dataController
                                                       .podcastList.length -
                                                   1;
                                           await audioHandler.skipToQueueItem(
-                                              homeController.indexToPlayPod);
+                                              homeController
+                                                  .indexToPlayPod.value);
                                         } else {
                                           homeController.indexToPlayPod -= 1;
                                           await audioHandler.skipToQueueItem(
-                                              homeController.indexToPlayPod);
+                                              homeController
+                                                  .indexToPlayPod.value);
                                         }
                                       },
                                       child: Icon(Icons.skip_previous_outlined,
@@ -316,7 +319,7 @@ class SinglePodcastView extends StatelessWidget {
                                                     .mediaItem.value!.id ==
                                                 dataController
                                                     .podcastList[homeController
-                                                        .indexToPlayPod]
+                                                        .indexToPlayPod.value]
                                                     .stream) {
                                               return Container(
                                                 height: 40,
@@ -351,7 +354,8 @@ class SinglePodcastView extends StatelessWidget {
                                                   onPressed: () async {
                                                     podcastController.indexX =
                                                         homeController
-                                                            .indexToPlayPod;
+                                                            .indexToPlayPod
+                                                            .value;
 
                                                     if (homeController.whoAccess
                                                                 .value ==
@@ -366,7 +370,8 @@ class SinglePodcastView extends StatelessWidget {
                                                       await audioHandler
                                                           .skipToQueueItem(
                                                               homeController
-                                                                  .indexToPlayPod);
+                                                                  .indexToPlayPod
+                                                                  .value);
                                                       audioHandler.play();
                                                       homeController.whoAccess
                                                           .value = "pod";
@@ -377,12 +382,14 @@ class SinglePodcastView extends StatelessWidget {
                                                           dataController
                                                               .mediaListPodcast[
                                                                   homeController
-                                                                      .indexToPlayPod]
+                                                                      .indexToPlayPod
+                                                                      .value]
                                                               .id) {
                                                         await audioHandler
                                                             .skipToQueueItem(
                                                                 homeController
-                                                                    .indexToPlayPod);
+                                                                    .indexToPlayPod
+                                                                    .value);
                                                       }
 
                                                       audioHandler.play();
@@ -394,7 +401,8 @@ class SinglePodcastView extends StatelessWidget {
                                                         dataController
                                                                 .podcastList[
                                                             homeController
-                                                                .indexToPlayPod],
+                                                                .indexToPlayPod
+                                                                .value],
                                                         true);
                                                   },
                                                 ),
@@ -416,7 +424,7 @@ class SinglePodcastView extends StatelessWidget {
                                                 onPressed: () async {
                                                   podcastController.indexX =
                                                       homeController
-                                                          .indexToPlayPod;
+                                                          .indexToPlayPod.value;
 
                                                   if (homeController.whoAccess
                                                               .value ==
@@ -430,7 +438,8 @@ class SinglePodcastView extends StatelessWidget {
                                                     await audioHandler
                                                         .skipToQueueItem(
                                                             homeController
-                                                                .indexToPlayPod);
+                                                                .indexToPlayPod
+                                                                .value);
                                                     audioHandler.play();
                                                     homeController.whoAccess
                                                         .value = "pod";
@@ -440,14 +449,16 @@ class SinglePodcastView extends StatelessWidget {
                                                         dataController
                                                             .mediaListPodcast[
                                                                 homeController
-                                                                    .indexToPlayPod]
+                                                                    .indexToPlayPod
+                                                                    .value]
                                                             .id) {
                                                       print(
                                                           "pod access 2 + same");
                                                       await audioHandler
                                                           .skipToQueueItem(
                                                               homeController
-                                                                  .indexToPlayPod);
+                                                                  .indexToPlayPod
+                                                                  .value);
                                                     }
 
                                                     audioHandler.play();
@@ -459,7 +470,8 @@ class SinglePodcastView extends StatelessWidget {
                                                       dataController
                                                               .podcastList[
                                                           homeController
-                                                              .indexToPlayPod],
+                                                              .indexToPlayPod
+                                                              .value],
                                                       true);
                                                 },
                                               ),
@@ -470,17 +482,21 @@ class SinglePodcastView extends StatelessWidget {
                                     ),
                                     GestureDetector(
                                       onTap: () async {
-                                        if (homeController.indexToPlayPod ==
+                                        if (homeController
+                                                .indexToPlayPod.value ==
                                             dataController.podcastList.length -
                                                 1) {
                                           homeController.indexToPlayPod =
-                                              homeController.indexToPlayPod = 0;
+                                              homeController.indexToPlayPod =
+                                                  RxInt(0);
                                           await audioHandler.skipToQueueItem(
-                                              homeController.indexToPlayPod);
+                                              homeController
+                                                  .indexToPlayPod.value);
                                         } else {
                                           homeController.indexToPlayPod += 1;
                                           await audioHandler.skipToQueueItem(
-                                              homeController.indexToPlayPod);
+                                              homeController
+                                                  .indexToPlayPod.value);
                                         }
                                       },
                                       child: Icon(Icons.skip_next_outlined,
@@ -508,18 +524,19 @@ class SinglePodcastView extends StatelessWidget {
                                                     .contains(dataController
                                                         .podcastList[
                                                             homeController
-                                                                .indexToPlayPod]
+                                                                .indexToPlayPod
+                                                                .value]
                                                         .id)
                                                 ? GestureDetector(
                                                     onTap: () async {
-                                                      var response = await RemoteServices
-                                                          .likeDislike(
-                                                              like: true,
-                                                              postId: dataController
-                                                                  .podcastList[
-                                                                      homeController
-                                                                          .indexToPlayPod]
-                                                                  .id);
+                                                      var response = await RemoteServices.likeDislike(
+                                                          like: true,
+                                                          postId: dataController
+                                                              .podcastList[
+                                                                  homeController
+                                                                      .indexToPlayPod
+                                                                      .value]
+                                                              .id);
                                                     },
                                                     child: Icon(
                                                       Icons
@@ -530,14 +547,14 @@ class SinglePodcastView extends StatelessWidget {
                                                   )
                                                 : GestureDetector(
                                                     onTap: () async {
-                                                      var response = await RemoteServices
-                                                          .likeDislike(
-                                                              like: false,
-                                                              postId: dataController
-                                                                  .podcastList[
-                                                                      homeController
-                                                                          .indexToPlayPod]
-                                                                  .id);
+                                                      var response = await RemoteServices.likeDislike(
+                                                          like: false,
+                                                          postId: dataController
+                                                              .podcastList[
+                                                                  homeController
+                                                                      .indexToPlayPod
+                                                                      .value]
+                                                              .id);
                                                     },
                                                     child: Icon(
                                                       Icons.favorite_outlined,

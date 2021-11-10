@@ -71,7 +71,7 @@ class RadioStationsView extends StatelessWidget {
                                           child: SizedBox(),
                                         ),
                                         AutoSizeText(
-                                          "Radio Stations",
+                                          "Radio",
                                           style: TextStyle(
                                               color: darkTxt,
                                               fontSize: 24,
@@ -311,8 +311,8 @@ class RadioStationsView extends StatelessWidget {
                                                     dataController
                                                         .radioList[index].id);
 
-                                            homeController.indexToPlayRadio.value =
-                                                radioIndex;
+                                            homeController.indexToPlayRadio
+                                                .value = radioIndex;
                                             print(radioIndex);
                                             dataController.radioList.value =
                                                 dataController

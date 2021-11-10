@@ -12,6 +12,7 @@ class SplashScreenController extends GetxController {
     checkLogin();
     RemoteServices.fetchPodcastList();
     RemoteServices.fetchRadioList();
+    RemoteServices. getGenre();
     RemoteServices.checkPay();
     Future.delayed(Duration(seconds: 2), () {
       Get.offAndToNamed("/tabs");

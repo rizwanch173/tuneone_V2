@@ -1,15 +1,16 @@
-import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:marquee_text/marquee_text.dart';
 import 'package:share/share.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
+import 'package:tuneone/ui/authar_page/author_pod_details.dart';
+import 'package:tuneone/ui/authar_page/author_radio_details.dart';
 import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:tuneone/ui/singlechannel/single_podcast_view.dart';
@@ -17,18 +18,17 @@ import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:tuneone/ui/styled_widgets/mini_player.dart';
 import 'package:tuneone/ui/styled_widgets/styled_button.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import '../../main.dart';
 
-class AuthorRadioDetails extends StatelessWidget {
+class AuthorPodcast extends StatelessWidget {
   final DataController dataController = Get.find();
   final HomeController homeController = Get.find();
   final int currentIndex;
 
-  AuthorRadioDetails({Key? key, required this.currentIndex}) : super(key: key);
+  AuthorPodcast({Key? key, required this.currentIndex}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    print(homeController.indexToPlayRadio);
     return Scaffold(
       body: Stack(
         children: [
@@ -79,18 +79,12 @@ class AuthorRadioDetails extends StatelessWidget {
                                         Get.back();
                                       }),
                                 ),
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: AutoSizeText(
-                                      dataController.radioList[currentIndex]
-                                          .author.displayName,
-                                      style: TextStyle(
-                                          color: darkTxt,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w800),
-                                    ),
-                                  ),
+                                AutoSizeText(
+                                  "Podcast",
+                                  style: TextStyle(
+                                      color: darkTxt,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800),
                                 ),
                                 SizedBox(
                                   width: Get.height * 0.05,
@@ -120,7 +114,7 @@ class AuthorRadioDetails extends StatelessWidget {
                                 aspectRatio: 1 / 1,
                                 child: StyledCachedNetworkImage2(
                                   url: dataController
-                                      .radioList[currentIndex].author.avtarUrl,
+                                      .podcastList[currentIndex].thumbnail,
                                 ),
                               ),
                             ),
@@ -137,6 +131,28 @@ class AuthorRadioDetails extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              dataController
+                                  .podcastList[currentIndex].copyright,
+                              style: TextStyle(
+                                fontFamily: 'Aeonik',
+                                fontSize: 15,
+                                color:
+                                    ThemeProvider.themeOf(context).id == "light"
+                                        ? Color(0xffa4a4a4)
+                                        : darkTxt,
+                                fontWeight: FontWeight.w300,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
                           height: 15,
                         ),
                         Align(
@@ -146,8 +162,8 @@ class AuthorRadioDetails extends StatelessWidget {
                               alignment: Alignment.center,
                               child: MarqueeText(
                                 text: TextSpan(
-                                  text: dataController.radioList[currentIndex]
-                                      .author.displayName,
+                                  text: dataController
+                                      .podcastList[currentIndex].title,
                                 ),
                                 style: TextStyle(
                                   color: ThemeProvider.themeOf(context).id ==
@@ -162,32 +178,10 @@ class AuthorRadioDetails extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            dataController
-                                .radioList[currentIndex].author.description,
-                            style: TextStyle(
-                              fontFamily: 'Aeonik',
-                              fontSize: 13,
-                              color:
-                                  ThemeProvider.themeOf(context).id == "light"
-                                      ? Color(0xffa4a4a4)
-                                      : darkTxt,
-                              fontWeight: FontWeight.w300,
-                            ),
-                            maxLines: 5,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        SizedBox(
-                          height: Get.height * 0.025,
+                          height: 15,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               height: 40,
@@ -233,7 +227,7 @@ class AuthorRadioDetails extends StatelessWidget {
                                   } else if (playing == true) {
                                     if (audioHandler.mediaItem.value!.id ==
                                         dataController
-                                            .radioList[currentIndex].stream) {
+                                            .podcastList[currentIndex].stream) {
                                       print("matched");
                                       return Container(
                                           height: 40,
@@ -300,32 +294,39 @@ class AuthorRadioDetails extends StatelessWidget {
                                               onPressed: () async {
                                                 if (homeController
                                                             .whoAccess.value ==
-                                                        "pod" ||
+                                                        "radio" ||
                                                     homeController
                                                             .whoAccess.value ==
                                                         "none") {
-                                                  await audioHandler
-                                                      .updateQueue(
-                                                          dataController
-                                                              .mediaListRadio);
+                                                  await audioHandler.updateQueue(
+                                                      dataController
+                                                          .mediaListPodcast);
                                                   await audioHandler
                                                       .skipToQueueItem(
                                                           currentIndex);
                                                   audioHandler.play();
-                                                  homeController.whoAccess
-                                                      .value = "radio";
+                                                  homeController
+                                                      .whoAccess.value = "pod";
                                                 } else {
-                                                  await audioHandler
-                                                      .skipToQueueItem(
-                                                          currentIndex);
+                                                  if (audioHandler.mediaItem
+                                                          .value!.id !=
+                                                      dataController
+                                                          .mediaListPodcast[
+                                                              currentIndex]
+                                                          .id) {
+                                                    await audioHandler
+                                                        .skipToQueueItem(
+                                                            currentIndex);
+                                                  }
+
                                                   audioHandler.play();
-                                                  homeController.whoAccess
-                                                      .value = "radio";
+                                                  homeController
+                                                      .whoAccess.value = "pod";
                                                 }
                                                 dataController.addRecently(
-                                                    dataController.radioList[
+                                                    dataController.podcastList[
                                                         currentIndex],
-                                                    false);
+                                                    true);
                                               },
                                             ),
                                           ));
@@ -360,31 +361,39 @@ class AuthorRadioDetails extends StatelessWidget {
                                           onPressed: () async {
                                             if (homeController
                                                         .whoAccess.value ==
-                                                    "pod" ||
+                                                    "radio" ||
                                                 homeController
                                                         .whoAccess.value ==
                                                     "none") {
                                               await audioHandler.updateQueue(
                                                   dataController
-                                                      .mediaListRadio);
+                                                      .mediaListPodcast);
                                               await audioHandler
                                                   .skipToQueueItem(
                                                       currentIndex);
                                               audioHandler.play();
                                               homeController.whoAccess.value =
-                                                  "radio";
+                                                  "pod";
                                             } else {
-                                              await audioHandler
-                                                  .skipToQueueItem(
-                                                      currentIndex);
+                                              if (audioHandler
+                                                      .mediaItem.value!.id !=
+                                                  dataController
+                                                      .mediaListPodcast[
+                                                          currentIndex]
+                                                      .id) {
+                                                await audioHandler
+                                                    .skipToQueueItem(
+                                                        currentIndex);
+                                              }
+
                                               audioHandler.play();
                                               homeController.whoAccess.value =
-                                                  "radio";
+                                                  "pod";
                                             }
                                             dataController.addRecently(
                                                 dataController
-                                                    .radioList[currentIndex],
-                                                false);
+                                                    .podcastList[currentIndex],
+                                                true);
                                           },
                                         ),
                                       ),
@@ -396,13 +405,24 @@ class AuthorRadioDetails extends StatelessWidget {
                             SizedBox(
                               width: 20,
                             ),
-                            Container(
-                              height: 40,
-                              child: dataController.islogin.isFalse
-                                  ? Container(
-                                      width: Get.width * 0.25,
-                                      child: StyledButton(
-                                        onPressed: () {
+                            dataController.islogin.isFalse
+                                ? Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      border: Border.all(
+                                        width: 1,
+                                        color:
+                                            ThemeProvider.themeOf(context).id ==
+                                                    "light"
+                                                ? Colors.grey.shade400
+                                                : darkTxt,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: GestureDetector(
+                                        onTap: () {
                                           homeController.showAlertDialog(
                                               context: context,
                                               title: "ATTENTION!",
@@ -411,48 +431,96 @@ class AuthorRadioDetails extends StatelessWidget {
                                               cancelActionText: "CANCEL",
                                               defaultActionText: "LOG IN");
                                         },
-                                        title: "Follow",
-                                        backgroundColor: backGroundColor,
-                                        titleColor: Colors.white,
-                                        borderRadius: BorderRadius.circular(50),
-                                        fontSize: 16,
+                                        child: Icon(
+                                          Icons.favorite_outline_sharp,
+                                          color: (ThemeProvider.themeOf(context)
+                                                      .id ==
+                                                  "light")
+                                              ? Colors.grey.shade400
+                                              : darkTxt,
+                                          size: 30,
+                                        ),
                                       ),
-                                    )
-                                  : Obx(
-                                      () => !dataController
-                                              .radioList[currentIndex]
-                                              .author
-                                              .follow
-                                              .contains(dataController
-                                                  .userList.user.id)
-                                          ? Container(
-                                              width: Get.width * 0.25,
-                                              child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Follow",
-                                                backgroundColor:
-                                                    backGroundColor,
-                                                titleColor: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(25),
-                                                fontSize: 16,
-                                              ),
-                                            )
-                                          : Container(
-                                              width: Get.width * 0.20,
-                                              child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Unfollow",
-                                                backgroundColor:
-                                                    backGroundColor,
-                                                titleColor: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                fontSize: 16,
+                                    ),
+                                  )
+                                : Obx(
+                                    () => !dataController.likeList.contains(
+                                            dataController
+                                                .podcastList[currentIndex].id)
+                                        ? Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                              border: Border.all(
+                                                width: 1,
+                                                color: ThemeProvider.themeOf(
+                                                                context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Colors.grey.shade400
+                                                    : darkTxt,
                                               ),
                                             ),
-                                    ),
-                            ),
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                await RemoteServices
+                                                    .likeDislike(
+                                                        like: true,
+                                                        postId: dataController
+                                                            .podcastList[
+                                                                currentIndex]
+                                                            .id);
+                                              },
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.favorite_outline_sharp,
+                                                  color: (ThemeProvider.themeOf(
+                                                                  context)
+                                                              .id ==
+                                                          "light")
+                                                      ? Colors.grey.shade400
+                                                      : darkTxt,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                              border: Border.all(
+                                                width: 1,
+                                                color: ThemeProvider.themeOf(
+                                                                context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Colors.grey.shade400
+                                                    : darkTxt,
+                                              ),
+                                            ),
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                await RemoteServices
+                                                    .likeDislike(
+                                                        like: false,
+                                                        postId: dataController
+                                                            .podcastList[
+                                                                currentIndex]
+                                                            .id);
+                                              },
+                                              child: Icon(
+                                                Icons.favorite_outlined,
+                                                color: Colors.white,
+                                                size: 30,
+                                              ),
+                                            ),
+                                          ),
+                                  ),
                             SizedBox(
                               width: 20,
                             ),
@@ -479,53 +547,137 @@ class AuthorRadioDetails extends StatelessWidget {
                                 ),
                                 onTap: () async {
                                   Share.share(
-                                      ' ${dataController.radioList[currentIndex].author.link}');
+                                      ' ${dataController.podcastList[currentIndex].link}');
                                 },
                               ),
                             ),
                           ],
                         ),
                         SizedBox(
-                          height: Get.height * 0.02,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              'Total played:  ',
-                              style: TextStyle(
-                                fontFamily: 'Aeonik',
-                                fontSize: 15,
-                                color:
-                                    ThemeProvider.themeOf(context).id == "light"
-                                        ? Color(0xffa4a4a4)
-                                        : darkTxt,
-                                fontWeight: FontWeight.w300,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                            Text(
-                              dataController
-                                  .radioList[currentIndex].author.totalPlayed,
-                              style: TextStyle(
-                                fontFamily: 'Aeonik',
-                                fontSize: 15,
-                                color:
-                                    ThemeProvider.themeOf(context).id == "light"
-                                        ? Color(0xffa4a4a4)
-                                        : darkTxt,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ],
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                        ),
-                        SizedBox(
-                          height: Get.height * 0.02,
+                          height: 15,
                         ),
                         Container(
-                          height: Get.height * 0.16,
+                          height: Get.height * 0.080,
+                          decoration: BoxDecoration(
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Colors.white
+                                : darkBg,
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0x14000000),
+                                offset: Offset(0, 5),
+                                blurRadius: 20,
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: ListTile(
+                              onTap: () {
+                                Get.to(AuthorPodDetails(
+                                  currentIndex: currentIndex,
+                                ));
+                              },
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: AspectRatio(
+                                  aspectRatio: 1 / 1,
+                                  child: StyledCachedNetworkImage2(
+                                    url: dataController
+                                        .podcastList[currentIndex]
+                                        .author
+                                        .avtarUrl,
+                                  ),
+                                ),
+                              ),
+                              title: AutoSizeText(
+                                dataController.podcastList[currentIndex].author
+                                    .displayName,
+                                style: TextStyle(
+                                    color: ThemeProvider.themeOf(context).id ==
+                                            "light"
+                                        ? darkBg
+                                        : darkTxt),
+                                presetFontSizes: [18, 16],
+                              ),
+                              subtitle: AutoSizeText(
+                                dataController.podcastList[currentIndex].author
+                                        .follow.length
+                                        .toString() +
+                                    " Followers",
+                                style: TextStyle(
+                                  fontFamily: 'Aeonik',
+                                  fontSize: 13,
+                                  color: ThemeProvider.themeOf(context).id ==
+                                          "light"
+                                      ? Color(0xffa4a4a4)
+                                      : darkTxt,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                                presetFontSizes: [12, 14],
+                              ),
+                              trailing: dataController.islogin.isFalse
+                                  ? Container(
+                                      width: Get.width * 0.25,
+                                      child: StyledButton(
+                                        onPressed: () {
+                                          homeController.showAlertDialog(
+                                              context: context,
+                                              title: "ATTENTION!",
+                                              content:
+                                                  "Please Sign In To Continue This Action",
+                                              cancelActionText: "CANCEL",
+                                              defaultActionText: "LOG IN");
+                                        },
+                                        title: "Follow",
+                                        backgroundColor: backGroundColor,
+                                        titleColor: Colors.white,
+                                        borderRadius: BorderRadius.circular(5),
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  : Obx(
+                                      () => !dataController
+                                              .podcastList[currentIndex]
+                                              .author
+                                              .follow
+                                              .contains(dataController
+                                                  .userList.user.id)
+                                          ? Container(
+                                              width: Get.width * 0.25,
+                                              child: StyledButton(
+                                                onPressed: () {},
+                                                title: "Follow",
+                                                backgroundColor:
+                                                    backGroundColor,
+                                                titleColor: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                fontSize: 16,
+                                              ),
+                                            )
+                                          : Container(
+                                              width: Get.width * 0.25,
+                                              child: StyledButton(
+                                                onPressed: () {},
+                                                title: "Unfollow",
+                                                backgroundColor:
+                                                    backGroundColor,
+                                                titleColor: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Get.height * 0.01,
+                        ),
+                        Container(
+                          height: Get.height * 0.11,
                           width: Get.width,
                           decoration: BoxDecoration(
                             color: ThemeProvider.themeOf(context).id == "light"
@@ -579,7 +731,7 @@ class AuthorRadioDetails extends StatelessWidget {
                                     ),
                                     Spacer(),
                                     Text(
-                                      dataController.radioList[currentIndex]
+                                      dataController.podcastList[currentIndex]
                                           .author.whatsapp,
                                       style: TextStyle(
                                         fontFamily: 'Aeonik',
@@ -616,8 +768,8 @@ class AuthorRadioDetails extends StatelessWidget {
                                     ),
                                     Spacer(),
                                     Text(
-                                      dataController
-                                          .radioList[currentIndex].author.email,
+                                      dataController.podcastList[currentIndex]
+                                          .author.email,
                                       style: TextStyle(
                                         fontFamily: 'Aeonik',
                                         fontSize: 15,
@@ -631,131 +783,7 @@ class AuthorRadioDetails extends StatelessWidget {
                                       textAlign: TextAlign.left,
                                     ),
                                   ],
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.018,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Social:',
-                                      style: TextStyle(
-                                        fontFamily: 'Aeonik',
-                                        fontSize: 15,
-                                        color:
-                                            ThemeProvider.themeOf(context).id ==
-                                                    "light"
-                                                ? Color(0xffa4a4a4)
-                                                : darkTxt,
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Spacer(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            icon: SvgPicture.asset(
-                                              "assets/Icon awesome-facebook.svg",
-                                              color:
-                                                  ThemeProvider.themeOf(context)
-                                                              .id ==
-                                                          "light"
-                                                      ? Colors.grey
-                                                      : darkTxt,
-                                            ),
-                                            onPressed: () async {
-                                              await canLaunch(
-                                                dataController
-                                                    .radioList[currentIndex]
-                                                    .author
-                                                    .facebook[0],
-                                              )
-                                                  ? await launch(dataController
-                                                      .radioList[currentIndex]
-                                                      .author
-                                                      .facebook[0])
-                                                  : throw 'Could not launch ${dataController.radioList[currentIndex].author.facebook[0]}';
-                                            },
-                                          ),
-                                          height: 30,
-                                          width: 30,
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Container(
-                                          child: IconButton(
-                                              padding: EdgeInsets.zero,
-                                              icon: SvgPicture.asset(
-                                                "assets/Icon awesome-instagram.svg",
-                                                color: ThemeProvider.themeOf(
-                                                                context)
-                                                            .id ==
-                                                        "light"
-                                                    ? Colors.grey
-                                                    : darkTxt,
-                                              ),
-                                              onPressed: () async {
-                                                await canLaunch(
-                                                  dataController
-                                                      .radioList[currentIndex]
-                                                      .author
-                                                      .instagram,
-                                                )
-                                                    ? await launch(
-                                                        dataController
-                                                            .radioList[
-                                                                currentIndex]
-                                                            .author
-                                                            .instagram,
-                                                        universalLinksOnly:
-                                                            true,
-                                                      )
-                                                    : throw 'Could not launch ${dataController.radioList[currentIndex].author.instagram}';
-                                              }),
-                                          height: 30,
-                                          width: 30,
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Container(
-                                          child: IconButton(
-                                              padding: EdgeInsets.zero,
-                                              icon: SvgPicture.asset(
-                                                "assets/Icon ionic-logo-whatsapp.svg",
-                                                color: ThemeProvider.themeOf(
-                                                                context)
-                                                            .id ==
-                                                        "light"
-                                                    ? Colors.grey
-                                                    : darkTxt,
-                                              ),
-                                              onPressed: () async {
-                                                if (Platform.isIOS) {
-                                                  await launch(
-                                                    "whatsapp://wa.me/${dataController.radioList[currentIndex].author.whatsapp}/?text=${Uri.encodeFull("Hi" + "${dataController.radioList[currentIndex].author.displayName}")}",
-                                                    universalLinksOnly: true,
-                                                  );
-                                                } else {
-                                                  await launch(
-                                                    "whatsapp://send?phone=${dataController.radioList[currentIndex].author.whatsapp}&text=${Uri.encodeFull("Hi" + "${dataController.radioList[currentIndex].author.whatsapp}")}",
-                                                    universalLinksOnly: true,
-                                                  );
-                                                }
-                                              }),
-                                          height: 30,
-                                          width: 30,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                )
                               ],
                             ),
                           ),
@@ -790,8 +818,10 @@ class AuthorRadioDetails extends StatelessWidget {
                                   children: [
                                     AutoSizeText(
                                       "More from: " +
-                                          dataController.radioList[currentIndex]
-                                              .author.displayName,
+                                          dataController
+                                              .podcastList[currentIndex]
+                                              .author
+                                              .displayName,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "Aeonik-medium",
@@ -802,27 +832,27 @@ class AuthorRadioDetails extends StatelessWidget {
                                                 : darkTxt,
                                       ),
                                     ),
-                                    GestureDetector(
-                                        onTap: () {
-                                          Get.to(() => MediaListRadioView(
-                                                title: "Top Stations",
-                                                fromLibrary: false,
-                                              ));
-                                          print("MediaListRadioView");
-                                        },
-                                        child: AutoSizeText(
-                                          "View All",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: "Aeonik-medium",
-                                            color:
-                                                ThemeProvider.themeOf(context)
-                                                            .id ==
-                                                        "light"
-                                                    ? backGroundColor
-                                                    : darkTxt,
-                                          ),
-                                        )),
+                                    // GestureDetector(
+                                    //     onTap: () {
+                                    //       Get.to(() => MediaListRadioView(
+                                    //             title: "Top Stations",
+                                    //             fromLibrary: false,
+                                    //           ));
+                                    //       print("MediaListRadioView");
+                                    //     },
+                                    //     child: AutoSizeText(
+                                    //       "View All",
+                                    //       style: TextStyle(
+                                    //         fontWeight: FontWeight.w600,
+                                    //         fontFamily: "Aeonik-medium",
+                                    //         color:
+                                    //             ThemeProvider.themeOf(context)
+                                    //                         .id ==
+                                    //                     "light"
+                                    //                 ? backGroundColor
+                                    //                 : darkTxt,
+                                    //       ),
+                                    //     )),
                                   ],
                                 ),
                               ),
@@ -833,113 +863,133 @@ class AuthorRadioDetails extends StatelessWidget {
                                         dataController.morefromList.length,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (context, index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          if (dataController.morefromList[index]
-                                                  .duration ==
-                                              0) {
-                                            var radioIndex = dataController
-                                                .radioListMasterCopy
-                                                .indexWhere((w) =>
-                                                    w.id ==
-                                                    dataController
+                                      return dataController
+                                                  .morefromList[index].id ==
+                                              dataController
+                                                  .podcastList[currentIndex].id
+                                          ? SizedBox()
+                                          : GestureDetector(
+                                              onTap: () {
+                                                if (dataController
                                                         .morefromList[index]
-                                                        .id);
+                                                        .duration ==
+                                                    0) {
+                                                  var radioIndex =
+                                                      dataController
+                                                          .radioListMasterCopy
+                                                          .indexWhere((w) =>
+                                                              w.id ==
+                                                              dataController
+                                                                  .morefromList[
+                                                                      index]
+                                                                  .id);
 
-                                            homeController.indexToPlayRadio
-                                                .value = radioIndex;
-                                            dataController.radioList.value =
-                                                dataController
-                                                    .radioListMasterCopy;
-                                            Get.to(SingleRadioView());
-                                            print("radioIndex");
-                                            print(radioIndex);
-                                          } else {
-                                            var podIndex = dataController
-                                                .podcastListMasterCopy
-                                                .indexWhere((w) =>
-                                                    w.id ==
-                                                    dataController
-                                                        .morefromList[index]
-                                                        .id);
-                                            homeController.indexToPlayPod
-                                                .value = podIndex;
-                                            print("podIndex");
-                                            print(podIndex);
-                                            dataController.podcastList.value =
-                                                dataController
-                                                    .podcastListMasterCopy;
-                                            Get.to(SinglePodcastView());
-                                          }
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            border: Border.all(
-                                              color:
-                                                  ThemeProvider.themeOf(context)
-                                                              .id ==
-                                                          "light"
-                                                      ? Color(0xffF2F2F2)
-                                                      : darkTxt
-                                                          .withOpacity(0.2),
-                                            ),
-                                          ),
-                                          margin: EdgeInsets.only(
-                                              left: index == 0
-                                                  ? Get.width * 0.05
-                                                  : Get.width * 0.03,
-                                              bottom: Get.height * 0.03),
-                                          child: Container(
-                                            width: Get.width * 0.25,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.stretch,
-                                              children: [
-                                                Expanded(
-                                                  child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      10.0),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      10.0)),
-                                                      child:
-                                                          StyledCachedNetworkImage(
-                                                        url: dataController
-                                                            .morefromList[index]
-                                                            .thumbnail,
-                                                        height:
-                                                            Get.height * 0.4,
-                                                      )),
-                                                  flex: 2,
-                                                ),
-                                                Expanded(
-                                                  child: AutoSizeText(
-                                                    dataController
-                                                        .morefromList[index]
-                                                        .title,
-                                                    style: TextStyle(
-                                                      color: Color(0xffA4A4A4),
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    // presetFontSizes: [22, 20],
-                                                    textAlign: TextAlign.center,
+                                                  homeController
+                                                      .indexToPlayRadio
+                                                      .value = radioIndex;
+                                                  dataController
+                                                          .radioList.value =
+                                                      dataController
+                                                          .radioListMasterCopy;
+                                                  Get.to(SingleRadioView());
+                                                  print("radioIndex");
+                                                  print(radioIndex);
+                                                } else {
+                                                  var podIndex = dataController
+                                                      .podcastListMasterCopy
+                                                      .indexWhere((w) =>
+                                                          w.id ==
+                                                          dataController
+                                                              .morefromList[
+                                                                  index]
+                                                              .id);
+                                                  homeController.indexToPlayPod
+                                                      .value = podIndex;
+                                                  print("podIndex");
+                                                  print(podIndex);
+                                                  dataController
+                                                          .podcastList.value =
+                                                      dataController
+                                                          .podcastListMasterCopy;
+                                                  Get.to(SinglePodcastView());
+                                                }
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                  border: Border.all(
+                                                    color:
+                                                        ThemeProvider.themeOf(
+                                                                        context)
+                                                                    .id ==
+                                                                "light"
+                                                            ? Color(0xffF2F2F2)
+                                                            : darkTxt
+                                                                .withOpacity(
+                                                                    0.2),
                                                   ),
-                                                  flex: 1,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
+                                                ),
+                                                margin: EdgeInsets.only(
+                                                    left: index == 0
+                                                        ? Get.width * 0.05
+                                                        : Get.width * 0.03,
+                                                    bottom: Get.height * 0.03),
+                                                child: Container(
+                                                  width: Get.width * 0.25,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .stretch,
+                                                    children: [
+                                                      Expanded(
+                                                        child: ClipRRect(
+                                                            borderRadius: BorderRadius.only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        10.0),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        10.0)),
+                                                            child:
+                                                                StyledCachedNetworkImage(
+                                                              url: dataController
+                                                                  .morefromList[
+                                                                      index]
+                                                                  .thumbnail,
+                                                              height:
+                                                                  Get.height *
+                                                                      0.4,
+                                                            )),
+                                                        flex: 2,
+                                                      ),
+                                                      Expanded(
+                                                        child: AutoSizeText(
+                                                          dataController
+                                                              .morefromList[
+                                                                  index]
+                                                              .title,
+                                                          style: TextStyle(
+                                                            color: Color(
+                                                                0xffA4A4A4),
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 2,
+                                                          // presetFontSizes: [22, 20],
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                        flex: 1,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
                                     }),
                               )
                             ],

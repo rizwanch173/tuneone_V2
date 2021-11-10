@@ -382,7 +382,8 @@ class HomePageView extends StatelessWidget {
                                             w.id ==
                                             dataController
                                                 .podcastList[index].id);
-                                    homeController.indexToPlayPod = podIndex;
+                                    homeController.indexToPlayPod.value =
+                                        podIndex;
 
                                     dataController.podcastList.value =
                                         dataController.podcastListMasterCopy;
@@ -536,7 +537,8 @@ class HomePageView extends StatelessWidget {
                                               w.id ==
                                               dataController
                                                   .recentlyList[index].id);
-                                      homeController.indexToPlayPod = podIndex;
+                                      homeController.indexToPlayPod.value =
+                                          podIndex;
                                       print(podIndex);
                                       Get.to(SinglePodcastView());
                                     }
