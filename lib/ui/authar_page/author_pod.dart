@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:marquee_text/marquee_text.dart';
 import 'package:share/share.dart';
@@ -18,6 +21,7 @@ import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:tuneone/ui/styled_widgets/mini_player.dart';
 import 'package:tuneone/ui/styled_widgets/styled_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../main.dart';
 
@@ -676,8 +680,120 @@ class AuthorPodcast extends StatelessWidget {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
+                        // Container(
+                        //   height: Get.height * 0.11,
+                        //   width: Get.width,
+                        //   decoration: BoxDecoration(
+                        //     color: ThemeProvider.themeOf(context).id == "light"
+                        //         ? Colors.white
+                        //         : darkBg,
+                        //     borderRadius: BorderRadius.circular(10.0),
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //         color: const Color(0x14000000),
+                        //         offset: Offset(0, 5),
+                        //         blurRadius: 20,
+                        //       ),
+                        //     ],
+                        //   ),
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(12.0),
+                        //     child: Column(
+                        //       crossAxisAlignment: CrossAxisAlignment.start,
+                        //       children: [
+                        //         Text(
+                        //           'Contact',
+                        //           style: TextStyle(
+                        //             fontFamily: 'Aeonik',
+                        //             fontSize: 18,
+                        //             color: ThemeProvider.themeOf(context).id ==
+                        //                     "light"
+                        //                 ? darkBg
+                        //                 : darkTxt,
+                        //             fontWeight: FontWeight.w500,
+                        //           ),
+                        //           textAlign: TextAlign.left,
+                        //         ),
+                        //         SizedBox(
+                        //           height: Get.height * 0.005,
+                        //         ),
+                        //         Row(
+                        //           children: [
+                        //             Text(
+                        //               'Phone:',
+                        //               style: TextStyle(
+                        //                 fontFamily: 'Aeonik',
+                        //                 fontSize: 15,
+                        //                 color:
+                        //                     ThemeProvider.themeOf(context).id ==
+                        //                             "light"
+                        //                         ? Color(0xffa4a4a4)
+                        //                         : darkTxt,
+                        //                 fontWeight: FontWeight.w300,
+                        //               ),
+                        //               textAlign: TextAlign.left,
+                        //             ),
+                        //             Spacer(),
+                        //             Text(
+                        //               dataController.podcastList[currentIndex]
+                        //                   .author.whatsapp,
+                        //               style: TextStyle(
+                        //                 fontFamily: 'Aeonik',
+                        //                 fontSize: 15,
+                        //                 color:
+                        //                     ThemeProvider.themeOf(context).id ==
+                        //                             "light"
+                        //                         ? Color(0xffa4a4a4)
+                        //                         : darkTxt,
+                        //                 fontWeight: FontWeight.w300,
+                        //               ),
+                        //               textAlign: TextAlign.left,
+                        //             ),
+                        //           ],
+                        //         ),
+                        //         SizedBox(
+                        //           height: Get.height * 0.005,
+                        //         ),
+                        //         Row(
+                        //           children: [
+                        //             Text(
+                        //               'Email:',
+                        //               style: TextStyle(
+                        //                 fontFamily: 'Aeonik',
+                        //                 fontSize: 15,
+                        //                 color:
+                        //                     ThemeProvider.themeOf(context).id ==
+                        //                             "light"
+                        //                         ? Color(0xffa4a4a4)
+                        //                         : darkTxt,
+                        //                 fontWeight: FontWeight.w300,
+                        //               ),
+                        //               textAlign: TextAlign.left,
+                        //             ),
+                        //             Spacer(),
+                        //             Text(
+                        //               dataController.podcastList[currentIndex]
+                        //                   .author.email,
+                        //               style: TextStyle(
+                        //                 fontFamily: 'Aeonik',
+                        //                 fontSize: 15,
+                        //                 color:
+                        //                     ThemeProvider.themeOf(context).id ==
+                        //                             "light"
+                        //                         ? Color(0xffa4a4a4)
+                        //                         : darkTxt,
+                        //                 fontWeight: FontWeight.w300,
+                        //               ),
+                        //               textAlign: TextAlign.left,
+                        //             ),
+                        //           ],
+                        //         )
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         Container(
-                          height: Get.height * 0.11,
+                          height: Get.height * 0.20,
                           width: Get.width,
                           decoration: BoxDecoration(
                             color: ThemeProvider.themeOf(context).id == "light"
@@ -711,7 +827,7 @@ class AuthorPodcast extends StatelessWidget {
                                   textAlign: TextAlign.left,
                                 ),
                                 SizedBox(
-                                  height: Get.height * 0.005,
+                                  height: Get.height * 0.008,
                                 ),
                                 Row(
                                   children: [
@@ -730,25 +846,85 @@ class AuthorPodcast extends StatelessWidget {
                                       textAlign: TextAlign.left,
                                     ),
                                     Spacer(),
-                                    Text(
-                                      dataController.podcastList[currentIndex]
-                                          .author.whatsapp,
-                                      style: TextStyle(
-                                        fontFamily: 'Aeonik',
-                                        fontSize: 15,
-                                        color:
-                                            ThemeProvider.themeOf(context).id ==
-                                                    "light"
-                                                ? Color(0xffa4a4a4)
-                                                : darkTxt,
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                      textAlign: TextAlign.left,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          dataController
+                                              .podcastList[currentIndex]
+                                              .author
+                                              .whatsapp,
+                                          style: TextStyle(
+                                            fontFamily: 'Aeonik',
+                                            fontSize: 15,
+                                            color:
+                                                ThemeProvider.themeOf(context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Color(0xffa4a4a4)
+                                                    : darkTxt,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        dataController.podcastList[currentIndex]
+                                                    .author.whatsapp !=
+                                                "---"
+                                            ? Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: Get.height * 0.02,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      await launch(
+                                                          'sms:${dataController.podcastList[currentIndex].author.whatsapp}');
+                                                    },
+                                                    child: Icon(
+                                                      Icons.sms_outlined,
+                                                      size: 28,
+                                                      color:
+                                                          ThemeProvider.themeOf(
+                                                                          context)
+                                                                      .id ==
+                                                                  "light"
+                                                              ? Colors.grey
+                                                              : darkTxt,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: Get.height * 0.02,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      await launch(
+                                                          'tel:${dataController.podcastList[currentIndex].author.whatsapp}');
+                                                    },
+                                                    child: Icon(
+                                                      Icons
+                                                          .phone_enabled_outlined,
+                                                      size: 28,
+                                                      color:
+                                                          ThemeProvider.themeOf(
+                                                                          context)
+                                                                      .id ==
+                                                                  "light"
+                                                              ? Colors.grey
+                                                              : darkTxt,
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            : SizedBox(),
+                                      ],
+                                      // crossAxisAlignment:
+                                      //     CrossAxisAlignment.start,
+                                      // mainAxisAlignment:
+                                      //     MainAxisAlignment.start,
                                     ),
                                   ],
                                 ),
                                 SizedBox(
-                                  height: Get.height * 0.005,
+                                  height: Get.height * 0.012,
                                 ),
                                 Row(
                                   children: [
@@ -767,9 +943,56 @@ class AuthorPodcast extends StatelessWidget {
                                       textAlign: TextAlign.left,
                                     ),
                                     Spacer(),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          dataController
+                                              .podcastList[currentIndex]
+                                              .author
+                                              .email,
+                                          style: TextStyle(
+                                            fontFamily: 'Aeonik',
+                                            fontSize: 15,
+                                            color:
+                                                ThemeProvider.themeOf(context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Color(0xffa4a4a4)
+                                                    : darkTxt,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        SizedBox(
+                                          width: Get.height * 0.02,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            await launch(
+                                                'mailto:${dataController.podcastList[currentIndex].author.email}?subject=About ${dataController.podcastList[currentIndex].author.displayName}&body=');
+                                          },
+                                          child: Icon(
+                                            Icons.email_outlined,
+                                            size: 28,
+                                            color:
+                                                ThemeProvider.themeOf(context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Colors.grey
+                                                    : darkTxt,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: Get.height * 0.020,
+                                ),
+                                Row(
+                                  children: [
                                     Text(
-                                      dataController.podcastList[currentIndex]
-                                          .author.email,
+                                      'Social:',
                                       style: TextStyle(
                                         fontFamily: 'Aeonik',
                                         fontSize: 15,
@@ -782,8 +1005,111 @@ class AuthorPodcast extends StatelessWidget {
                                       ),
                                       textAlign: TextAlign.left,
                                     ),
+                                    Spacer(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          child: IconButton(
+                                            padding: EdgeInsets.zero,
+                                            icon: SvgPicture.asset(
+                                              "assets/Icon awesome-facebook.svg",
+                                              color:
+                                                  ThemeProvider.themeOf(context)
+                                                              .id ==
+                                                          "light"
+                                                      ? Colors.grey
+                                                      : darkTxt,
+                                            ),
+                                            onPressed: () async {
+                                              await canLaunch(
+                                                dataController
+                                                    .podcastList[currentIndex]
+                                                    .author
+                                                    .facebook[0],
+                                              )
+                                                  ? await launch(dataController
+                                                      .podcastList[currentIndex]
+                                                      .author
+                                                      .facebook[0])
+                                                  : throw 'Could not launch ${dataController.podcastList[currentIndex].author.facebook[0]}';
+                                            },
+                                          ),
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Container(
+                                          child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              icon: SvgPicture.asset(
+                                                "assets/Icon awesome-instagram.svg",
+                                                color: ThemeProvider.themeOf(
+                                                                context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Colors.grey
+                                                    : darkTxt,
+                                              ),
+                                              onPressed: () async {
+                                                await canLaunch(
+                                                  dataController
+                                                      .podcastList[currentIndex]
+                                                      .author
+                                                      .instagram,
+                                                )
+                                                    ? await launch(
+                                                        dataController
+                                                            .podcastList[
+                                                                currentIndex]
+                                                            .author
+                                                            .instagram,
+                                                        universalLinksOnly:
+                                                            true,
+                                                      )
+                                                    : throw 'Could not launch ${dataController.podcastList[currentIndex].author.instagram}';
+                                              }),
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Container(
+                                          child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              icon: SvgPicture.asset(
+                                                "assets/Icon ionic-logo-whatsapp.svg",
+                                                color: ThemeProvider.themeOf(
+                                                                context)
+                                                            .id ==
+                                                        "light"
+                                                    ? Colors.grey
+                                                    : darkTxt,
+                                              ),
+                                              onPressed: () async {
+                                                if (Platform.isIOS) {
+                                                  await launch(
+                                                    "whatsapp://wa.me/${dataController.podcastList[currentIndex].author.whatsapp}/?text=${Uri.encodeFull("Hi  " + "${dataController.podcastList[currentIndex].author.displayName}")}",
+                                                    universalLinksOnly: true,
+                                                  );
+                                                } else {
+                                                  await launch(
+                                                    "whatsapp://send?phone=${dataController.podcastList[currentIndex].author.whatsapp}&text=${Uri.encodeFull("Hi  " + "${dataController.podcastList[currentIndex].author.displayName}")}",
+                                                    universalLinksOnly: true,
+                                                  );
+                                                }
+                                              }),
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                      ],
+                                    ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ),

@@ -158,8 +158,7 @@ class MediaListRadioView extends StatelessWidget {
                                                               .id ==
                                                           "light")
                                                       ? Colors.grey[400]
-                                                      : Theme.of(context)
-                                                          .primaryColor,
+                                                      : darkTxt,
                                                 ),
                                                 child:
                                                     StreamBuilder<
@@ -209,8 +208,12 @@ class MediaListRadioView extends StatelessWidget {
                                                                     BoxDecoration(
                                                                   shape: BoxShape
                                                                       .circle,
-                                                                  color: Colors
-                                                                      .white,
+                                                                  color: (ThemeProvider.themeOf(context)
+                                                                              .id ==
+                                                                          "light")
+                                                                      ? Colors
+                                                                          .grey[400]
+                                                                      : darkTxt,
                                                                 ),
                                                                 child:
                                                                     IconButton(
@@ -233,11 +236,9 @@ class MediaListRadioView extends StatelessWidget {
                                                                   color: (ThemeProvider.themeOf(context)
                                                                               .id ==
                                                                           "light")
-                                                                      ? Colors.grey[
-                                                                          400]
-                                                                      : Theme.of(
-                                                                              context)
-                                                                          .primaryColor,
+                                                                      ? Colors
+                                                                          .grey[400]
+                                                                      : darkTxt,
                                                                 ),
                                                                 child:
                                                                     IconButton(
@@ -294,11 +295,9 @@ class MediaListRadioView extends StatelessWidget {
                                                                 color: (ThemeProvider.themeOf(context)
                                                                             .id ==
                                                                         "light")
-                                                                    ? Colors.grey[
-                                                                        400]
-                                                                    : Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
+                                                                    ? Colors
+                                                                        .grey[400]
+                                                                    : darkTxt,
                                                               ),
                                                               child: IconButton(
                                                                 icon: const Icon(
@@ -501,7 +500,13 @@ class MediaListRadioView extends StatelessWidget {
                                                               BoxDecoration(
                                                             shape:
                                                                 BoxShape.circle,
-                                                            color: Colors.white,
+                                                            color: (ThemeProvider.themeOf(
+                                                                            context)
+                                                                        .id ==
+                                                                    "light")
+                                                                ? Colors
+                                                                    .grey[400]
+                                                                : darkTxt,
                                                           ),
                                                           child: IconButton(
                                                               icon: const Icon(

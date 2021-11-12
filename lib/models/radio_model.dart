@@ -7,20 +7,20 @@ String radioModelToJson(List<RadioModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class RadioModel {
-  RadioModel({
-    required this.id,
-    required this.date,
-    required this.title,
-    required this.link,
-    required this.stream,
-    required this.duration,
-    required this.postCountAll,
-    required this.likeCount,
-    required this.downloadCount,
-    required this.copyright,
-    required this.thumbnail,
-    required this.author,
-  });
+  RadioModel(
+      {required this.id,
+      required this.date,
+      required this.title,
+      required this.link,
+      required this.stream,
+      required this.duration,
+      required this.postCountAll,
+      required this.likeCount,
+      required this.downloadCount,
+      required this.copyright,
+      required this.thumbnail,
+      required this.author,
+      required this.slug});
 
   int id;
   DateTime date;
@@ -34,6 +34,7 @@ class RadioModel {
   String copyright;
   String thumbnail;
   Author author;
+  String slug;
 
   factory RadioModel.fromJson(Map<String, dynamic> json) => RadioModel(
         id: json["id"],
@@ -47,6 +48,7 @@ class RadioModel {
         downloadCount: json["download_count"],
         copyright: json["copyright"],
         thumbnail: json["thumbnail"],
+        slug: json["slug"],
         author: Author.fromJson(json["author"]),
       );
 

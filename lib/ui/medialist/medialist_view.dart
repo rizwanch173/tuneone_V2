@@ -153,8 +153,7 @@ class MediaListView extends StatelessWidget {
                                                               .id ==
                                                           "light")
                                                       ? Colors.grey[400]
-                                                      : Theme.of(context)
-                                                          .primaryColor,
+                                                      : darkTxt,
                                                 ),
                                                 child:
                                                     StreamBuilder<
@@ -207,16 +206,17 @@ class MediaListView extends StatelessWidget {
                                                                   color: (ThemeProvider.themeOf(context)
                                                                               .id ==
                                                                           "light")
-                                                                      ? Colors.grey[
-                                                                          400]
-                                                                      : Theme.of(
-                                                                              context)
-                                                                          .primaryColor,
+                                                                      ? Colors
+                                                                          .grey[400]
+                                                                      : darkTxt,
                                                                 ),
                                                                 child:
                                                                     IconButton(
-                                                                        icon: const Icon(Icons
-                                                                            .pause),
+                                                                        icon:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .pause,
+                                                                        ),
                                                                         onPressed:
                                                                             () {
                                                                           audioHandler
@@ -234,17 +234,16 @@ class MediaListView extends StatelessWidget {
                                                                   color: (ThemeProvider.themeOf(context)
                                                                               .id ==
                                                                           "light")
-                                                                      ? Colors.grey[
-                                                                          400]
-                                                                      : Theme.of(
-                                                                              context)
-                                                                          .primaryColor,
+                                                                      ? Colors
+                                                                          .grey[400]
+                                                                      : darkTxt,
                                                                 ),
                                                                 child:
                                                                     IconButton(
-                                                                  icon: const Icon(
-                                                                      Icons
-                                                                          .play_arrow),
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .play_arrow,
+                                                                  ),
                                                                   onPressed:
                                                                       () async {
                                                                     podcastController
@@ -302,16 +301,15 @@ class MediaListView extends StatelessWidget {
                                                                 color: (ThemeProvider.themeOf(context)
                                                                             .id ==
                                                                         "light")
-                                                                    ? Colors.grey[
-                                                                        400]
-                                                                    : Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
+                                                                    ? Colors
+                                                                        .grey[400]
+                                                                    : darkTxt,
                                                               ),
                                                               child: IconButton(
-                                                                icon: const Icon(
-                                                                    Icons
-                                                                        .play_arrow),
+                                                                icon: Icon(
+                                                                  Icons
+                                                                      .play_arrow,
+                                                                ),
                                                                 onPressed:
                                                                     () async {
                                                                   podcastController
@@ -378,8 +376,8 @@ class MediaListView extends StatelessWidget {
                                                                   context)
                                                               .id ==
                                                           "light"
-                                                      ? Colors.white
-                                                      : darkTxt,
+                                                      ? darkBg
+                                                      : Colors.white,
                                                 ),
                                               ),
                                               subtitle: AutoSizeText(
@@ -493,12 +491,12 @@ class MediaListView extends StatelessWidget {
                                                                     .id ==
                                                                 "light")
                                                             ? Colors.grey[400]
-                                                            : Theme.of(context)
-                                                                .primaryColor,
+                                                            : darkTxt,
                                                       ),
                                                       child: IconButton(
-                                                          icon: const Icon(
-                                                              Icons.pause),
+                                                          icon: Icon(
+                                                            Icons.pause,
+                                                          ),
                                                           onPressed: () {
                                                             audioHandler
                                                                 .pause();
@@ -516,12 +514,12 @@ class MediaListView extends StatelessWidget {
                                                                     .id ==
                                                                 "light")
                                                             ? Colors.grey[400]
-                                                            : Theme.of(context)
-                                                                .primaryColor,
+                                                            : darkTxt,
                                                       ),
                                                       child: IconButton(
-                                                        icon: const Icon(
-                                                            Icons.play_arrow),
+                                                        icon: Icon(
+                                                          Icons.play_arrow,
+                                                        ),
                                                         onPressed: () async {
                                                           podcastController
                                                               .indexX = index;
@@ -586,12 +584,12 @@ class MediaListView extends StatelessWidget {
                                                                   .id ==
                                                               "light")
                                                           ? Colors.grey[400]
-                                                          : Theme.of(context)
-                                                              .primaryColor,
+                                                          : darkTxt,
                                                     ),
                                                     child: IconButton(
-                                                      icon: const Icon(
-                                                          Icons.play_arrow),
+                                                      icon: Icon(
+                                                        Icons.play_arrow,
+                                                      ),
                                                       onPressed: () async {
                                                         podcastController
                                                             .indexX = index;

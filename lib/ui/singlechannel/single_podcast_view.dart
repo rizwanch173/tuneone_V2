@@ -155,189 +155,270 @@ class SinglePodcastView extends StatelessWidget {
                           child: Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: Get.width * 0.05),
-                              child: Column(children: [
-                                SizedBox(
-                                  height: kToolbarHeight,
-                                ),
-                                SizedBox(height: Get.height * 0.05),
-                                Obx(
-                                  () => Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          border: Border.all(
-                                            width: 2,
-                                            color:
-                                                ThemeProvider.themeOf(context)
-                                                            .id ==
-                                                        "light"
-                                                    ? backGroundColor
-                                                    : darkTxt,
+                              child: SingleChildScrollView(
+                                child: Column(children: [
+                                  SizedBox(
+                                    height: kToolbarHeight,
+                                  ),
+                                  SizedBox(height: Get.height * 0.05),
+                                  Obx(
+                                    () => Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            border: Border.all(
+                                              width: 2,
+                                              color:
+                                                  ThemeProvider.themeOf(context)
+                                                              .id ==
+                                                          "light"
+                                                      ? backGroundColor
+                                                      : darkTxt,
+                                            ),
                                           ),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: AspectRatio(
-                                            aspectRatio: 1 / 1,
-                                            child: StyledCachedNetworkImage2(
-                                              url: dataController
-                                                  .podcastList[homeController
-                                                      .indexToPlayPod.value]
-                                                  .thumbnail,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: AspectRatio(
+                                              aspectRatio: 1 / 1,
+                                              child: StyledCachedNetworkImage2(
+                                                url: dataController
+                                                    .podcastList[homeController
+                                                        .indexToPlayPod.value]
+                                                    .thumbnail,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          homeController.prepareAuthorList(
-                                              authorId: dataController
-                                                  .podcastList[homeController
-                                                      .indexToPlayPod.value]
-                                                  .author
-                                                  .authorId);
-                                          Get.to(AuthorPodcast(
-                                            currentIndex: homeController
-                                                .indexToPlayPod.value,
-                                          ));
-                                        },
-                                        child: AutoSizeText(
-                                          dataController
-                                              .podcastList[homeController
-                                                  .indexToPlayPod.value]
-                                              .author
-                                              .displayName,
-                                          style: TextStyle(color: Colors.white),
-                                          presetFontSizes: [18, 16],
+                                        SizedBox(
+                                          height: 10,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.02,
-                                ),
-                                StreamBuilder<PositionData>(
-                                  stream: _positionDataStream,
-                                  builder: (context, snapshot) {
-                                    final positionData = snapshot.data ??
-                                        PositionData(Duration.zero,
-                                            Duration.zero, Duration.zero);
-                                    return SeekBar(
-                                      duration: positionData.duration,
-                                      position: positionData.position,
-                                      onChangeEnd: (newPosition) {
-                                        audioHandler.seek(newPosition);
-                                      },
-                                    );
-                                  },
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.04,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    GestureDetector(
-                                      child: Icon(
-                                        Icons.ios_share,
-                                        color: Colors.white,
-                                        size: 35,
-                                      ),
-                                      onTap: () async {
-                                        Share.share(dataController
-                                            .radioList[homeController
-                                                .indexToPlayPod.value]
-                                            .link);
-                                      },
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        if (homeController
-                                                .indexToPlayPod.value ==
-                                            0) {
-                                          homeController.indexToPlayPod.value =
-                                              dataController
-                                                      .podcastList.length -
-                                                  1;
-                                          await audioHandler.skipToQueueItem(
-                                              homeController
-                                                  .indexToPlayPod.value);
-                                        } else {
-                                          homeController.indexToPlayPod -= 1;
-                                          await audioHandler.skipToQueueItem(
-                                              homeController
-                                                  .indexToPlayPod.value);
-                                        }
-                                      },
-                                      child: Icon(Icons.skip_previous_outlined,
-                                          color: Colors.white, size: 40),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: (ThemeProvider.themeOf(context)
-                                                    .id ==
-                                                "light")
-                                            ? Colors.grey[400]
-                                            : Theme.of(context).primaryColor,
-                                      ),
-                                      child: StreamBuilder<PlaybackState>(
-                                        stream: audioHandler.playbackState,
-                                        builder: (context, snapshot) {
-                                          final playbackState = snapshot.data;
-                                          final processingState =
-                                              playbackState?.processingState;
-                                          final playing =
-                                              playbackState?.playing;
-                                          if (processingState ==
-                                                  AudioProcessingState
-                                                      .loading ||
-                                              processingState ==
-                                                  AudioProcessingState
-                                                      .buffering) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                              ),
-                                              width: 40.0,
-                                              height: 40.0,
-                                              child:
-                                                  const CupertinoActivityIndicator(),
-                                            );
-                                          } else if (playing == true) {
-                                            if (audioHandler
-                                                    .mediaItem.value!.id ==
-                                                dataController
+                                        TextButton(
+                                          onPressed: () {
+                                            homeController.prepareAuthorList(
+                                                authorId: dataController
                                                     .podcastList[homeController
                                                         .indexToPlayPod.value]
-                                                    .stream) {
+                                                    .author
+                                                    .authorId);
+                                            Get.to(AuthorPodcast(
+                                              currentIndex: homeController
+                                                  .indexToPlayPod.value,
+                                            ));
+                                          },
+                                          child: AutoSizeText(
+                                            dataController
+                                                .podcastList[homeController
+                                                    .indexToPlayPod.value]
+                                                .author
+                                                .displayName,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                            presetFontSizes: [18, 16],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: Get.height * 0.02,
+                                  ),
+                                  StreamBuilder<PositionData>(
+                                    stream: _positionDataStream,
+                                    builder: (context, snapshot) {
+                                      final positionData = snapshot.data ??
+                                          PositionData(Duration.zero,
+                                              Duration.zero, Duration.zero);
+                                      return SeekBar(
+                                        duration: positionData.duration,
+                                        position: positionData.position,
+                                        onChangeEnd: (newPosition) {
+                                          audioHandler.seek(newPosition);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: Get.height * 0.04,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      GestureDetector(
+                                        child: Icon(
+                                          Icons.ios_share,
+                                          color: Colors.white,
+                                          size: 35,
+                                        ),
+                                        onTap: () async {
+                                          Share.share(dataController
+                                              .podcastList[homeController
+                                                  .indexToPlayPod.value]
+                                              .link);
+                                        },
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          if (homeController
+                                                  .indexToPlayPod.value ==
+                                              0) {
+                                            homeController.indexToPlayPod
+                                                .value = dataController
+                                                    .podcastList.length -
+                                                1;
+                                            await audioHandler.skipToQueueItem(
+                                                homeController
+                                                    .indexToPlayPod.value);
+                                          } else {
+                                            homeController.indexToPlayPod -= 1;
+                                            await audioHandler.skipToQueueItem(
+                                                homeController
+                                                    .indexToPlayPod.value);
+                                          }
+                                        },
+                                        child: Icon(
+                                            Icons.skip_previous_outlined,
+                                            color: Colors.white,
+                                            size: 40),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: (ThemeProvider.themeOf(context)
+                                                      .id ==
+                                                  "light")
+                                              ? Colors.grey[400]
+                                              : Theme.of(context).primaryColor,
+                                        ),
+                                        child: StreamBuilder<PlaybackState>(
+                                          stream: audioHandler.playbackState,
+                                          builder: (context, snapshot) {
+                                            final playbackState = snapshot.data;
+                                            final processingState =
+                                                playbackState?.processingState;
+                                            final playing =
+                                                playbackState?.playing;
+                                            if (processingState ==
+                                                    AudioProcessingState
+                                                        .loading ||
+                                                processingState ==
+                                                    AudioProcessingState
+                                                        .buffering) {
                                               return Container(
-                                                height: 40,
-                                                width: 40,
                                                 decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
                                                   color: Colors.white,
                                                 ),
-                                                child: IconButton(
-                                                    icon: const Icon(
-                                                      Icons.pause,
-                                                    ),
+                                                width: 40.0,
+                                                height: 40.0,
+                                                child:
+                                                    const CupertinoActivityIndicator(),
+                                              );
+                                            } else if (playing == true) {
+                                              if (audioHandler
+                                                      .mediaItem.value!.id ==
+                                                  dataController
+                                                      .podcastList[
+                                                          homeController
+                                                              .indexToPlayPod
+                                                              .value]
+                                                      .stream) {
+                                                return Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: IconButton(
+                                                      icon: const Icon(
+                                                        Icons.pause,
+                                                      ),
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      onPressed: () {
+                                                        audioHandler.pause();
+                                                      }),
+                                                );
+                                              } else {
+                                                return Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: IconButton(
                                                     color: Theme.of(context)
                                                         .primaryColor,
-                                                    onPressed: () {
-                                                      audioHandler.pause();
-                                                    }),
-                                              );
+                                                    icon: const Icon(
+                                                        Icons.play_arrow),
+                                                    onPressed: () async {
+                                                      podcastController.indexX =
+                                                          homeController
+                                                              .indexToPlayPod
+                                                              .value;
+
+                                                      if (homeController
+                                                                  .whoAccess
+                                                                  .value ==
+                                                              "radio" ||
+                                                          homeController
+                                                                  .whoAccess
+                                                                  .value ==
+                                                              "none") {
+                                                        await audioHandler
+                                                            .updateQueue(
+                                                                dataController
+                                                                    .mediaListPodcast);
+                                                        await audioHandler
+                                                            .skipToQueueItem(
+                                                                homeController
+                                                                    .indexToPlayPod
+                                                                    .value);
+                                                        audioHandler.play();
+                                                        homeController.whoAccess
+                                                            .value = "pod";
+                                                      } else {
+                                                        print("pod access");
+                                                        if (audioHandler
+                                                                .mediaItem
+                                                                .value!
+                                                                .id !=
+                                                            dataController
+                                                                .mediaListPodcast[
+                                                                    homeController
+                                                                        .indexToPlayPod
+                                                                        .value]
+                                                                .id) {
+                                                          await audioHandler
+                                                              .skipToQueueItem(
+                                                                  homeController
+                                                                      .indexToPlayPod
+                                                                      .value);
+                                                        }
+
+                                                        audioHandler.play();
+
+                                                        homeController.whoAccess
+                                                            .value = "pod";
+                                                      }
+                                                      dataController.addRecently(
+                                                          dataController
+                                                                  .podcastList[
+                                                              homeController
+                                                                  .indexToPlayPod
+                                                                  .value],
+                                                          true);
+                                                    },
+                                                  ),
+                                                );
+                                              }
                                             } else {
                                               return Container(
                                                 height: 40,
@@ -376,7 +457,6 @@ class SinglePodcastView extends StatelessWidget {
                                                       homeController.whoAccess
                                                           .value = "pod";
                                                     } else {
-                                                      print("pod access");
                                                       if (audioHandler.mediaItem
                                                               .value!.id !=
                                                           dataController
@@ -385,6 +465,8 @@ class SinglePodcastView extends StatelessWidget {
                                                                       .indexToPlayPod
                                                                       .value]
                                                               .id) {
+                                                        print(
+                                                            "pod access 2 + same");
                                                         await audioHandler
                                                             .skipToQueueItem(
                                                                 homeController
@@ -408,167 +490,101 @@ class SinglePodcastView extends StatelessWidget {
                                                 ),
                                               );
                                             }
+                                          },
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          if (homeController
+                                                  .indexToPlayPod.value ==
+                                              dataController
+                                                      .podcastList.length -
+                                                  1) {
+                                            homeController.indexToPlayPod =
+                                                homeController.indexToPlayPod =
+                                                    RxInt(0);
+                                            await audioHandler.skipToQueueItem(
+                                                homeController
+                                                    .indexToPlayPod.value);
                                           } else {
-                                            return Container(
-                                              height: 40,
-                                              width: 40,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                              ),
-                                              child: IconButton(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                icon: const Icon(
-                                                    Icons.play_arrow),
-                                                onPressed: () async {
-                                                  podcastController.indexX =
-                                                      homeController
-                                                          .indexToPlayPod.value;
-
-                                                  if (homeController.whoAccess
-                                                              .value ==
-                                                          "radio" ||
-                                                      homeController.whoAccess
-                                                              .value ==
-                                                          "none") {
-                                                    await audioHandler.updateQueue(
-                                                        dataController
-                                                            .mediaListPodcast);
-                                                    await audioHandler
-                                                        .skipToQueueItem(
-                                                            homeController
-                                                                .indexToPlayPod
-                                                                .value);
-                                                    audioHandler.play();
-                                                    homeController.whoAccess
-                                                        .value = "pod";
-                                                  } else {
-                                                    if (audioHandler.mediaItem
-                                                            .value!.id !=
-                                                        dataController
-                                                            .mediaListPodcast[
-                                                                homeController
-                                                                    .indexToPlayPod
-                                                                    .value]
-                                                            .id) {
-                                                      print(
-                                                          "pod access 2 + same");
-                                                      await audioHandler
-                                                          .skipToQueueItem(
-                                                              homeController
-                                                                  .indexToPlayPod
-                                                                  .value);
-                                                    }
-
-                                                    audioHandler.play();
-
-                                                    homeController.whoAccess
-                                                        .value = "pod";
-                                                  }
-                                                  dataController.addRecently(
-                                                      dataController
-                                                              .podcastList[
-                                                          homeController
-                                                              .indexToPlayPod
-                                                              .value],
-                                                      true);
-                                                },
-                                              ),
-                                            );
+                                            homeController.indexToPlayPod += 1;
+                                            await audioHandler.skipToQueueItem(
+                                                homeController
+                                                    .indexToPlayPod.value);
                                           }
                                         },
+                                        child: Icon(Icons.skip_next_outlined,
+                                            color: Colors.white, size: 40),
                                       ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        if (homeController
-                                                .indexToPlayPod.value ==
-                                            dataController.podcastList.length -
-                                                1) {
-                                          homeController.indexToPlayPod =
-                                              homeController.indexToPlayPod =
-                                                  RxInt(0);
-                                          await audioHandler.skipToQueueItem(
-                                              homeController
-                                                  .indexToPlayPod.value);
-                                        } else {
-                                          homeController.indexToPlayPod += 1;
-                                          await audioHandler.skipToQueueItem(
-                                              homeController
-                                                  .indexToPlayPod.value);
-                                        }
-                                      },
-                                      child: Icon(Icons.skip_next_outlined,
-                                          color: Colors.white, size: 40),
-                                    ),
-                                    dataController.islogin.isFalse
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              homeController.showAlertDialog(
-                                                  context: context,
-                                                  title: "ATTENTION!",
-                                                  content:
-                                                      "Please Sign In To Continue This Action",
-                                                  cancelActionText: "CANCEL",
-                                                  defaultActionText: "LOG IN");
-                                            },
-                                            child: Icon(
-                                              Icons.favorite_outline_sharp,
-                                              color: Colors.white,
-                                              size: 40,
+                                      dataController.islogin.isFalse
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                homeController.showAlertDialog(
+                                                    context: context,
+                                                    title: "ATTENTION!",
+                                                    content:
+                                                        "Please Sign In To Continue This Action",
+                                                    cancelActionText: "CANCEL",
+                                                    defaultActionText:
+                                                        "LOG IN");
+                                              },
+                                              child: Icon(
+                                                Icons.favorite_outline_sharp,
+                                                color: Colors.white,
+                                                size: 40,
+                                              ),
+                                            )
+                                          : Obx(
+                                              () => !dataController.likeList
+                                                      .contains(dataController
+                                                          .podcastList[
+                                                              homeController
+                                                                  .indexToPlayPod
+                                                                  .value]
+                                                          .id)
+                                                  ? GestureDetector(
+                                                      onTap: () async {
+                                                        var response = await RemoteServices.likeDislike(
+                                                            like: true,
+                                                            postId: dataController
+                                                                .podcastList[
+                                                                    homeController
+                                                                        .indexToPlayPod
+                                                                        .value]
+                                                                .id);
+                                                      },
+                                                      child: Icon(
+                                                        Icons
+                                                            .favorite_outline_sharp,
+                                                        color: Colors.white,
+                                                        size: 40,
+                                                      ),
+                                                    )
+                                                  : GestureDetector(
+                                                      onTap: () async {
+                                                        var response = await RemoteServices.likeDislike(
+                                                            like: false,
+                                                            postId: dataController
+                                                                .podcastList[
+                                                                    homeController
+                                                                        .indexToPlayPod
+                                                                        .value]
+                                                                .id);
+                                                      },
+                                                      child: Icon(
+                                                        Icons.favorite_outlined,
+                                                        color: Colors.white,
+                                                        size: 40,
+                                                      ),
+                                                    ),
                                             ),
-                                          )
-                                        : Obx(
-                                            () => !dataController.likeList
-                                                    .contains(dataController
-                                                        .podcastList[
-                                                            homeController
-                                                                .indexToPlayPod
-                                                                .value]
-                                                        .id)
-                                                ? GestureDetector(
-                                                    onTap: () async {
-                                                      var response = await RemoteServices.likeDislike(
-                                                          like: true,
-                                                          postId: dataController
-                                                              .podcastList[
-                                                                  homeController
-                                                                      .indexToPlayPod
-                                                                      .value]
-                                                              .id);
-                                                    },
-                                                    child: Icon(
-                                                      Icons
-                                                          .favorite_outline_sharp,
-                                                      color: Colors.white,
-                                                      size: 40,
-                                                    ),
-                                                  )
-                                                : GestureDetector(
-                                                    onTap: () async {
-                                                      var response = await RemoteServices.likeDislike(
-                                                          like: false,
-                                                          postId: dataController
-                                                              .podcastList[
-                                                                  homeController
-                                                                      .indexToPlayPod
-                                                                      .value]
-                                                              .id);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.favorite_outlined,
-                                                      color: Colors.white,
-                                                      size: 40,
-                                                    ),
-                                                  ),
-                                          ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: kBottomNavigationBarHeight,
-                                )
-                              ])));
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: kBottomNavigationBarHeight,
+                                  )
+                                ]),
+                              )));
                     }),
               ),
             ],

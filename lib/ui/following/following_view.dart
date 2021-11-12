@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
-
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:adobe_xd/adobe_xd.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
@@ -191,16 +192,96 @@ class FollowingView extends StatelessWidget {
                             // Adobe XD layer: 'background-01' (shape)
                             Stack(
                               children: [
+                                // Container(
+                                //   height: 100,
+                                //   child: Image.asset("assets/background-7.png"),
+                                // ),
+                                //
+                                // SizedBox.expand(
+                                //   child: Image.asset(
+                                //     'images/sky.jpg',
+                                //   ),
+                                // ),
+
                                 Container(
                                   height: 100,
-                                  child: Image.asset("assets/background-7.png"),
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        const Color(0xFF7BF2E9),
+                                        const Color(0xFFB65EBA),
+                                      ],
+                                      begin: Alignment(0.0, -1.0),
+                                      end: Alignment(0.0, 0.0),
+                                      //  stops: [0.0, 0.0],
+                                    ),
+                                  ),
                                 ),
+
                                 Container(
                                   height: 100,
-                                  child: Image.asset("assets/wk-4.png",
-                                      color: const Color.fromRGBO(
-                                          255, 255, 255, 0.6),
-                                      colorBlendMode: BlendMode.modulate),
+                                  width: 200,
+                                  child: BlendMask(
+                                    opacity: 1.0,
+                                    blendMode: BlendMode.overlay,
+                                    child: SizedBox.expand(
+                                      child: Image.asset(
+                                        'assets/background-7.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Stack(
+                              children: [
+                                // Container(
+                                //   height: 100,
+                                //   child: Image.asset("assets/background-7.png"),
+                                // ),
+                                //
+                                // SizedBox.expand(
+                                //   child: Image.asset(
+                                //     'images/sky.jpg',
+                                //   ),
+                                // ),
+
+                                Container(
+                                  height: 100,
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        const Color(0xFFA7E05F),
+                                        const Color(0xFF70C900),
+                                      ],
+                                      begin: Alignment(0.0, -1.0),
+                                      end: Alignment(0.0, 0.0),
+                                      //  stops: [0.0, 0.0],
+                                    ),
+                                  ),
+                                ),
+
+                                Container(
+                                  height: 100,
+                                  width: 200,
+                                  child: BlendMask(
+                                    opacity: 1.0,
+                                    blendMode: BlendMode.overlay,
+                                    child: SizedBox.expand(
+                                      child: Image.asset(
+                                        'assets/background-7.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -352,5 +433,47 @@ class MaskedImage extends StatelessWidget {
     Image image = Image.memory(data.buffer.asUint8List(),
         fit: BoxFit.cover, width: w, height: h);
     return [shader, image];
+  }
+}
+
+class BlendMask extends SingleChildRenderObjectWidget {
+  final BlendMode blendMode;
+  final double opacity;
+
+  BlendMask({
+    required this.blendMode,
+    this.opacity = 1.0,
+    required Widget child,
+  }) : super(child: child);
+
+  @override
+  RenderObject createRenderObject(context) {
+    return RenderBlendMask(blendMode, opacity);
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, RenderBlendMask renderObject) {
+    renderObject.blendMode = blendMode;
+    renderObject.opacity = opacity;
+  }
+}
+
+class RenderBlendMask extends RenderProxyBox {
+  BlendMode blendMode;
+  double opacity;
+
+  RenderBlendMask(this.blendMode, this.opacity);
+
+  @override
+  void paint(context, offset) {
+    context.canvas.saveLayer(
+        offset & size,
+        Paint()
+          ..blendMode = blendMode
+          ..color = Color.fromARGB((opacity * 255).round(), 255, 255, 255));
+
+    super.paint(context, offset);
+
+    context.canvas.restore();
   }
 }

@@ -97,7 +97,7 @@ class LibraryView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AutoSizeText(
-                            "Favorite Stations",
+                            "Favorite Radio",
                             style: TextStyle(
                               color:
                                   ThemeProvider.themeOf(context).id == "light"
@@ -176,8 +176,8 @@ class LibraryView extends StatelessWidget {
                                             .radioListMasterCopy[indexR].id)) {
                                       return GestureDetector(
                                         onTap: () {
-                                          homeController.indexToPlayRadio.value =
-                                              indexR;
+                                          homeController
+                                              .indexToPlayRadio.value = indexR;
                                           Get.to(SingleRadioView());
                                         },
                                         child: Container(
@@ -367,7 +367,8 @@ class LibraryView extends StatelessWidget {
                                             .podcastListMasterCopy[index].id)) {
                                       return GestureDetector(
                                         onTap: () {
-                                          homeController.indexToPlayPod.value = index;
+                                          homeController.indexToPlayPod.value =
+                                              index;
                                           Get.to(SinglePodcastView());
                                         },
                                         child: Container(
