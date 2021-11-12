@@ -52,6 +52,7 @@ class User {
   });
 
   String id;
+
   String userLogin;
   String userPass;
   String userNicename;
@@ -100,8 +101,9 @@ class UserMeta {
     required this.description,
     required this.likes,
     required this.followings,
+    required this.avtar,
   });
-
+  String avtar;
   String nickname;
   String firstName;
   String lastName;
@@ -114,6 +116,7 @@ class UserMeta {
         firstName: json["first_name"],
         lastName: json["last_name"],
         description: json["description"],
+        avtar: json["avtar"],
         likes: List<dynamic>.from(json["likes"].map((x) => x)),
         followings: List<dynamic>.from(json["followings"].map((x) => x)),
       );
@@ -123,6 +126,7 @@ class UserMeta {
         "first_name": firstName,
         "last_name": lastName,
         "description": description,
+        "avtar": avtar,
         "likes": List<dynamic>.from(likes.map((x) => x)),
         "followings": List<dynamic>.from(followings.map((x) => x)),
       };

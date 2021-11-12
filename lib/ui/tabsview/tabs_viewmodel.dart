@@ -16,6 +16,8 @@ class TabsViewModel extends GetxController {
   ];
   changeIndex(int val) {
     index = val;
+    PodCastsView.selectedPod(true);
+    RadioStationsView.selectedRadio(true);
     update();
   }
 }

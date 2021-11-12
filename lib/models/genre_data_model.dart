@@ -1,29 +1,27 @@
 import 'dart:convert';
 
-List<PodcastModel> podcastModelFromJson(String str) => List<PodcastModel>.from(
-    json.decode(str).map((x) => PodcastModel.fromJson(x)));
+List<GenreDataModel> genreDataModelFromJson(String str) =>
+    List<GenreDataModel>.from(
+        json.decode(str).map((x) => GenreDataModel.fromJson(x)));
 
-String podcastModelToJson(List<PodcastModel> data) =>
+String genreDataModelToJson(List<GenreDataModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class PodcastModel {
-  PodcastModel({
-    required this.id,
-    required this.date,
-    required this.title,
-    required this.link,
-    required this.stream,
-    required this.duration,
-    required this.postCountAll,
-    required this.likeCount,
-    required this.downloadCount,
-    required this.copyright,
-    required this.thumbnail,
-    required this.author,
-    required this.slug,
-    required this.isRadio,
-    required this.genres,
-  });
+class GenreDataModel {
+  GenreDataModel(
+      {required this.id,
+      required this.date,
+      required this.title,
+      required this.link,
+      required this.stream,
+      required this.duration,
+      required this.postCountAll,
+      required this.likeCount,
+      required this.downloadCount,
+      required this.copyright,
+      required this.thumbnail,
+      required this.author,
+      required this.slug});
 
   int id;
   DateTime date;
@@ -38,10 +36,8 @@ class PodcastModel {
   String thumbnail;
   Author author;
   String slug;
-  bool isRadio;
-  List<int> genres;
 
-  factory PodcastModel.fromJson(Map<String, dynamic> json) => PodcastModel(
+  factory GenreDataModel.fromJson(Map<String, dynamic> json) => GenreDataModel(
         id: json["id"],
         date: DateTime.parse(json["date"]),
         title: json["title"],
@@ -54,8 +50,6 @@ class PodcastModel {
         copyright: json["copyright"],
         thumbnail: json["thumbnail"],
         slug: json["slug"],
-        isRadio: json["isradio"],
-        genres: List<int>.from(json["genres"].map((x) => x)),
         author: Author.fromJson(json["author"]),
       );
 

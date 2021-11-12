@@ -8,6 +8,7 @@ import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/login_controller.dart';
 import 'package:tuneone/controllers/signup_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tuneone/models/genre_data_model.dart';
 import 'package:tuneone/models/genre_model.dart';
 import 'package:tuneone/models/podcast_model.dart';
 import 'package:tuneone/models/radio_model.dart';
@@ -239,21 +240,60 @@ class RemoteServices {
     }
   }
 
+  static Future<bool?> followOrUnfollow(
+      {required bool follow, required int channelId}) async {
+    final param = {
+      "meta": {"id": channelId},
+      "is_following": follow
+    };
+
+    var response = await apiRequest(
+        "https://tuneoneradio.com/wp-json/wp/v2/users/" +
+            dataController.userList.user.id,
+        param);
+    var jsonString = response.body;
+
+    if (response.statusCode == 200) {
+      final item = json.decode(response.body);
+
+      print(response.body);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<bool?> getGenre() async {
     var response = await client.get(Uri.parse(
         'https://tuneoneradio.com/wp-json/wp/v2/genre?&per_page=100'));
 
     if (response.statusCode == 200) {
       var jsonString = response.body;
-      dataController.genrelistMaster.value = genreModelFromJson(jsonString);
+      dataController.genrelistGenral.value = genreModelFromJson(jsonString);
 
-      dataController.genrelistRadio.value = dataController.genrelistMaster
-          .where((p0) => p0.parent == 58)
-          .toList();
+      dataController.genrelistRadio.value = dataController
+          .genrelistRadioMaster.value = dataController.genrelistGenral;
 
-      dataController.genrelistPod.value = dataController.genrelistMaster
-          .where((p0) => p0.parent == 52)
-          .toList();
+      dataController.genrelistPod.value =
+          dataController.genrelistpodMaster.value = dataController
+              .genrelistGenral
+              .where((p0) => p0.parent == 52)
+              .toList();
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool?> getGenreData({genreId}) async {
+    var response = await client.get(Uri.parse(
+        'https://tuneoneradio.com/wp-json/wp/v2/station?genre=$genreId&_embed&per_page=100'));
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      dataController.genredatalistGenral.value =
+          genreDataModelFromJson(jsonString);
 
       return true;
     } else {

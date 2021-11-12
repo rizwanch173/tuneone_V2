@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
-import 'package:tuneone/ui/authar_page/author_radio.dart';
 import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/medialist/medialist_view.dart';
 import 'package:tuneone/ui/shared/styles.dart';
@@ -79,7 +78,7 @@ class HomePageView extends StatelessWidget {
                                       dataController.islogin.isTrue
                                           ? "Dear, " +
                                               dataController
-                                                  .userList.user.displayName
+                                                  .userList.userMeta.firstName
                                                   .split("@")[0]
                                           : "Dear,",
                                       presetFontSizes: [18, 20],

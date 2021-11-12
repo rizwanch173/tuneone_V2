@@ -9,6 +9,7 @@ import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/controllers/podcast_controller.dart';
 import 'package:tuneone/controllers/radio_controller.dart';
+import 'package:tuneone/ui/medialist/genre_medialist_radio.dart';
 import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -21,9 +22,9 @@ class RadioStationsView extends StatelessWidget {
   final DataController dataController = Get.find();
   final HomeController homeController = Get.find();
   final _debouncer = Debouncer(milliseconds: 500);
+  static var selectedRadio = true.obs;
   @override
   Widget build(BuildContext context) {
-    var selectedRadio = true.obs;
     homeController.updateView();
     return Container(
       color: ThemeProvider.themeOf(context).id == "light"
@@ -66,6 +67,7 @@ class RadioStationsView extends StatelessWidget {
                                       child: selectedRadio.isFalse
                                           ? Container(
                                               width: 30,
+                                              height: 20,
                                               child: IconButton(
                                                 icon:
                                                     Icon(Icons.arrow_back_ios),
@@ -73,11 +75,20 @@ class RadioStationsView extends StatelessWidget {
                                                 onPressed: () async {
                                                   selectedRadio.value =
                                                       !selectedRadio.value;
+                                                  dataController.genrelistRadio
+                                                          .value =
+                                                      dataController
+                                                          .genrelistRadioMaster;
+                                                  dataController
+                                                          .radioList.value =
+                                                      dataController
+                                                          .radioListMasterCopy;
                                                 },
                                               ),
                                             )
                                           : SizedBox(
                                               width: 30,
+                                              height: 20,
                                             ),
                                     ),
                                   ),
@@ -100,6 +111,10 @@ class RadioStationsView extends StatelessWidget {
                                     onTap: () {
                                       selectedRadio.value =
                                           !selectedRadio.value;
+                                      dataController.genrelistRadio.value =
+                                          dataController.genrelistRadioMaster;
+                                      dataController.radioList.value =
+                                          dataController.radioListMasterCopy;
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.only(right: 4),
@@ -123,7 +138,7 @@ class RadioStationsView extends StatelessWidget {
                                     ),
                                   ),
                                 ],
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                               ),
@@ -138,7 +153,7 @@ class RadioStationsView extends StatelessWidget {
                         height: Get.height * 0.02,
                       ),
                       selectedRadio.isTrue
-                          ? genreView(context)
+                          ? radioView(context)
                           : genreView(context),
                     ],
                   )
@@ -400,80 +415,182 @@ class RadioStationsView extends StatelessWidget {
 
   Widget genreView(context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
-        children: [
-          GridView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 105 / 65,
-                crossAxisSpacing: 15,
-                crossAxisCount: 2,
-              ),
-              itemCount: dataController.genrelistRadio.length,
-              itemBuilder: (context, index) {
-                return Stack(
-                  children: [
-                    Container(
-                      height: 100,
-                      width: 200,
+      padding: EdgeInsets.only(
+        bottom:
+            homeController.whoAccess.value == "none" ? 0 : Get.height * 0.080,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Container(
+                height: Get.height * 0.060,
+                decoration: BoxDecoration(
+                  color: ThemeProvider.themeOf(context).id == "light"
+                      ? Colors.white
+                      : darkBg,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0x14000000),
+                      offset: Offset(0, 5),
+                      blurRadius: 20,
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  onChanged: (val) {
+                    _debouncer.run(() {
+                      dataController.genrelistRadio.value = dataController
+                          .genrelistRadioMaster
+                          .where((u) => (u.name
+                              .toLowerCase()
+                              .contains(val.toLowerCase())))
+                          .toList();
+                    });
+                    print("ser");
+                    print(dataController.radioList.length);
+                  },
+                  style: TextStyle(
+                    color: ThemeProvider.themeOf(context).id == "light"
+                        ? darkBg
+                        : darkTxt,
+                  ),
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Colors.white
+                                : Colors.transparent)),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Colors.white
+                                : Colors.transparent)),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 15,
+                    ),
+                    hintText: "Search",
+                    hintStyle: TextStyle(
+                      color: ThemeProvider.themeOf(context).id != "light"
+                          ? darkTxt
+                          : Color(0xffA4A4A4),
+                    ),
+                    filled: true,
+                    fillColor: ThemeProvider.themeOf(context).id == "light"
+                        ? Colors.white
+                        : darkBg,
+                    suffixIcon: Container(
+                      margin: EdgeInsets.all(7),
+//                          padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: LinearGradient(
-                          colors: [
-                            const Color(0xFF7BF2E9),
-                            const Color(0xFFB65EBA),
-                          ],
-                          begin: Alignment(0.0, -1.0),
-                          end: Alignment(0.0, 0.0),
-                          //  stops: [0.0, 0.0],
+                          color: ThemeProvider.themeOf(context).id == "light"
+                              ? backGroundColor
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(6)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SvgPicture.asset(
+                          "assets/feather-search.svg",
+                          color: ThemeProvider.themeOf(context).id == "light"
+                              ? Colors.white
+                              : darkBg,
                         ),
                       ),
                     ),
-                    Stack(
+                  ),
+                ),
+              ),
+            ),
+            GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 105 / 65,
+                  crossAxisSpacing: 15,
+                  crossAxisCount: 2,
+                ),
+                itemCount: dataController.genrelistRadio.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      Get.to(GenreMediaListRadioView(
+                        title: dataController.genrelistRadio[index].name
+                            .replaceAll("&amp;", ","),
+                        genreId: dataController.genrelistRadio[index].id,
+                      ));
+                    },
+                    child: Stack(
                       children: [
                         Container(
                           height: 100,
                           width: 200,
-                          child: BlendMask(
-                            opacity: 1.0,
-                            blendMode: BlendMode.overlay,
-                            child: SizedBox.expand(
-                              child: Image.asset(
-                                'assets/background-7.png',
-                                fit: BoxFit.cover,
-                              ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            gradient: LinearGradient(
+                              colors: [
+                                gradient[index]['grad']![0],
+                                gradient[index]['grad']![1],
+                              ],
+                              begin: Alignment(0.0, -1.0),
+                              end: Alignment(0.0, 0.0),
+                              //  stops: [0.0, 0.0],
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/radiogen.svg",
-                                color: Colors.white,
-                              ),
-                              AutoSizeText(
-                                dataController.genrelistRadio[index].name,
-                                style: TextStyle(
-                                  fontFamily: 'Aeonik',
-                                  fontSize: 16,
-                                  color: const Color(0xffffffff),
-                                  fontWeight: FontWeight.w700,
+                        Stack(
+                          children: [
+                            Container(
+                              height: 100,
+                              width: 200,
+                              child: BlendMask(
+                                opacity: 1.0,
+                                blendMode: BlendMode.overlay,
+                                child: SizedBox.expand(
+                                  child: Image.asset(
+                                    'assets/background-7.png',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              )
-                            ],
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/radiogen.svg",
+                                    color: Colors.white,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child: AutoSizeText(
+                                      dataController.genrelistRadio[index].name
+                                          .replaceAll("&amp;", ","),
+                                      style: TextStyle(
+                                        fontFamily: 'Aeonik',
+                                        fontSize: 16,
+                                        color: const Color(0xffffffff),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                );
-              })
-        ],
+                  );
+                })
+          ],
+        ),
       ),
     );
   }

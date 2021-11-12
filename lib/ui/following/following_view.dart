@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:adobe_xd/adobe_xd.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +10,7 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/follow_controller.dart';
 import 'package:tuneone/ui/shared/styles.dart';
+import 'package:tuneone/ui/styled_widgets/masking.dart';
 import 'package:tuneone/ui/styled_widgets/styled_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

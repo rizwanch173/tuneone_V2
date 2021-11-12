@@ -23,6 +23,15 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
+  // var gradient = [
+  //   {
+  //     "grad": [Color(0xff000000), Color(0xff000000)]
+  //   },
+  //   {
+  //     "grad": [Color(0xff000000), Color(0xff000000)]
+  //   }
+  // ];
+
   String greetingMessage() {
     var timeNow = DateTime.now().hour;
 
