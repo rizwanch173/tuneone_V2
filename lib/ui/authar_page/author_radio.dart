@@ -626,7 +626,7 @@ class AuthorRadio extends StatelessWidget {
                                       ),
                                     )
                                   : Obx(
-                                      () => !dataController
+                                      () => dataController
                                               .radioList[currentIndex]
                                               .author
                                               .follow
@@ -649,7 +649,7 @@ class AuthorRadio extends StatelessWidget {
                                               width: Get.width * 0.25,
                                               child: StyledButton(
                                                 onPressed: () {},
-                                                title: "Unfollow",
+                                                title: "Following",
                                                 backgroundColor:
                                                     backGroundColor,
                                                 titleColor: Colors.white,

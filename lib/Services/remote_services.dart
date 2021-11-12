@@ -245,7 +245,16 @@ class RemoteServices {
 
     if (response.statusCode == 200) {
       var jsonString = response.body;
-      dataController.genrelist.value = genreModelFromJson(jsonString);
+      dataController.genrelistMaster.value = genreModelFromJson(jsonString);
+
+      dataController.genrelistRadio.value = dataController.genrelistMaster
+          .where((p0) => p0.parent == 58)
+          .toList();
+
+      dataController.genrelistPod.value = dataController.genrelistMaster
+          .where((p0) => p0.parent == 52)
+          .toList();
+
       return true;
     } else {
       return false;

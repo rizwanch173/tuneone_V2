@@ -449,7 +449,7 @@ class AuthorPodDetails extends StatelessWidget {
                                       ),
                                     )
                                   : Obx(
-                                      () => !dataController
+                                      () => dataController
                                               .podcastList[currentIndex]
                                               .author
                                               .follow
@@ -472,7 +472,7 @@ class AuthorPodDetails extends StatelessWidget {
                                               width: Get.width * 0.20,
                                               child: StyledButton(
                                                 onPressed: () {},
-                                                title: "Unfollow",
+                                                title: "Following ",
                                                 backgroundColor:
                                                     backGroundColor,
                                                 titleColor: Colors.white,
