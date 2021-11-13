@@ -28,6 +28,9 @@ class DataController extends GetxController {
   var currentPodCopy = <PodcastModel>[].obs;
   var currentRadioCopy = <RadioModel>[].obs;
 
+  var settings = [
+    false,
+  ].obs;
   var obj = {};
   var morefromList = [];
 
@@ -65,6 +68,8 @@ class DataController extends GetxController {
           email: played.author.email,
           displayName: played.author.displayName),
       duration: fromPod ? 1 : 0,
+      slug: played.slug,
+      isRadio: played.isRadio,
     );
     recentlyList.removeWhere((element) => element.id == played.id);
 

@@ -2,14 +2,21 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
+import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/models/recently_model.dart';
 import 'package:tuneone/models/userLoginModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
+
 class SplashScreenController extends GetxController {
   final DataController dataController = Get.find();
   checkStartUpLogic() {
+    RemoteServices.fetchPodcastList();
+    RemoteServices.fetchRadioList();
     checkLogin();
+    loadSettings();
+
     RemoteServices.fetchPodcastList();
     RemoteServices.fetchRadioList();
     RemoteServices.getGenre();
@@ -42,6 +49,15 @@ class SplashScreenController extends GetxController {
     return false;
   }
 
+  Future<bool?> loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey("playLast")) {
+      dataController.settings[0] = prefs.getBool("playLast")!;
+    }
+
+    return false;
+  }
+
   Future<UserLoginModel> fetchSpData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -52,7 +68,7 @@ class SplashScreenController extends GetxController {
 
     dataController.email.value = prefs.getString("email")!;
     dataController.pass.value = prefs.getString("pass")!;
-    print("object sp");
+
     print(dataController.userList.user.userEmail);
 
     RemoteServices.loginUserByCode(
@@ -63,10 +79,7 @@ class SplashScreenController extends GetxController {
 
   fetchSpDataRecently() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Map<String, dynamic> userMap;
     final String recently = prefs.getString('recently')!;
-    // userMap = jsonDecode(recently) as Map<String, dynamic>;
     dataController.recentlyList.value = recentlyModelFromJson(recently);
   }
 }

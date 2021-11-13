@@ -624,26 +624,26 @@ class MediaLibrary {
     ],
     albumsRootId: [
       MediaItem(
-        id: "https://s3.amazonaws.com/scifri-segments/scifri201711241.mp3",
-        album: "Science Friday",
-        title: "From Cat Rheology To Operatic Incompetence",
-        artist: "Science Friday and WNYC Studios",
-        duration: Duration(milliseconds: 2856950),
-        artUri: Uri.parse(
-            "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
-      ),
-    ],
-    albumsRootId2: [
-      MediaItem(
         id: "https://radio.tuneonehosting.com/radio/8010/radio.mp3?azuracast",
-        album: "ri Fridayfgfdshgh",
-        title: "From Cat Rheology To Operatic Incompetencefdhfhd",
-        artist: "Science Friday and WNYC Studiosdsggdfs",
-        duration: Duration(milliseconds: 2856950),
+        album: "Aigle+ Radio",
+        title: "Aigle+ Radio",
+        artist: "Aigle+ Radio",
+        //  duration: Duration(milliseconds: 2856950),
         artUri: Uri.parse(
-            "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
+            "https://tuneoneradio.com/wp-content/uploads/2021/04/FullColor_1280x1024_72dpi.png"),
       ),
     ],
+    // albumsRootId2: [
+    //   MediaItem(
+    //     id: "https://radio.tuneonehosting.com/radio/8010/radio.mp3?azuracast",
+    //     album: "ri Fridayfgfdshgh",
+    //     title: "From Cat Rheology To Operatic Incompetencefdhfhd",
+    //     artist: "Science Friday and WNYC Studiosdsggdfs",
+    //     duration: Duration(milliseconds: 2856950),
+    //     artUri: Uri.parse(
+    //         "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
+    //   ),
+    // ],
   };
 }
 

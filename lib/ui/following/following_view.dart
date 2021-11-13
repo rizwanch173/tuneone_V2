@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -6,17 +7,21 @@ import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/follow_controller.dart';
 import 'package:tuneone/ui/shared/styles.dart';
+import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:tuneone/ui/styled_widgets/masking.dart';
 import 'package:tuneone/ui/styled_widgets/styled_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FollowingView extends StatelessWidget {
   final DataController dataController = Get.find();
   final FollowController followController = Get.put(FollowController());
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -24,165 +29,94 @@ class FollowingView extends StatelessWidget {
         color: ThemeProvider.themeOf(context).id == "light"
             ? darkTxt
             : Theme.of(context).primaryColor.withOpacity(0.8),
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(bottom: Get.height * 0.02),
-              decoration: BoxDecoration(
-                image: ThemeProvider.themeOf(context).id == "light"
-                    ? DecorationImage(
-                        image: AssetImage("assets/appbarBgLight.png"),
-                        fit: BoxFit.cover)
-                    : DecorationImage(
-                        image: AssetImage("assets/appbarBgdark.png"),
-                        fit: BoxFit.cover),
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(15),
-                  bottomLeft: Radius.circular(15),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: Get.height * 0.02),
+                decoration: BoxDecoration(
+                  image: ThemeProvider.themeOf(context).id == "light"
+                      ? DecorationImage(
+                          image: AssetImage("assets/appbarBgLight.png"),
+                          fit: BoxFit.cover)
+                      : DecorationImage(
+                          image: AssetImage("assets/appbarBgdark.png"),
+                          fit: BoxFit.cover),
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(15),
+                    bottomLeft: Radius.circular(15),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: Get.height * 0.07,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: AutoSizeText(
-                        "Follow",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: Get.height * 0.07,
                       ),
-                    ),
-                    SizedBox(
-                      height: Get.height * 0.03,
-                    )
-                  ],
+                      Align(
+                        alignment: Alignment.center,
+                        child: AutoSizeText(
+                          "Follow",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                      SizedBox(
+                        height: Get.height * 0.03,
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Card(
-              color: ThemeProvider.themeOf(context).id == "light"
-                  ? darkTxt
-                  : darkBg,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              elevation: 2,
-              margin: EdgeInsets.only(bottom: Get.height * 0.02),
-              child: Column(
+              Column(
                 children: [
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(
-                  //       horizontal: Get.width * 0.05,
-                  //       vertical: Get.height * 0.02),
-                  //   // child: Row(
-                  //   //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   //   children: [
-                  //   //     AutoSizeText(
-                  //   //       "Podcast you Following",
-                  //   //       presetFontSizes: [20, 18],
-                  //   //       style: TextStyle(
-                  //   //         color: ThemeProvider.themeOf(context).id == "light"
-                  //   //             ? darkBg
-                  //   //             : darkTxt,
-                  //   //       ),
-                  //   //     ),
-                  //   //     AutoSizeText(
-                  //   //       "View All",
-                  //   //       presetFontSizes: [20, 18],
-                  //   //       style: TextStyle(
-                  //   //         color: ThemeProvider.themeOf(context).id == "light"
-                  //   //             ? backGroundColor
-                  //   //             : darkTxt,
-                  //   //       ),
-                  //   //     ),
-                  //   //   ],
-                  //   // ),
-                  // ),
                   dataController.islogin.isTrue
-                      ?
-                      // ? Padding(
-                      //     padding: EdgeInsets.symmetric(
-                      //         horizontal: Get.width * 0.05,
-                      //         vertical: Get.height * 0.01),
-                      //     child: Column(
-                      //       children: [
-                      //         Row(
-                      //           children: [
-                      //             ClipRRect(
-                      //                 borderRadius: BorderRadius.circular(5),
-                      //                 child: Image.asset(
-                      //                   "assets/image_4.png",
-                      //                   width: Get.width * 0.2,
-                      //                 )),
-                      //             SizedBox(
-                      //               width: 10,
-                      //             ),
-                      //             Expanded(
-                      //               child: Column(
-                      //                 crossAxisAlignment:
-                      //                     CrossAxisAlignment.start,
-                      //                 children: [
-                      //                   AutoSizeText(
-                      //                     "Black Men Can’t Jump in Hollywood",
-                      //                     presetFontSizes: [20, 18],
-                      //                   ),
-                      //                   SizedBox(
-                      //                     height: 5,
-                      //                   ),
-                      //                   AutoSizeText(
-                      //                     "John Doe",
-                      //                     style:
-                      //                         TextStyle(color: backGroundColor),
-                      //                   )
-                      //                 ],
-                      //               ),
-                      //             )
-                      //           ],
-                      //         ),
-                      //         SizedBox(
-                      //           height: 5,
-                      //         ),
-                      //         Row(
-                      //           children: [
-                      //             Expanded(
-                      //                 flex: 2,
-                      //                 child: AutoSizeText(
-                      //                   "Entertainment \u0387 39 Episodes",
-                      //                   style: TextStyle(color: Colors.grey),
-                      //                 )),
-                      //             Expanded(
-                      //               child: Transform.translate(
-                      //                 offset: Offset(0, -10),
-                      //                 child: Container(
-                      //                   padding: EdgeInsets.symmetric(
-                      //                       vertical: Get.height * 0.01),
-                      //                   decoration: BoxDecoration(
-                      //                       borderRadius:
-                      //                           BorderRadius.circular(5),
-                      //                       border: Border.all(
-                      //                           color: Colors.grey[400]!)),
-                      //                   child: Center(
-                      //                     child: AutoSizeText(
-                      //                       "Following",
-                      //                       style: TextStyle(
-                      //                           color: Colors.grey[400]),
-                      //                     ),
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             )
-                      //           ],
-                      //         )
-                      //       ],
-                      //     ),
-                      //   )
-                      SizedBox()
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: Get.height * 0.22,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: AspectRatio(
+                                  aspectRatio: 1 / 1,
+                                  child: StyledCachedNetworkImage2(
+                                      url: dataController
+                                          .userList.userMeta.avtar),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: Get.height * 0.02),
+                            AutoSizeText(
+                              dataController.userList.userMeta.firstName +
+                                  " " +
+                                  dataController.userList.userMeta.lastName,
+                              style: TextStyle(
+                                color:
+                                    ThemeProvider.themeOf(context).id == "light"
+                                        ? darkBg
+                                        : darkTxt,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18,
+                              ),
+                            ),
+                            SizedBox(height: Get.height * 0.01),
+                            AutoSizeText(
+                              dataController.userList.user.userEmail,
+                              style: TextStyle(
+                                color:
+                                    ThemeProvider.themeOf(context).id == "light"
+                                        ? Color(0xffa4a4a4)
+                                        : darkTxt,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        )
                       : Column(
                           children: [
                             SizedBox(
@@ -190,64 +124,6 @@ class FollowingView extends StatelessWidget {
                             ),
                             // Adobe XD layer: 'background-01' (shape)
 
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Stack(
-                              children: [
-                                // Container(
-                                //   height: 100,
-                                //   child: Image.asset("assets/background-7.png"),
-                                // ),
-                                //
-                                // SizedBox.expand(
-                                //   child: Image.asset(
-                                //     'images/sky.jpg',
-                                //   ),
-                                // ),
-
-                                Container(
-                                  height: 100,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        const Color(0xFFA7E05F),
-                                        const Color(0xFF70C900),
-                                      ],
-                                      begin: Alignment(0.0, -1.0),
-                                      end: Alignment(0.0, 0.0),
-                                      //  stops: [0.0, 0.0],
-                                    ),
-                                  ),
-                                ),
-
-                                Container(
-                                  height: 100,
-                                  width: 200,
-                                  child: BlendMask(
-                                    opacity: 1.0,
-                                    blendMode: BlendMode.overlay,
-                                    child: SizedBox.expand(
-                                      child: Image.asset(
-                                        'assets/background-7.png',
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            // Container(
-                            //   height: 100,
-                            //   child: MaskedImage(
-                            //       asset: 'assets/background-7.png',
-                            //       mask: 'assets/wk-4.png'),
-                            // ),
                             AutoSizeText(
                               "Please login to proceed",
                               presetFontSizes: [14, 16],
@@ -281,68 +157,335 @@ class FollowingView extends StatelessWidget {
                         )
                 ],
               ),
-            ),
-            ListTile(
-              dense: true,
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: AutoSizeText(
-                  "Display Mode",
-                  style: TextStyle(
-                    color: ThemeProvider.themeOf(context).id == "light"
-                        ? darkBg
-                        : darkTxt,
-                  ),
+              SizedBox(height: Get.height * 0.03),
+              Container(
+                decoration: BoxDecoration(
+                  color: ThemeProvider.themeOf(context).id == "light"
+                      ? Colors.white
+                      : darkBg,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0x14000000),
+                      offset: Offset(0, 5),
+                      blurRadius: 20,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      dense: true,
+                      leading: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: AutoSizeText(
+                          "Setting",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? darkBg
+                                : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      dense: true,
+                      leading: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: AutoSizeText(
+                          "Dark Mode",
+                          style: TextStyle(
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Color(0xffA4A4A4)
+                                : darkTxt,
+                          ),
+                        ),
+                      ),
+                      trailing: Container(
+                        width: Get.width * 0.25,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: ThemeProvider.themeOf(context).id == "dark"
+                                  ? Color(0x48000000)
+                                  : Color(0xfffffff),
+                              offset: Offset(0, 5),
+                              blurRadius: 50,
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                            child: Theme(
+                          data: ThemeData(),
+                          child: ShaderMask(
+                            child: Container(
+                              child: CupertinoSwitch(
+                                activeColor: Color(0xfffe6232),
+                                value:
+                                    ThemeProvider.themeOf(context).id == "dark",
+                                onChanged: (v) {
+                                  if (ThemeProvider.themeOf(context).id ==
+                                      "dark") {
+                                    ThemeProvider.controllerOf(context)
+                                        .setTheme("light");
+                                  } else {
+                                    ThemeProvider.controllerOf(context)
+                                        .setTheme("dark");
+                                  }
+                                },
+                              ),
+                            ),
+                            shaderCallback: (r) {
+                              return LinearGradient(
+                                colors:
+                                    ThemeProvider.themeOf(context).id == "dark"
+                                        ? [Colors.white, Colors.white]
+                                        : [Colors.white, Color(0xfff3f3f3)],
+                              ).createShader(r);
+                            },
+                          ),
+                        )),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    ListTile(
+                      dense: true,
+                      leading: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: AutoSizeText(
+                          "Play Last Station on Startup",
+                          style: TextStyle(
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Color(0xffA4A4A4)
+                                : darkTxt,
+                          ),
+                        ),
+                      ),
+                      trailing: Container(
+                        width: Get.width * 0.25,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: ThemeProvider.themeOf(context).id == "dark"
+                                  ? Color(0x48000000)
+                                  : Color(0xfffffff),
+                              offset: Offset(0, 5),
+                              blurRadius: 50,
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                            child: Theme(
+                          data: ThemeData(),
+                          child: ShaderMask(
+                            child: Container(
+                              child: CupertinoSwitch(
+                                activeColor: Color(0xfffe6232),
+                                value: dataController.settings[0],
+                                onChanged: (v) async {
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  if (dataController.settings[0]) {
+                                    dataController.settings[0] = false;
+                                    prefs.setBool("playLast", false);
+                                  } else {
+                                    dataController.settings[0] = true;
+                                    prefs.setBool("playLast", true);
+                                  }
+                                },
+                              ),
+                            ),
+                            shaderCallback: (r) {
+                              return LinearGradient(
+                                colors:
+                                    ThemeProvider.themeOf(context).id == "dark"
+                                        ? [Colors.white, Colors.white]
+                                        : [Colors.white, Color(0xfff3f3f3)],
+                              ).createShader(r);
+                            },
+                          ),
+                        )),
+                      ),
+                    ),
+                    SizedBox(height: Get.height * 0.02),
+                  ],
                 ),
               ),
-              trailing: Container(
-                width: Get.width * 0.25,
-//              padding: EdgeInsets.symmetric(vertical: Get.height*0.007),
-
-                child: Center(
-                  child: Container(
-                    height: Get.height * 0.07,
-                    width: Get.width * 0.25,
-                    child: DayNightSwitcher(
-                      dayBackgroundColor: backGroundColor.withOpacity(0.5),
-                      isDarkModeEnabled:
-                          ThemeProvider.themeOf(context).id == "dark",
-                      onStateChanged: (isDarkModeEnabled) {
-                        if (isDarkModeEnabled)
-                          ThemeProvider.controllerOf(context).setTheme("dark");
-                        else
-                          ThemeProvider.controllerOf(context).setTheme("light");
-                      },
+              SizedBox(height: Get.height * 0.02),
+              Container(
+                decoration: BoxDecoration(
+                  color: ThemeProvider.themeOf(context).id == "light"
+                      ? Colors.white
+                      : darkBg,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0x14000000),
+                      offset: Offset(0, 5),
+                      blurRadius: 20,
                     ),
-                  ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      dense: true,
+                      leading: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: AutoSizeText(
+                          "Help And Feedback",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? darkBg
+                                : darkTxt,
+                          ),
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () async {
+                        await launch(
+                            'mailto:${'support@tuneoneradio.com'}?subject=About ${'TuneOne'}&body=');
+                      },
+                      dense: true,
+                      leading: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: AutoSizeText(
+                          "Help",
+                          style: TextStyle(
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Color(0xffA4A4A4)
+                                : darkTxt,
+                          ),
+                        ),
+                      ),
+                      trailing: Container(
+                        width: Get.width * 0.25,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: ThemeProvider.themeOf(context).id == "dark"
+                                  ? Color(0x48000000)
+                                  : Color(0xfffffff),
+                              offset: Offset(0, 5),
+                              blurRadius: 50,
+                            ),
+                          ],
+                        ),
+                        child: Icon(Icons.arrow_forward_ios,
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Color(0x48000000)
+                                : darkTxt),
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () async {
+                        await canLaunch(
+                          'https://tuneoneradio.com/about/',
+                        )
+                            ? await launch('https://tuneoneradio.com/about/')
+                            : throw 'Could not launch ${'https://tuneoneradio.com/about/'}';
+                      },
+                      dense: true,
+                      leading: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: AutoSizeText(
+                          "About Us",
+                          style: TextStyle(
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Color(0xffA4A4A4)
+                                : darkTxt,
+                          ),
+                        ),
+                      ),
+                      trailing: Container(
+                        width: Get.width * 0.25,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: ThemeProvider.themeOf(context).id == "dark"
+                                  ? Color(0x48000000)
+                                  : Color(0xfffffff),
+                              offset: Offset(0, 5),
+                              blurRadius: 50,
+                            ),
+                          ],
+                        ),
+                        child: Icon(Icons.arrow_forward_ios,
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Color(0x48000000)
+                                : darkTxt),
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        LaunchReview.launch();
+                      },
+                      dense: true,
+                      leading: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: AutoSizeText(
+                          "Rate Us",
+                          style: TextStyle(
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Color(0xffA4A4A4)
+                                : darkTxt,
+                          ),
+                        ),
+                      ),
+                      trailing: Container(
+                        width: Get.width * 0.25,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: ThemeProvider.themeOf(context).id == "dark"
+                                  ? Color(0x48000000)
+                                  : Color(0xfffffff),
+                              offset: Offset(0, 5),
+                              blurRadius: 50,
+                            ),
+                          ],
+                        ),
+                        child: Icon(Icons.arrow_forward_ios,
+                            color: ThemeProvider.themeOf(context).id == "light"
+                                ? Color(0x48000000)
+                                : darkTxt),
+                      ),
+                    ),
+                    SizedBox(height: Get.height * 0.02),
+                  ],
                 ),
               ),
-            ),
-            dataController.islogin.isTrue
-                ? Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Get.width * 00.35,
-                      vertical: Get.width * 0.040,
-                    ),
-                    child: StyledButton(
-                      onPressed: () async {
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        prefs.remove("islogin");
-                        dataController.islogin(false);
-                      },
-                      title: "Log out",
-                      backgroundColor:
-                          ThemeProvider.themeOf(context).id == "light"
-                              ? backGroundColor
-                              : Colors.black26,
-                      titleColor: darkTxt,
-                      borderRadius: BorderRadius.circular(5),
-                      fontSize: 16,
-                    ),
-                  )
-                : SizedBox(),
-          ],
+              dataController.islogin.isTrue
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Get.width * 00.35,
+                        vertical: Get.width * 0.040,
+                      ),
+                      child: StyledButton(
+                        onPressed: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.remove("islogin");
+                          dataController.islogin(false);
+                        },
+                        title: "Log out",
+                        backgroundColor:
+                            ThemeProvider.themeOf(context).id == "light"
+                                ? backGroundColor
+                                : Colors.black26,
+                        titleColor: darkTxt,
+                        borderRadius: BorderRadius.circular(5),
+                        fontSize: 16,
+                      ),
+                    )
+                  : SizedBox(),
+            ],
+          ),
         ),
       ),
     );

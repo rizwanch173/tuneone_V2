@@ -8,18 +8,21 @@ String recentlyModelToJson(List<RecentlyModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class RecentlyModel {
-  RecentlyModel(
-      {required this.id,
-      required this.date,
-      required this.title,
-      required this.stream,
-      required this.postCountAll,
-      required this.likeCount,
-      required this.downloadCount,
-      required this.copyright,
-      required this.thumbnail,
-      required this.author,
-      required this.duration});
+  RecentlyModel({
+    required this.id,
+    required this.date,
+    required this.title,
+    required this.stream,
+    required this.postCountAll,
+    required this.likeCount,
+    required this.downloadCount,
+    required this.copyright,
+    required this.thumbnail,
+    required this.author,
+    required this.duration,
+    required this.slug,
+    required this.isRadio,
+  });
 
   int id;
   DateTime date;
@@ -32,6 +35,8 @@ class RecentlyModel {
   String thumbnail;
   Author2 author;
   int duration;
+  String slug;
+  bool isRadio;
 
   factory RecentlyModel.fromJson(Map<String, dynamic> json) => RecentlyModel(
         id: json["id"],
@@ -43,6 +48,8 @@ class RecentlyModel {
         downloadCount: json["download_count"],
         copyright: json["copyright"],
         thumbnail: json["thumbnail"],
+        slug: json["slug"],
+        isRadio: json["isradio"],
         author: Author2.fromJson(json["author"]),
         duration: 0,
       );
@@ -59,6 +66,8 @@ class RecentlyModel {
         "thumbnail": thumbnail,
         "author": author.toJson(),
         "duration": duration,
+        "isradio": isRadio,
+        "slug": slug,
       };
 }
 
