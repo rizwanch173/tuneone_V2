@@ -30,7 +30,6 @@ class TabsViewModel extends GetxController {
   @override
   onInit() {
     print("onInit tabs");
-
     Future.delayed(Duration(seconds: 3), () {
       playIt();
     });
@@ -38,7 +37,7 @@ class TabsViewModel extends GetxController {
     super.onInit();
   }
 
-  playIt() async {
+  Future<bool?> playIt() async {
     var radioListIdIndex = [];
     var podcastListIdIndex = [];
     var indexToRemove = [];
