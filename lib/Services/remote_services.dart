@@ -150,6 +150,7 @@ class RemoteServices {
         dataController.islogin(true);
 
         dataController.likeList.addAll(user.userMeta.likes);
+        dataController.followList.addAll(user.userMeta.followings);
 
         return [true, "", user];
       } else {
@@ -196,6 +197,7 @@ class RemoteServices {
         var user = userLoginModelFromJson(jsonString);
         dataController.userList = user;
         dataController.likeList.addAll(user.userMeta.likes);
+        dataController.followList.addAll(user.userMeta.followings);
         return true;
       } else {
         return false;
@@ -240,12 +242,22 @@ class RemoteServices {
     }
   }
 
-  static Future<bool?> followOrUnfollow(
-      {required bool follow, required int channelId}) async {
+  static Future<bool?> followOrUnfollow({
+    required bool follow,
+    required int channelId,
+  }) async {
     final param = {
       "meta": {"id": channelId},
       "is_following": follow
     };
+
+    // if (follow) {
+    //   dataController.followList.add(
+    //       int.parse(dataController.radioList[currentIndex].author.authorId));
+    // } else {
+    //   dataController.followList.remove(
+    //       int.parse(dataController.radioList[currentIndex].author.authorId));
+    // }
 
     var response = await apiRequest(
         "https://tuneoneradio.com/wp-json/wp/v2/users/" +

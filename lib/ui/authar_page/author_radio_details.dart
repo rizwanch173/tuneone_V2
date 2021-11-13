@@ -9,6 +9,7 @@ import 'package:group_button/group_button.dart';
 import 'package:marquee_text/marquee_text.dart';
 import 'package:share/share.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/ui/medialist/medialist_radio.dart';
@@ -457,40 +458,76 @@ class AuthorRadioDetails extends StatelessWidget {
                                         backgroundColor: backGroundColor,
                                         titleColor: Colors.white,
                                         borderRadius: BorderRadius.circular(50),
-                                        fontSize: 16,
+                                        fontSize: 14,
                                       ),
                                     )
                                   : Obx(
-                                      () => dataController
-                                              .radioList[currentIndex]
-                                              .author
-                                              .follow
-                                              .contains(dataController
-                                                  .userList.user.id)
+                                      () => dataController.followList.contains(
+                                              int.parse(dataController
+                                                  .radioList[currentIndex]
+                                                  .author
+                                                  .authorId))
                                           ? Container(
                                               width: Get.width * 0.25,
                                               child: StyledButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  dataController.followList
+                                                      .remove(int.parse(
+                                                          dataController
+                                                              .radioList[
+                                                                  currentIndex]
+                                                              .author
+                                                              .authorId));
+
+                                                  RemoteServices
+                                                      .followOrUnfollow(
+                                                    follow: false,
+                                                    channelId: int.parse(
+                                                        dataController
+                                                            .radioList[
+                                                                currentIndex]
+                                                            .author
+                                                            .authorId),
+                                                  );
+                                                },
+                                                title: "Following",
+                                                backgroundColor:
+                                                    backGroundColor,
+                                                titleColor: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                fontSize: 14,
+                                              ),
+                                            )
+                                          : Container(
+                                              width: Get.width * 0.20,
+                                              child: StyledButton(
+                                                onPressed: () {
+                                                  dataController.followList.add(
+                                                      int.parse(dataController
+                                                          .radioList[
+                                                              currentIndex]
+                                                          .author
+                                                          .authorId));
+
+                                                  RemoteServices
+                                                      .followOrUnfollow(
+                                                    follow: true,
+                                                    channelId: int.parse(
+                                                        dataController
+                                                            .radioList[
+                                                                currentIndex]
+                                                            .author
+                                                            .authorId),
+                                                  );
+                                                },
                                                 title: "Follow",
                                                 backgroundColor:
                                                     backGroundColor,
                                                 titleColor: Colors.white,
                                                 borderRadius:
                                                     BorderRadius.circular(25),
-                                                fontSize: 16,
-                                              ),
-                                            )
-                                          : Container(
-                                              width: Get.width * 0.20,
-                                              child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Following ",
-                                                backgroundColor:
-                                                    backGroundColor,
-                                                titleColor: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                fontSize: 16,
+                                                fontSize: 14,
                                               ),
                                             ),
                                     ),

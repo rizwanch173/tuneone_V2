@@ -641,17 +641,35 @@ class AuthorPodcast extends StatelessWidget {
                                       ),
                                     )
                                   : Obx(
-                                      () => dataController
-                                              .podcastList[currentIndex]
-                                              .author
-                                              .follow
-                                              .contains(dataController
-                                                  .userList.user.id)
+                                      () => dataController.followList.contains(
+                                              int.parse(dataController
+                                                  .podcastList[currentIndex]
+                                                  .author
+                                                  .authorId))
                                           ? Container(
                                               width: Get.width * 0.25,
                                               child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Follow",
+                                                onPressed: () {
+                                                  dataController.followList
+                                                      .remove(int.parse(
+                                                          dataController
+                                                              .podcastList[
+                                                                  currentIndex]
+                                                              .author
+                                                              .authorId));
+
+                                                  RemoteServices
+                                                      .followOrUnfollow(
+                                                    follow: false,
+                                                    channelId: int.parse(
+                                                        dataController
+                                                            .podcastList[
+                                                                currentIndex]
+                                                            .author
+                                                            .authorId),
+                                                  );
+                                                },
+                                                title: "Following",
                                                 backgroundColor:
                                                     backGroundColor,
                                                 titleColor: Colors.white,
@@ -663,8 +681,26 @@ class AuthorPodcast extends StatelessWidget {
                                           : Container(
                                               width: Get.width * 0.25,
                                               child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Following",
+                                                onPressed: () {
+                                                  dataController.followList.add(
+                                                      int.parse(dataController
+                                                          .podcastList[
+                                                              currentIndex]
+                                                          .author
+                                                          .authorId));
+
+                                                  RemoteServices
+                                                      .followOrUnfollow(
+                                                    follow: true,
+                                                    channelId: int.parse(
+                                                        dataController
+                                                            .podcastList[
+                                                                currentIndex]
+                                                            .author
+                                                            .authorId),
+                                                  );
+                                                },
+                                                title: "Follow",
                                                 backgroundColor:
                                                     backGroundColor,
                                                 titleColor: Colors.white,

@@ -41,8 +41,7 @@ class TabsViewModel extends GetxController {
     var radioListIdIndex = [];
     var podcastListIdIndex = [];
     var indexToRemove = [];
-    print("lenth=========");
-    print(dataController.radioListMasterCopy.length);
+
     dataController.radioListMasterCopy.forEach((element) {
       radioListIdIndex.add(element.id);
     });
@@ -50,9 +49,7 @@ class TabsViewModel extends GetxController {
     dataController.podcastListMasterCopy.forEach((element) {
       podcastListIdIndex.add(element.id);
     });
-    print("index=============================");
-    print(radioListIdIndex);
-    print(podcastListIdIndex);
+
     for (var i = 0; i < dataController.recentlyList.length; i++) {
       if (dataController.recentlyList[i].isRadio) {
         if (!radioListIdIndex.contains(dataController.recentlyList[i].id)) {
@@ -66,8 +63,6 @@ class TabsViewModel extends GetxController {
         }
       }
     }
-    print("index to remove=================");
-    print(indexToRemove);
 
     dataController.recentlyList.value = dataController.recentlyList
         .where((x) =>

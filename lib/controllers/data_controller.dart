@@ -35,6 +35,7 @@ class DataController extends GetxController {
   var morefromList = [];
 
   var likeList = <dynamic>[].obs;
+  var followList = <dynamic>[].obs;
   //var recentlyList = <int>[].obs;
   var recentlyList = <RecentlyModel>[].obs;
 

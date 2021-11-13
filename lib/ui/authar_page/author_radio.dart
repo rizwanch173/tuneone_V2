@@ -626,17 +626,35 @@ class AuthorRadio extends StatelessWidget {
                                       ),
                                     )
                                   : Obx(
-                                      () => dataController
-                                              .radioList[currentIndex]
-                                              .author
-                                              .follow
-                                              .contains(dataController
-                                                  .userList.user.id)
+                                      () => dataController.followList.contains(
+                                              int.parse(dataController
+                                                  .radioList[currentIndex]
+                                                  .author
+                                                  .authorId))
                                           ? Container(
                                               width: Get.width * 0.25,
                                               child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Follow",
+                                                onPressed: () {
+                                                  dataController.followList
+                                                      .remove(int.parse(
+                                                          dataController
+                                                              .radioList[
+                                                                  currentIndex]
+                                                              .author
+                                                              .authorId));
+
+                                                  RemoteServices
+                                                      .followOrUnfollow(
+                                                    follow: false,
+                                                    channelId: int.parse(
+                                                        dataController
+                                                            .radioList[
+                                                                currentIndex]
+                                                            .author
+                                                            .authorId),
+                                                  );
+                                                },
+                                                title: "Following",
                                                 backgroundColor:
                                                     backGroundColor,
                                                 titleColor: Colors.white,
@@ -648,8 +666,26 @@ class AuthorRadio extends StatelessWidget {
                                           : Container(
                                               width: Get.width * 0.25,
                                               child: StyledButton(
-                                                onPressed: () {},
-                                                title: "Following",
+                                                onPressed: () {
+                                                  dataController.followList.add(
+                                                      int.parse(dataController
+                                                          .radioList[
+                                                              currentIndex]
+                                                          .author
+                                                          .authorId));
+
+                                                  RemoteServices
+                                                      .followOrUnfollow(
+                                                    follow: true,
+                                                    channelId: int.parse(
+                                                        dataController
+                                                            .radioList[
+                                                                currentIndex]
+                                                            .author
+                                                            .authorId),
+                                                  );
+                                                },
+                                                title: "Follow",
                                                 backgroundColor:
                                                     backGroundColor,
                                                 titleColor: Colors.white,
