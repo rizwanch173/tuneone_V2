@@ -426,7 +426,7 @@ class FollowingView extends StatelessWidget {
                       onTap: () {
                         // LaunchReview.launch();
                         LaunchReview.launch(
-                            androidAppId: "com.tuneone.tuneone",
+                            androidAppId: "org.tuneoneradio",
                             iOSAppId: "1588979954");
                       },
                       dense: true,
