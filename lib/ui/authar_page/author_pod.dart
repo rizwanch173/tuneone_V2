@@ -44,7 +44,6 @@ class AuthorPodcast extends StatelessWidget {
                     child: Column(
                   children: [
                     Container(
-
                       decoration: BoxDecoration(
                         image: ThemeProvider.themeOf(context).id == "light"
                             ? DecorationImage(
@@ -911,11 +910,9 @@ class AuthorPodcast extends StatelessWidget {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () async {
-
-                                                      String uri = Uri.encodeFull('sms:${dataController.podcastList[currentIndex].author.whatsapp}');
-                                                      await launch(
-                                                          uri
-                                                          );
+                                                      String uri = Uri.encodeFull(
+                                                          'sms:${dataController.podcastList[currentIndex].author.whatsapp}');
+                                                      await launch(uri);
                                                     },
                                                     child: Icon(
                                                       Icons.sms_outlined,
@@ -934,11 +931,9 @@ class AuthorPodcast extends StatelessWidget {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () async {
-                                                      String uri = Uri.encodeFull('tel:${dataController.podcastList[currentIndex].author.whatsapp}');
-                                                      await launch(
-                                                          uri
-                                                      );
-
+                                                      String uri = Uri.encodeFull(
+                                                          'tel:${dataController.podcastList[currentIndex].author.whatsapp}');
+                                                      await launch(uri);
                                                     },
                                                     child: Icon(
                                                       Icons
@@ -1009,12 +1004,9 @@ class AuthorPodcast extends StatelessWidget {
                                         ),
                                         GestureDetector(
                                           onTap: () async {
-                                           // String uri = Uri.encodeFull('mailto:hello@domain.com?subject=${'kkkk'}&body=${'jjjj'}');
-                                            String uri = Uri.encodeFull('mailto:${dataController.podcastList[currentIndex].author.email}?subject=About${dataController.podcastList[currentIndex].author.displayName}&body=');
-
+                                            String uri = Uri.encodeFull(
+                                                'mailto:${dataController.podcastList[currentIndex].author.email}?subject=About${dataController.podcastList[currentIndex].author.displayName}&body=');
                                             await launch(uri);
-                                                // await launch(
-                                                // 'mailto:${dataController.podcastList[currentIndex].author.email}?subject=About ${dataController.podcastList[currentIndex].author.displayName}&body=');
                                           },
                                           child: Icon(
                                             Icons.email_outlined,
@@ -1136,8 +1128,12 @@ class AuthorPodcast extends StatelessWidget {
                                                     : darkTxt,
                                               ),
                                               onPressed: () async {
-                                                if (Platform.isAndroid) {
-                                                  String uri = Uri.encodeFull("whatsapp://wa.me/${dataController.podcastList[currentIndex].author.whatsapp}/?text=kjkjkj}");
+                                                // String url = "whatsapp://send?text=< .... >";
+                                                // if (await canLaunch(whatsApp)) launch(whatsApp)
+
+                                                if (Platform.isIOS) {
+                                                  String uri = Uri.encodeFull(
+                                                      "whatsapp://wa.me/${dataController.podcastList[currentIndex].author.whatsapp}/?text=kjkjkj}");
                                                   await launch(
                                                     uri,
                                                     universalLinksOnly: true,

@@ -45,11 +45,17 @@
 		<string>audio</string>
 	</array>
 
-	<key>LSApplicationQueriesSchemes</key>
+	
+
+    <key>LSApplicationQueriesSchemes</key>
     <array>
-            <string>itms-beta</string>
-            <string>itms</string>
+            <string>whatsapp</string>
+            <string>instagram</string>
+            <string>fb</string>
+            <string>tel</string>
+            <string>mailto</string>
     </array>
+
 
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

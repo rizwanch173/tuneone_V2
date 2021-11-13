@@ -348,8 +348,9 @@ class FollowingView extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () async {
-                        await launch(
-                            'mailto:${'support@tuneoneradio.com'}?subject=About ${'TuneOne'}&body=');
+                        String uri = Uri.encodeFull(
+                            'mailto:support@tuneoneradio.com?subject=AboutTuneOne&body=');
+                        await launch(uri);
                       },
                       dense: true,
                       leading: Padding(
@@ -423,8 +424,9 @@ class FollowingView extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () {
-                       // LaunchReview.launch();
-                        LaunchReview.launch(androidAppId: "com.tuneone.tuneone",
+                        // LaunchReview.launch();
+                        LaunchReview.launch(
+                            androidAppId: "com.tuneone.tuneone",
                             iOSAppId: "1588979954");
                       },
                       dense: true,

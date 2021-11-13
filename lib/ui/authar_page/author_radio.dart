@@ -503,10 +503,10 @@ class AuthorRadio extends StatelessWidget {
                                               },
                                               child: Icon(
                                                 Icons.favorite_outlined,
-                                              color:  ThemeProvider.themeOf(
-                                                    context)
-                                                    .id ==
-                                                    "light"
+                                                color: ThemeProvider.themeOf(
+                                                                context)
+                                                            .id ==
+                                                        "light"
                                                     ? Colors.grey.shade400
                                                     : darkTxt,
                                                 size: 30,
@@ -785,8 +785,9 @@ class AuthorRadio extends StatelessWidget {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () async {
-                                                      await launch(
+                                                      String uri = Uri.encodeFull(
                                                           'sms:${dataController.radioList[currentIndex].author.whatsapp}');
+                                                      await launch(uri);
                                                     },
                                                     child: Icon(
                                                       Icons.sms_outlined,
@@ -805,8 +806,9 @@ class AuthorRadio extends StatelessWidget {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () async {
-                                                      await launch(
+                                                      String uri = Uri.encodeFull(
                                                           'tel:${dataController.radioList[currentIndex].author.whatsapp}');
+                                                      await launch(uri);
                                                     },
                                                     child: Icon(
                                                       Icons
@@ -875,8 +877,9 @@ class AuthorRadio extends StatelessWidget {
                                         ),
                                         GestureDetector(
                                           onTap: () async {
-                                            await launch(
-                                                'mailto:${dataController.radioList[currentIndex].author.email}?subject=About ${dataController.radioList[currentIndex].author.displayName}&body=');
+                                            String uri = Uri.encodeFull(
+                                                'mailto:${dataController.radioList[currentIndex].author.email}?subject=About${dataController.radioList[currentIndex].author.displayName}&body=');
+                                            await launch(uri);
                                           },
                                           child: Icon(
                                             Icons.email_outlined,
