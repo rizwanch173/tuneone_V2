@@ -1002,10 +1002,7 @@ class AuthorRadio extends StatelessWidget {
                                               ),
                                               onPressed: () async {
                                                 if (Platform.isIOS) {
-                                                  await launch(
-                                                    "whatsapp://wa.me/${dataController.radioList[currentIndex].author.whatsapp}/?text=${Uri.encodeFull("Hi  " + "${dataController.radioList[currentIndex].author.displayName}")}",
-                                                    universalLinksOnly: true,
-                                                  );
+                                                  launchWhatsApp(phone:dataController.radioList[currentIndex].author.whatsapp.replaceAll(" ", ""),message: "Hi" );
                                                 } else {
                                                   await launch(
                                                     "whatsapp://send?phone=${dataController.radioList[currentIndex].author.whatsapp}&text=${Uri.encodeFull("Hi  " + "${dataController.radioList[currentIndex].author.displayName}")}",
@@ -1238,5 +1235,23 @@ class AuthorRadio extends StatelessWidget {
         ],
       ),
     );
+  }
+  void launchWhatsApp({
+    required String phone,
+    required String message,
+  }) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "whatsapp://wa.me/$phone/?text=${Uri.parse(message)}";
+      } else {
+        return "whatsapp://send?phone=$phone&text=${Uri.parse(message)}";
+      }
+    }
+
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
   }
 }

@@ -1132,12 +1132,14 @@ class AuthorPodcast extends StatelessWidget {
                                                 // if (await canLaunch(whatsApp)) launch(whatsApp)
 
                                                 if (Platform.isIOS) {
-                                                  String uri = Uri.encodeFull(
-                                                      "whatsapp://wa.me/${dataController.podcastList[currentIndex].author.whatsapp}/?text=kjkjkj}");
-                                                  await launch(
-                                                    uri,
-                                                    universalLinksOnly: true,
-                                                  );
+                                                  launchWhatsApp(phone:dataController.podcastList[currentIndex].author.whatsapp.replaceAll(" ", ""),message: "Hi" );
+
+                                                  // String uri = Uri.encodeFull(
+                                                  //     "whatsapp://wa.me/${dataController.podcastList[currentIndex].author.whatsapp}/?text=kjkjkj}");
+                                                  // await launch(
+                                                  //   uri,
+                                                  //   universalLinksOnly: true,
+                                                  // );
                                                 } else {
                                                   await launch(
                                                     "whatsapp://send?phone=${dataController.podcastList[currentIndex].author.whatsapp}&text=${Uri.encodeFull("Hi" + "${dataController.podcastList[currentIndex].author.displayName}")}",
@@ -1392,5 +1394,24 @@ class AuthorPodcast extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void launchWhatsApp({
+    required String phone,
+    required String message,
+  }) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "whatsapp://wa.me/$phone/?text=${Uri.parse(message)}";
+      } else {
+        return "whatsapp://send?phone=$phone&text=${Uri.parse(message)}";
+      }
+    }
+
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
   }
 }
