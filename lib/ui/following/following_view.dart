@@ -423,7 +423,9 @@ class FollowingView extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () {
-                        LaunchReview.launch();
+                       // LaunchReview.launch();
+                        LaunchReview.launch(androidAppId: "com.tuneone.tuneone",
+                            iOSAppId: "1588979954");
                       },
                       dense: true,
                       leading: Padding(

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,8 +12,6 @@ import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/ui/authar_page/author_pod_details.dart';
-import 'package:tuneone/ui/authar_page/author_radio_details.dart';
-import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:tuneone/ui/singlechannel/single_podcast_view.dart';
 import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
@@ -47,6 +44,7 @@ class AuthorPodcast extends StatelessWidget {
                     child: Column(
                   children: [
                     Container(
+
                       decoration: BoxDecoration(
                         image: ThemeProvider.themeOf(context).id == "light"
                             ? DecorationImage(
@@ -112,6 +110,7 @@ class AuthorPodcast extends StatelessWidget {
                             horizontal: Get.width * 0.20,
                           ),
                           child: Container(
+                            height: Get.height * 0.25,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: AspectRatio(
@@ -561,7 +560,7 @@ class AuthorPodcast extends StatelessWidget {
                           height: 15,
                         ),
                         Container(
-                          height: Get.height * 0.080,
+                          height: Get.height * 0.100,
                           decoration: BoxDecoration(
                             color: ThemeProvider.themeOf(context).id == "light"
                                 ? Colors.white
@@ -829,7 +828,7 @@ class AuthorPodcast extends StatelessWidget {
                         //   ),
                         // ),
                         Container(
-                          height: Get.height * 0.20,
+                          height: Get.height * 0.23,
                           width: Get.width,
                           decoration: BoxDecoration(
                             color: ThemeProvider.themeOf(context).id == "light"
@@ -912,8 +911,11 @@ class AuthorPodcast extends StatelessWidget {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () async {
+
+                                                      String uri = Uri.encodeFull('sms:${dataController.podcastList[currentIndex].author.whatsapp}');
                                                       await launch(
-                                                          'sms:${dataController.podcastList[currentIndex].author.whatsapp}');
+                                                          uri
+                                                          );
                                                     },
                                                     child: Icon(
                                                       Icons.sms_outlined,
@@ -932,8 +934,11 @@ class AuthorPodcast extends StatelessWidget {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () async {
+                                                      String uri = Uri.encodeFull('tel:${dataController.podcastList[currentIndex].author.whatsapp}');
                                                       await launch(
-                                                          'tel:${dataController.podcastList[currentIndex].author.whatsapp}');
+                                                          uri
+                                                      );
+
                                                     },
                                                     child: Icon(
                                                       Icons
@@ -1004,8 +1009,12 @@ class AuthorPodcast extends StatelessWidget {
                                         ),
                                         GestureDetector(
                                           onTap: () async {
-                                            await launch(
-                                                'mailto:${dataController.podcastList[currentIndex].author.email}?subject=About ${dataController.podcastList[currentIndex].author.displayName}&body=');
+                                           // String uri = Uri.encodeFull('mailto:hello@domain.com?subject=${'kkkk'}&body=${'jjjj'}');
+                                            String uri = Uri.encodeFull('mailto:${dataController.podcastList[currentIndex].author.email}?subject=About${dataController.podcastList[currentIndex].author.displayName}&body=');
+
+                                            await launch(uri);
+                                                // await launch(
+                                                // 'mailto:${dataController.podcastList[currentIndex].author.email}?subject=About ${dataController.podcastList[currentIndex].author.displayName}&body=');
                                           },
                                           child: Icon(
                                             Icons.email_outlined,
@@ -1127,14 +1136,15 @@ class AuthorPodcast extends StatelessWidget {
                                                     : darkTxt,
                                               ),
                                               onPressed: () async {
-                                                if (Platform.isIOS) {
+                                                if (Platform.isAndroid) {
+                                                  String uri = Uri.encodeFull("whatsapp://wa.me/${dataController.podcastList[currentIndex].author.whatsapp}/?text=kjkjkj}");
                                                   await launch(
-                                                    "whatsapp://wa.me/${dataController.podcastList[currentIndex].author.whatsapp}/?text=${Uri.encodeFull("Hi  " + "${dataController.podcastList[currentIndex].author.displayName}")}",
+                                                    uri,
                                                     universalLinksOnly: true,
                                                   );
                                                 } else {
                                                   await launch(
-                                                    "whatsapp://send?phone=${dataController.podcastList[currentIndex].author.whatsapp}&text=${Uri.encodeFull("Hi  " + "${dataController.podcastList[currentIndex].author.displayName}")}",
+                                                    "whatsapp://send?phone=${dataController.podcastList[currentIndex].author.whatsapp}&text=${Uri.encodeFull("Hi" + "${dataController.podcastList[currentIndex].author.displayName}")}",
                                                     universalLinksOnly: true,
                                                   );
                                                 }

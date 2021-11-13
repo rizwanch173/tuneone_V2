@@ -125,6 +125,7 @@ class AuthorRadioDetails extends StatelessWidget {
                             horizontal: Get.width * 0.20,
                           ),
                           child: Container(
+                            height: Get.height * 0.25,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: AspectRatio(

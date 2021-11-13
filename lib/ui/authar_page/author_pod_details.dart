@@ -1,10 +1,6 @@
-import 'dart:async';
-import 'dart:io';
-import 'package:audio_service/audio_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
 import 'package:marquee_text/marquee_text.dart';
@@ -13,19 +9,13 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
-import 'package:tuneone/controllers/podcast_controller.dart';
-import 'package:tuneone/controllers/radio_controller.dart';
-import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/shared/styles.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tuneone/ui/singlechannel/single_podcast_view.dart';
 import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:tuneone/ui/styled_widgets/mini_player.dart';
 import 'package:tuneone/ui/styled_widgets/styled_button.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../main.dart';
+
 
 class AuthorPodDetails extends StatelessWidget {
   final DataController dataController = Get.find();
@@ -130,6 +120,7 @@ class AuthorPodDetails extends StatelessWidget {
                             horizontal: Get.width * 0.20,
                           ),
                           child: Container(
+                            height: Get.height * 0.25,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: AspectRatio(

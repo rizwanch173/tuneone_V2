@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -12,12 +11,9 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
-import 'package:tuneone/controllers/podcast_controller.dart';
-import 'package:tuneone/controllers/radio_controller.dart';
 import 'package:tuneone/ui/authar_page/author_radio_details.dart';
 import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/shared/styles.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tuneone/ui/singlechannel/single_podcast_view.dart';
 import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
@@ -115,6 +111,7 @@ class AuthorRadio extends StatelessWidget {
                             horizontal: Get.width * 0.20,
                           ),
                           child: Container(
+                            height: Get.height * 0.25,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: AspectRatio(
@@ -506,7 +503,12 @@ class AuthorRadio extends StatelessWidget {
                                               },
                                               child: Icon(
                                                 Icons.favorite_outlined,
-                                                color: Colors.white,
+                                              color:  ThemeProvider.themeOf(
+                                                    context)
+                                                    .id ==
+                                                    "light"
+                                                    ? Colors.grey.shade400
+                                                    : darkTxt,
                                                 size: 30,
                                               ),
                                             ),
@@ -548,7 +550,7 @@ class AuthorRadio extends StatelessWidget {
                           height: 15,
                         ),
                         Container(
-                          height: Get.height * 0.080,
+                          height: Get.height * 0.100,
                           decoration: BoxDecoration(
                             color: ThemeProvider.themeOf(context).id == "light"
                                 ? Colors.white
@@ -702,7 +704,7 @@ class AuthorRadio extends StatelessWidget {
                           height: Get.height * 0.01,
                         ),
                         Container(
-                          height: Get.height * 0.20,
+                          height: Get.height * 0.23,
                           width: Get.width,
                           decoration: BoxDecoration(
                             color: ThemeProvider.themeOf(context).id == "light"

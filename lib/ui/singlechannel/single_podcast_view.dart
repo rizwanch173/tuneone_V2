@@ -160,13 +160,14 @@ class SinglePodcastView extends StatelessWidget {
                                   SizedBox(
                                     height: kToolbarHeight,
                                   ),
-                                  SizedBox(height: Get.height * 0.05),
+
                                   Obx(
                                     () => Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Container(
+                                          height: Get.height * 0.40,
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),

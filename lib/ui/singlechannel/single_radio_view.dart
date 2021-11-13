@@ -151,13 +151,15 @@ class SingleRadioView extends StatelessWidget {
                                   SizedBox(
                                     height: kToolbarHeight,
                                   ),
-                                  SizedBox(height: Get.height * 0.05),
+
                                   Obx(
                                     () => Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Container(
+                                    height: Get.height * 0.40,
+
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10),
