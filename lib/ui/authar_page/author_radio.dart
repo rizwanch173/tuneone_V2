@@ -704,7 +704,7 @@ class AuthorRadio extends StatelessWidget {
                           height: Get.height * 0.01,
                         ),
                         Container(
-                          height: Get.height * 0.23,
+                          height: Get.height * 0.24,
                           width: Get.width,
                           decoration: BoxDecoration(
                             color: ThemeProvider.themeOf(context).id == "light"

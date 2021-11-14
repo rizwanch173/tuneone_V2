@@ -714,120 +714,9 @@ class AuthorPodcast extends StatelessWidget {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        // Container(
-                        //   height: Get.height * 0.11,
-                        //   width: Get.width,
-                        //   decoration: BoxDecoration(
-                        //     color: ThemeProvider.themeOf(context).id == "light"
-                        //         ? Colors.white
-                        //         : darkBg,
-                        //     borderRadius: BorderRadius.circular(10.0),
-                        //     boxShadow: [
-                        //       BoxShadow(
-                        //         color: const Color(0x14000000),
-                        //         offset: Offset(0, 5),
-                        //         blurRadius: 20,
-                        //       ),
-                        //     ],
-                        //   ),
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.all(12.0),
-                        //     child: Column(
-                        //       crossAxisAlignment: CrossAxisAlignment.start,
-                        //       children: [
-                        //         Text(
-                        //           'Contact',
-                        //           style: TextStyle(
-                        //             fontFamily: 'Aeonik',
-                        //             fontSize: 18,
-                        //             color: ThemeProvider.themeOf(context).id ==
-                        //                     "light"
-                        //                 ? darkBg
-                        //                 : darkTxt,
-                        //             fontWeight: FontWeight.w500,
-                        //           ),
-                        //           textAlign: TextAlign.left,
-                        //         ),
-                        //         SizedBox(
-                        //           height: Get.height * 0.005,
-                        //         ),
-                        //         Row(
-                        //           children: [
-                        //             Text(
-                        //               'Phone:',
-                        //               style: TextStyle(
-                        //                 fontFamily: 'Aeonik',
-                        //                 fontSize: 15,
-                        //                 color:
-                        //                     ThemeProvider.themeOf(context).id ==
-                        //                             "light"
-                        //                         ? Color(0xffa4a4a4)
-                        //                         : darkTxt,
-                        //                 fontWeight: FontWeight.w300,
-                        //               ),
-                        //               textAlign: TextAlign.left,
-                        //             ),
-                        //             Spacer(),
-                        //             Text(
-                        //               dataController.podcastList[currentIndex]
-                        //                   .author.whatsapp,
-                        //               style: TextStyle(
-                        //                 fontFamily: 'Aeonik',
-                        //                 fontSize: 15,
-                        //                 color:
-                        //                     ThemeProvider.themeOf(context).id ==
-                        //                             "light"
-                        //                         ? Color(0xffa4a4a4)
-                        //                         : darkTxt,
-                        //                 fontWeight: FontWeight.w300,
-                        //               ),
-                        //               textAlign: TextAlign.left,
-                        //             ),
-                        //           ],
-                        //         ),
-                        //         SizedBox(
-                        //           height: Get.height * 0.005,
-                        //         ),
-                        //         Row(
-                        //           children: [
-                        //             Text(
-                        //               'Email:',
-                        //               style: TextStyle(
-                        //                 fontFamily: 'Aeonik',
-                        //                 fontSize: 15,
-                        //                 color:
-                        //                     ThemeProvider.themeOf(context).id ==
-                        //                             "light"
-                        //                         ? Color(0xffa4a4a4)
-                        //                         : darkTxt,
-                        //                 fontWeight: FontWeight.w300,
-                        //               ),
-                        //               textAlign: TextAlign.left,
-                        //             ),
-                        //             Spacer(),
-                        //             Text(
-                        //               dataController.podcastList[currentIndex]
-                        //                   .author.email,
-                        //               style: TextStyle(
-                        //                 fontFamily: 'Aeonik',
-                        //                 fontSize: 15,
-                        //                 color:
-                        //                     ThemeProvider.themeOf(context).id ==
-                        //                             "light"
-                        //                         ? Color(0xffa4a4a4)
-                        //                         : darkTxt,
-                        //                 fontWeight: FontWeight.w300,
-                        //               ),
-                        //               textAlign: TextAlign.left,
-                        //             ),
-                        //           ],
-                        //         )
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
+
                         Container(
-                          height: Get.height * 0.23,
+                          height: Get.height * 0.24,
                           width: Get.width,
                           decoration: BoxDecoration(
                             color: ThemeProvider.themeOf(context).id == "light"
@@ -861,7 +750,7 @@ class AuthorPodcast extends StatelessWidget {
                                   textAlign: TextAlign.left,
                                 ),
                                 SizedBox(
-                                  height: Get.height * 0.008,
+                                  height: Get.height * 0.007,
                                 ),
                                 Row(
                                   children: [
@@ -960,7 +849,7 @@ class AuthorPodcast extends StatelessWidget {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: Get.height * 0.012,
+                                  height: Get.height * 0.010,
                                 ),
                                 Row(
                                   children: [
@@ -1024,7 +913,7 @@ class AuthorPodcast extends StatelessWidget {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: Get.height * 0.020,
+                                  height: Get.height * 0.018,
                                 ),
                                 Row(
                                   children: [
@@ -1227,7 +1116,7 @@ class AuthorPodcast extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                height: Get.height * 0.22,
+                                height: Get.height * 0.21,
                                 child: ListView.builder(
                                     itemCount:
                                         dataController.morefromList.length,
