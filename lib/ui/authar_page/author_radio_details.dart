@@ -631,14 +631,16 @@ class AuthorRadioDetails extends StatelessWidget {
                           height: Get.height * 0.12,
                         )
                       : SizedBox(
-                          height: 5,
+                          height: 15,
                         ),
                 ),
               ],
             ),
             Positioned(
               bottom: 0,
-              child: MiniPlayer(),
+              child: homeController.whoAccess.value != "none"
+                  ? MiniPlayer()
+                  : SizedBox(),
             )
           ],
         ),
