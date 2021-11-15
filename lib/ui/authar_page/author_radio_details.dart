@@ -74,6 +74,7 @@ class AuthorRadioDetails extends StatelessWidget {
                           child: Icon(
                             Icons.ios_share,
                             color: darkTxt,
+                            size: 20,
                           ),
                           onTap: () async {
                             Share.share(
