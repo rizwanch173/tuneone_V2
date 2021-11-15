@@ -717,36 +717,37 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                 ],
               ),
               Spacer(),
-              GestureDetector(
-                  onTap: () {
-                    if (homeController.selectedIndex.value == 0) {
-                      if (dataController.currentRadioCopy.length != 0) {
-                        Get.to(
-                          AuthorMediaListRadioView(
-                            title: dataController
-                                .currentRadioCopy[0].author.displayName,
-                          ),
-                        );
-                      }
-                    } else {
-                      if (dataController.currentPodCopy.length != 0) {
-                        Get.to(AuthorMediaListPodView(
+              TextButton(
+                onPressed: () {
+                  if (homeController.selectedIndex.value == 0) {
+                    if (dataController.currentRadioCopy.length != 0) {
+                      Get.to(
+                        AuthorMediaListRadioView(
                           title: dataController
-                              .currentPodCopy[0].author.displayName,
-                        ));
-                      }
+                              .currentRadioCopy[0].author.displayName,
+                        ),
+                      );
                     }
-                  },
-                  child: AutoSizeText(
-                    "View All",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "Aeonik-medium",
-                      color: ThemeProvider.themeOf(context).id == "light"
-                          ? backGroundColor
-                          : darkTxt,
-                    ),
-                  )),
+                  } else {
+                    if (dataController.currentPodCopy.length != 0) {
+                      Get.to(AuthorMediaListPodView(
+                        title:
+                            dataController.currentPodCopy[0].author.displayName,
+                      ));
+                    }
+                  }
+                },
+                child: AutoSizeText(
+                  "View All",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontFamily: "Aeonik-medium",
+                    color: ThemeProvider.themeOf(context).id == "light"
+                        ? backGroundColor
+                        : darkTxt,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

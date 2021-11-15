@@ -717,39 +717,40 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                 buttons: ["Podcast", "Radio"],
               ),
               Spacer(),
-              GestureDetector(
-                  onTap: () {
-                    print(currentIndex);
-                    print(dataController.currentPodCopy.length);
-                    if (homeController.selectedIndex.value == 0) {
-                      if (dataController.currentPodCopy.length != 0) {
-                        Get.to(AuthorMediaListPodView(
-                          title: dataController
-                              .currentPodCopy[0].author.displayName,
-                        ));
-                      }
-                    } else {
-                      print(currentIndex);
-                      if (dataController.currentRadioCopy.length != 0) {
-                        Get.to(
-                          AuthorMediaListRadioView(
-                            title: dataController
-                                .currentRadioCopy[0].author.displayName,
-                          ),
-                        );
-                      }
+              TextButton(
+                onPressed: () {
+                  print(currentIndex);
+                  print(dataController.currentPodCopy.length);
+                  if (homeController.selectedIndex.value == 0) {
+                    if (dataController.currentPodCopy.length != 0) {
+                      Get.to(AuthorMediaListPodView(
+                        title:
+                            dataController.currentPodCopy[0].author.displayName,
+                      ));
                     }
-                  },
-                  child: AutoSizeText(
-                    "View All",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "Aeonik-medium",
-                      color: ThemeProvider.themeOf(context).id == "light"
-                          ? backGroundColor
-                          : darkTxt,
-                    ),
-                  )),
+                  } else {
+                    print(currentIndex);
+                    if (dataController.currentRadioCopy.length != 0) {
+                      Get.to(
+                        AuthorMediaListRadioView(
+                          title: dataController
+                              .currentRadioCopy[0].author.displayName,
+                        ),
+                      );
+                    }
+                  }
+                },
+                child: AutoSizeText(
+                  "View All",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontFamily: "Aeonik-medium",
+                    color: ThemeProvider.themeOf(context).id == "light"
+                        ? backGroundColor
+                        : darkTxt,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
