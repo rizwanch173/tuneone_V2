@@ -42,24 +42,21 @@ class AuthorRadioDetails extends StatelessWidget {
             SliverAppBar(
               expandedHeight: Get.height * 0.50,
               // automaticallyImplyLeading: false,
-              leading: GestureDetector(
-                child: Padding(
-                  padding: EdgeInsets.only(left: Get.height * 0.02),
-                  child: Icon(
+              leading: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(
                     Icons.arrow_back_ios_rounded,
                     color: Colors.white,
-                    size: 24,
+                    size: 30,
                   ),
-                ),
-                onTap: () {
-                  Get.back();
-                },
-              ),
+                  onPressed: () {
+                    Get.back();
+                  }),
               actions: [
                 Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(right: Get.height * 0.03),
+                      padding: EdgeInsets.only(right: Get.height * 0.025),
                       child: Container(
                         height: Get.height * 0.04,
                         width: Get.height * 0.04,
