@@ -53,21 +53,23 @@ class TabsViewModel extends GetxController {
     for (var i = 0; i < dataController.recentlyList.length; i++) {
       if (dataController.recentlyList[i].isRadio) {
         if (!radioListIdIndex.contains(dataController.recentlyList[i].id)) {
-          indexToRemove.add(i);
+          indexToRemove.add(dataController.recentlyList[i].id);
           //  dataController.recentlyList.removeWhere((e0) => e0.id == element.id);
         }
       } else {
         if (!podcastListIdIndex.contains(dataController.recentlyList[i].id)) {
-          indexToRemove.add(i);
+          indexToRemove.add(dataController.recentlyList[i].id);
           //  dataController.recentlyList.removeWhere((e1) => e1.id == element.id);
         }
       }
     }
+    dataController.recentlyList
+        .removeWhere((element) => indexToRemove.contains(element.id));
 
-    dataController.recentlyList.value = dataController.recentlyList
-        .where((x) =>
-            !indexToRemove.contains(dataController.recentlyList.indexOf(x)))
-        .toList();
+    // dataController.recentlyList.value = dataController.recentlyList
+    //     .where((x) =>
+    //         !indexToRemove.contains(dataController.recentlyList.indexOf(x)))
+    //     .toList();
 
     print(dataController.settings[0]);
     if (dataController.settings[0] && dataController.recentlyList.length != 0) {
