@@ -48,7 +48,7 @@ class AuthorRadioDetails extends StatelessWidget {
                   child: Icon(
                     Icons.arrow_back_ios_rounded,
                     color: Colors.white,
-                    size: 30,
+                    size: 24,
                   ),
                 ),
                 onTap: () {
@@ -74,7 +74,7 @@ class AuthorRadioDetails extends StatelessWidget {
                           child: Icon(
                             Icons.ios_share,
                             color: darkTxt,
-                            size: 20,
+                            size: 24,
                           ),
                           onTap: () async {
                             Share.share(
