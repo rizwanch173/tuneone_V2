@@ -516,11 +516,13 @@ class HomePageView extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () {
+
+
                                       print(dataController
                                           .recentlyList[index].duration);
                                       if (dataController
-                                              .recentlyList[index].duration ==
-                                          0) {
+                                              .recentlyList[index].isRadio) {
+                                        print("#"*10);
                                         var radioIndex = dataController
                                             .radioListMasterCopy
                                             .indexWhere((w) =>
@@ -533,6 +535,9 @@ class HomePageView extends StatelessWidget {
                                         Get.to(SingleRadioView());
                                         print(radioIndex);
                                       } else {
+                                        print("*"*10);
+                                        print(dataController
+                                            .podcastListMasterCopy.length);
                                         var podIndex = dataController
                                             .podcastListMasterCopy
                                             .indexWhere((w) =>
