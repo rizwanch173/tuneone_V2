@@ -8,14 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreenController extends GetxController {
   final DataController dataController = Get.find();
-  checkStartUpLogic() {
-    RemoteServices.fetchPodcastList();
-    RemoteServices.fetchRadioList();
+  checkStartUpLogic() async {
+    await RemoteServices.fetchPodcastList();
+    await RemoteServices.fetchRadioList();
     checkLogin();
     loadSettings();
-
-    RemoteServices.fetchPodcastList();
-    RemoteServices.fetchRadioList();
     RemoteServices.getGenre();
     RemoteServices.checkPay();
     Future.delayed(Duration(seconds: 2), () {
