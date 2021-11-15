@@ -2,12 +2,9 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
-import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/models/recently_model.dart';
 import 'package:tuneone/models/userLoginModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../main.dart';
 
 class SplashScreenController extends GetxController {
   final DataController dataController = Get.find();

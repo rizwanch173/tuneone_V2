@@ -450,154 +450,162 @@ class HomePageView extends StatelessWidget {
                   SizedBox(
                     height: Get.height * 0.02,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: ThemeProvider.themeOf(context).id == "light"
-                          ? Colors.white
-                          : darkBg,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0x14000000),
-                          offset: Offset(0, 5),
-                          blurRadius: 20,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Get.width * 0.05,
-                              vertical: Get.height * 0.02),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AutoSizeText(
-                                "Recently Played",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Aeonik-medium",
-                                  color: ThemeProvider.themeOf(context).id ==
-                                          "light"
-                                      ? darkBg
-                                      : darkTxt,
-                                ),
-                              ),
-                              // GestureDetector(
-                              //     onTap: () {
-                              //       Get.to(() => MediaListView(
-                              //             title: "Recently Played",
-                              //             fromLibrary: false,
-                              //           ));
-                              //     },
-                              //     child: AutoSizeText(
-                              //       "View All",
-                              //       presetFontSizes: [20, 18],
-                              //       style: TextStyle(
-                              //         color:
-                              //             ThemeProvider.themeOf(context).id == "light"
-                              //                 ? backGroundColor
-                              //                 : darkTxt,
-                              //       ),
-                              //     )),
-                            ],
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: homeController.whoAccess.value != "none"
+                            ? Get.height * 0.05
+                            : 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: ThemeProvider.themeOf(context).id == "light"
+                            ? Colors.white
+                            : darkBg,
+                        borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0x14000000),
+                            offset: Offset(0, 5),
+                            blurRadius: 20,
                           ),
-                        ),
-                        Container(
-                          height: Get.height * 0.22,
-                          child: ListView.builder(
-                              // reverse: true,
-                              itemCount: dataController.recentlyList.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    print(dataController
-                                        .recentlyList[index].duration);
-                                    if (dataController
-                                            .recentlyList[index].duration ==
-                                        0) {
-                                      var radioIndex = dataController
-                                          .radioListMasterCopy
-                                          .indexWhere((w) =>
-                                              w.id ==
-                                              dataController
-                                                  .recentlyList[index].id);
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: Get.width * 0.05,
+                                vertical: Get.height * 0.02),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AutoSizeText(
+                                  "Recently Played",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Aeonik-medium",
+                                    color: ThemeProvider.themeOf(context).id ==
+                                            "light"
+                                        ? darkBg
+                                        : darkTxt,
+                                  ),
+                                ),
+                                // GestureDetector(
+                                //     onTap: () {
+                                //       Get.to(() => MediaListView(
+                                //             title: "Recently Played",
+                                //             fromLibrary: false,
+                                //           ));
+                                //     },
+                                //     child: AutoSizeText(
+                                //       "View All",
+                                //       presetFontSizes: [20, 18],
+                                //       style: TextStyle(
+                                //         color:
+                                //             ThemeProvider.themeOf(context).id == "light"
+                                //                 ? backGroundColor
+                                //                 : darkTxt,
+                                //       ),
+                                //     )),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: Get.height * 0.22,
+                            child: ListView.builder(
+                                // reverse: true,
+                                itemCount: dataController.recentlyList.length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      print(dataController
+                                          .recentlyList[index].duration);
+                                      if (dataController
+                                              .recentlyList[index].duration ==
+                                          0) {
+                                        var radioIndex = dataController
+                                            .radioListMasterCopy
+                                            .indexWhere((w) =>
+                                                w.id ==
+                                                dataController
+                                                    .recentlyList[index].id);
 
-                                      homeController.indexToPlayRadio.value =
-                                          radioIndex;
-                                      Get.to(SingleRadioView());
-                                      print(radioIndex);
-                                    } else {
-                                      var podIndex = dataController
-                                          .podcastListMasterCopy
-                                          .indexWhere((w) =>
-                                              w.id ==
+                                        homeController.indexToPlayRadio.value =
+                                            radioIndex;
+                                        Get.to(SingleRadioView());
+                                        print(radioIndex);
+                                      } else {
+                                        var podIndex = dataController
+                                            .podcastListMasterCopy
+                                            .indexWhere((w) =>
+                                                w.id ==
+                                                dataController
+                                                    .recentlyList[index].id);
+                                        homeController.indexToPlayPod.value =
+                                            podIndex;
+                                        print(podIndex);
+                                        Get.to(SinglePodcastView());
+                                      }
+                                    },
+                                    child: Container(
+                                      width: Get.width * 0.25,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        border: Border.all(
+                                          color: ThemeProvider.themeOf(context)
+                                                      .id ==
+                                                  "light"
+                                              ? Color(0xffF2F2F2)
+                                              : darkTxt.withOpacity(0.2),
+                                        ),
+                                      ),
+                                      margin: EdgeInsets.only(
+                                          left: index == 0
+                                              ? Get.width * 0.05
+                                              : Get.width * 0.03,
+                                          bottom: Get.height * 0.03),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Expanded(
+                                            child: ClipRRect(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(10)),
+                                                child: StyledCachedNetworkImage(
+                                                  url: dataController
+                                                      .recentlyList[index]
+                                                      .thumbnail,
+                                                  height: Get.height * 0.4,
+                                                )),
+                                            flex: 2,
+                                          ),
+                                          Expanded(
+                                            child: AutoSizeText(
                                               dataController
-                                                  .recentlyList[index].id);
-                                      homeController.indexToPlayPod.value =
-                                          podIndex;
-                                      print(podIndex);
-                                      Get.to(SinglePodcastView());
-                                    }
-                                  },
-                                  child: Container(
-                                    width: Get.width * 0.25,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      border: Border.all(
-                                        color:
-                                            ThemeProvider.themeOf(context).id ==
-                                                    "light"
-                                                ? Color(0xffF2F2F2)
-                                                : darkTxt.withOpacity(0.2),
+                                                  .recentlyList[index].title,
+                                              style: TextStyle(
+                                                color: Color(0xffA4A4A4),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            flex: 1,
+                                          )
+                                        ],
                                       ),
                                     ),
-                                    margin: EdgeInsets.only(
-                                        left: index == 0
-                                            ? Get.width * 0.05
-                                            : Get.width * 0.03,
-                                        bottom: Get.height * 0.03),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        Expanded(
-                                          child: ClipRRect(
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight:
-                                                      Radius.circular(10)),
-                                              child: StyledCachedNetworkImage(
-                                                url: dataController
-                                                    .recentlyList[index]
-                                                    .thumbnail,
-                                                height: Get.height * 0.4,
-                                              )),
-                                          flex: 2,
-                                        ),
-                                        Expanded(
-                                          child: AutoSizeText(
-                                            dataController
-                                                .recentlyList[index].title,
-                                            style: TextStyle(
-                                              color: Color(0xffA4A4A4),
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          flex: 1,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }),
-                        )
-                      ],
+                                  );
+                                }),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(

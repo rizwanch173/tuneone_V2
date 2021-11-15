@@ -7,12 +7,10 @@ import 'package:get/get.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
-import 'package:tuneone/controllers/podcast_controller.dart';
 import 'package:tuneone/controllers/radio_controller.dart';
 import 'package:tuneone/ui/medialist/genre_medialist_radio.dart';
 import 'package:tuneone/ui/medialist/medialist_radio.dart';
 import 'package:tuneone/ui/shared/styles.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:tuneone/ui/styled_widgets/masking.dart';
@@ -284,7 +282,7 @@ class RadioStationsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AutoSizeText(
-                      "Local Radio Stations",
+                      "Radio Stations",
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontFamily: "Aeonik-medium",

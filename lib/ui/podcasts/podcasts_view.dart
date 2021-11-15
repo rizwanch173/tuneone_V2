@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,7 +8,6 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/ui/medialist/genre_medialist_pod.dart';
-import 'package:tuneone/ui/medialist/genre_medialist_radio.dart';
 import 'package:tuneone/ui/medialist/medialist_view.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:tuneone/ui/singlechannel/single_podcast_view.dart';

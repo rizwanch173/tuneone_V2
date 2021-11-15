@@ -1,7 +1,6 @@
 import 'package:get/instance_manager.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
-import 'package:tuneone/controllers/login_controller.dart';
 import 'package:tuneone/controllers/podcast_controller.dart';
 
 class ServicesBinder extends Bindings {

@@ -1,14 +1,15 @@
+import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
-import 'package:marquee_text/marquee_text.dart';
 import 'package:share/share.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/Services/remote_services.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
+import 'package:tuneone/ui/authar_page/author_medialist_pod.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:tuneone/ui/singlechannel/single_podcast_view.dart';
 import 'package:tuneone/ui/singlechannel/single_radio_view.dart';
@@ -16,6 +17,7 @@ import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
 import 'package:tuneone/ui/styled_widgets/mini_player.dart';
 import 'package:tuneone/ui/styled_widgets/styled_button.dart';
 
+import 'authar_medialist_radio.dart';
 
 class AuthorPodDetails extends StatelessWidget {
   final DataController dataController = Get.find();
@@ -27,119 +29,106 @@ class AuthorPodDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     homeController.selectedIndex.value = 0;
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: Get.height,
-            color: ThemeProvider.themeOf(context).id == "light"
-                ? Colors.white
-                : Theme.of(context).primaryColor.withOpacity(0.8),
-            child: Obx(() {
-              return SingleChildScrollView(
-                child: Container(
-                    child: Column(
-                  children: [
-                    Container(
-                      height: Get.height * 0.65,
-                      child: Column(
-                        children: [
-                          Container(
+      backgroundColor:
+          ThemeProvider.themeOf(context).id == "light" ? darkTxt : darkBg,
+      body: Obx(
+        () => Stack(
+          children: [
+            CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  expandedHeight: Get.height * 0.50,
+                  // automaticallyImplyLeading: false,
+                  leading: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: const Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Get.back();
+                      }),
+                  actions: [
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: Get.height * 0.025),
+                          child: Container(
+                            height: Get.height * 0.04,
+                            width: Get.height * 0.04,
                             decoration: BoxDecoration(
-                              image: ThemeProvider.themeOf(context).id == "light"
-                                  ? DecorationImage(
-                                      image: AssetImage("assets/appbarBgLight.png"),
-                                      fit: BoxFit.cover)
-                                  : DecorationImage(
-                                      image: AssetImage("assets/appbarBgdark.png"),
-                                      fit: BoxFit.cover),
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(15),
-                                bottomLeft: Radius.circular(15),
+                              borderRadius: BorderRadius.circular(50.0),
+                              border: Border.all(
+                                width: 1,
+                                color: darkTxt,
                               ),
                             ),
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: Get.width * 0.04),
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: Get.height * 0.06,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Center(
-                                        child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            icon: const Icon(
-                                              Icons.arrow_back_ios_rounded,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ),
-                                            onPressed: () {
-                                              Get.back();
-                                            }),
-                                      ),
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: AutoSizeText(
-                                            dataController.podcastList[currentIndex]
-                                                .author.displayName,
-                                            style: TextStyle(
-                                                color: darkTxt,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w800),
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            icon: const Icon(
-                                              Icons.home,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ),
-                                            onPressed: () {
-                                              Get.offAndToNamed("/tabs");
-                                            }),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: Get.height * 0.03,
-                                  )
-                                ],
+                            child: GestureDetector(
+                              child: Icon(
+                                Icons.ios_share,
+                                color: darkTxt,
+                                size: 22,
                               ),
+                              onTap: () async {
+                                Share.share(
+                                    ' ${dataController.podcastList[currentIndex].link}');
+                              },
                             ),
                           ),
+                        ),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.end,
+                    ),
+                  ],
+                  floating: false,
+                  pinned: true,
+                  backgroundColor: ThemeProvider.themeOf(context).id == "light"
+                      ? backGroundColor
+                      : darkBg,
+                  collapsedHeight: 56.0,
+                  flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: true,
+                    background: Container(
+                      decoration: BoxDecoration(
+                        image: ThemeProvider.themeOf(context).id == "light"
+                            ? DecorationImage(
+                                image: AssetImage("assets/details_light.png"),
+                                fit: BoxFit.cover)
+                            : DecorationImage(
+                                image: AssetImage("assets/details_dark.png"),
+                                fit: BoxFit.cover),
+                      ),
+                      child: Column(
+                        children: [
                           SizedBox(
-                            height: Get.height * 0.01,
+                            height: Get.height * 0.11,
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: Get.width * 0.20,
                             ),
                             child: Container(
-                              height: Get.height * 0.25,
+                              height: Get.height * 0.2,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: AspectRatio(
                                   aspectRatio: 1 / 1,
                                   child: StyledCachedNetworkImage2(
-                                    url: dataController.podcastList[currentIndex]
-                                        .author.avtarUrl,
+                                    url: dataController
+                                        .podcastList[currentIndex]
+                                        .author
+                                        .avtarUrl,
                                   ),
                                 ),
                               ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
                                 border: Border.all(
-                                  width: 0.5,
-                                  color:
-                                  ThemeProvider.themeOf(context).id == "light"
-                                      ? backGroundColor
+                                  width: 2,
+                                  color: ThemeProvider.themeOf(context).id ==
+                                          "light"
+                                      ? Color(0xffFF6879)
                                       : darkTxt,
                                 ),
                               ),
@@ -149,29 +138,18 @@ class AuthorPodDetails extends StatelessWidget {
                             height: Get.height * 0.01,
                           ),
                           Align(
-                            child: Container(
-                              width: Get.width * 0.60,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: MarqueeText(
-                                  text: TextSpan(
-                                    text: dataController.podcastList[currentIndex]
-                                        .author.displayName,
-                                  ),
-                                  style: TextStyle(
-                                    color: ThemeProvider.themeOf(context).id ==
-                                        "light"
-                                        ? darkBg
-                                        : darkTxt,
-                                    fontSize: 18,
-                                  ),
-                                  speed: 18,
-                                ),
-                              ),
+                            alignment: Alignment.center,
+                            child: AutoSizeText(
+                              dataController
+                                  .podcastList[currentIndex].author.displayName,
+                              style: TextStyle(
+                                  color: darkTxt,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800),
                             ),
                           ),
                           SizedBox(
-                            height: 5,
+                            height: Get.height * 0.01,
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -181,14 +159,11 @@ class AuthorPodDetails extends StatelessWidget {
                               style: TextStyle(
                                 fontFamily: 'Aeonik',
                                 fontSize: 13,
-                                color:
-                                ThemeProvider.themeOf(context).id == "light"
-                                    ? Color(0xffa4a4a4)
-                                    : darkTxt,
+                                color: darkTxt,
                                 fontWeight: FontWeight.w300,
                               ),
                               maxLines: 5,
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.left,
                             ),
                           ),
                           SizedBox(
@@ -196,356 +171,109 @@ class AuthorPodDetails extends StatelessWidget {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // Container(
-                              //   height: 40,
-                              //   width: 40,
-                              //   decoration: BoxDecoration(
-                              //     borderRadius: BorderRadius.circular(50.0),
-                              //     border: Border.all(
-                              //       width: 1,
-                              //       color: ThemeProvider.themeOf(context).id ==
-                              //               "light"
-                              //           ? backGroundColor
-                              //           : darkTxt,
-                              //     ),
-                              //   ),
-                              //   child: StreamBuilder<PlaybackState>(
-                              //     stream: audioHandler.playbackState,
-                              //     builder: (context, snapshot) {
-                              //       final playbackState = snapshot.data;
-                              //       final processingState =
-                              //           playbackState?.processingState;
-                              //       final playing = playbackState?.playing;
-                              //       if (processingState ==
-                              //               AudioProcessingState.loading ||
-                              //           processingState ==
-                              //               AudioProcessingState.buffering) {
-                              //         return Container(
-                              //           decoration: BoxDecoration(
-                              //             borderRadius:
-                              //                 BorderRadius.circular(50.0),
-                              //             border: Border.all(
-                              //               width: 1,
-                              //               color: ThemeProvider.themeOf(context)
-                              //                           .id ==
-                              //                       "light"
-                              //                   ? backGroundColor
-                              //                   : darkTxt,
-                              //             ),
-                              //           ),
-                              //           width: 40.0,
-                              //           height: 40.0,
-                              //           child: const CupertinoActivityIndicator(),
-                              //         );
-                              //       } else if (playing == true) {
-                              //         if (audioHandler.mediaItem.value!.id ==
-                              //             dataController
-                              //                 .podcastList[currentIndex].stream) {
-                              //           print("matched");
-                              //           return Container(
-                              //               height: 40,
-                              //               width: 40,
-                              //               decoration: BoxDecoration(
-                              //                 borderRadius:
-                              //                     BorderRadius.circular(50.0),
-                              //                 border: Border.all(
-                              //                   width: 1,
-                              //                   color:
-                              //                       ThemeProvider.themeOf(context)
-                              //                                   .id ==
-                              //                               "light"
-                              //                           ? backGroundColor
-                              //                           : darkTxt,
-                              //                 ),
-                              //               ),
-                              //               child: Center(
-                              //                 child: IconButton(
-                              //                     padding: EdgeInsets.zero,
-                              //                     icon: Icon(Icons.pause,
-                              //                         size: 30,
-                              //                         color:
-                              //                             ThemeProvider.themeOf(
-                              //                                             context)
-                              //                                         .id ==
-                              //                                     "light"
-                              //                                 ? backGroundColor
-                              //                                 : darkTxt),
-                              //                     onPressed: () {
-                              //                       audioHandler.pause();
-                              //                     }),
-                              //               ));
-                              //         } else {
-                              //           return Container(
-                              //               height: 40,
-                              //               width: 40,
-                              //               decoration: BoxDecoration(
-                              //                 borderRadius:
-                              //                     BorderRadius.circular(50.0),
-                              //                 border: Border.all(
-                              //                   width: 1,
-                              //                   color:
-                              //                       ThemeProvider.themeOf(context)
-                              //                                   .id ==
-                              //                               "light"
-                              //                           ? backGroundColor
-                              //                           : darkTxt,
-                              //                 ),
-                              //               ),
-                              //               child: Center(
-                              //                 child: IconButton(
-                              //                   padding: EdgeInsets.zero,
-                              //                   icon: Icon(
-                              //                     Icons.play_arrow,
-                              //                     size: 30,
-                              //                   ),
-                              //                   color:
-                              //                       ThemeProvider.themeOf(context)
-                              //                                   .id ==
-                              //                               "light"
-                              //                           ? backGroundColor
-                              //                           : darkTxt,
-                              //                   onPressed: () async {
-                              //                     if (homeController
-                              //                                 .whoAccess.value ==
-                              //                             "radio" ||
-                              //                         homeController
-                              //                                 .whoAccess.value ==
-                              //                             "none") {
-                              //                       await audioHandler.updateQueue(
-                              //                           dataController
-                              //                               .mediaListPodcast);
-                              //                       await audioHandler
-                              //                           .skipToQueueItem(
-                              //                               currentIndex);
-                              //                       audioHandler.play();
-                              //                       homeController
-                              //                           .whoAccess.value = "pod";
-                              //                     } else {
-                              //                       if (audioHandler.mediaItem
-                              //                               .value!.id !=
-                              //                           dataController
-                              //                               .mediaListPodcast[
-                              //                                   currentIndex]
-                              //                               .id) {
-                              //                         await audioHandler
-                              //                             .skipToQueueItem(
-                              //                                 currentIndex);
-                              //                       }
-                              //
-                              //                       audioHandler.play();
-                              //                       homeController
-                              //                           .whoAccess.value = "pod";
-                              //                     }
-                              //                     dataController.addRecently(
-                              //                         dataController.podcastList[
-                              //                             currentIndex],
-                              //                         true);
-                              //                   },
-                              //                 ),
-                              //               ));
-                              //         }
-                              //       } else {
-                              //         return Container(
-                              //           height: 40,
-                              //           width: 40,
-                              //           decoration: BoxDecoration(
-                              //             borderRadius:
-                              //                 BorderRadius.circular(50.0),
-                              //             border: Border.all(
-                              //               color: ThemeProvider.themeOf(context)
-                              //                           .id ==
-                              //                       "light"
-                              //                   ? backGroundColor
-                              //                   : darkTxt,
-                              //             ),
-                              //           ),
-                              //           child: Center(
-                              //             child: IconButton(
-                              //               padding: EdgeInsets.zero,
-                              //               icon: const Icon(
-                              //                 Icons.play_arrow,
-                              //                 size: 30,
-                              //               ),
-                              //               color: ThemeProvider.themeOf(context)
-                              //                           .id ==
-                              //                       "light"
-                              //                   ? backGroundColor
-                              //                   : darkTxt,
-                              //               onPressed: () async {
-                              //                 if (homeController
-                              //                             .whoAccess.value ==
-                              //                         "radio" ||
-                              //                     homeController
-                              //                             .whoAccess.value ==
-                              //                         "none") {
-                              //                   await audioHandler.updateQueue(
-                              //                       dataController
-                              //                           .mediaListPodcast);
-                              //                   await audioHandler
-                              //                       .skipToQueueItem(
-                              //                           currentIndex);
-                              //                   audioHandler.play();
-                              //                   homeController.whoAccess.value =
-                              //                       "pod";
-                              //                 } else {
-                              //                   if (audioHandler
-                              //                           .mediaItem.value!.id !=
-                              //                       dataController
-                              //                           .mediaListPodcast[
-                              //                               currentIndex]
-                              //                           .id) {
-                              //                     await audioHandler
-                              //                         .skipToQueueItem(
-                              //                             currentIndex);
-                              //                   }
-                              //
-                              //                   audioHandler.play();
-                              //                   homeController.whoAccess.value =
-                              //                       "pod";
-                              //                 }
-                              //                 dataController.addRecently(
-                              //                     dataController
-                              //                         .podcastList[currentIndex],
-                              //                     true);
-                              //               },
-                              //             ),
-                              //           ),
-                              //         );
-                              //       }
-                              //     },
-                              //   ),
-                              // ),
-                              SizedBox(
-                                width: 20,
-                              ),
                               Container(
                                 height: 40,
                                 child: dataController.islogin.isFalse
                                     ? Container(
-                                  width: Get.width * 0.25,
-                                  child: StyledButton(
-                                    onPressed: () {
-                                      homeController.showAlertDialog(
-                                          context: context,
-                                          title: "ATTENTION!",
-                                          content:
-                                          "Please Sign In To Continue This Action",
-                                          cancelActionText: "CANCEL",
-                                          defaultActionText: "LOG IN");
-                                    },
-                                    title: "Follow",
-                                    backgroundColor: backGroundColor,
-                                    titleColor: Colors.white,
-                                    borderRadius: BorderRadius.circular(25),
-                                    fontSize: 14,
-                                  ),
-                                )
+                                        width: Get.width * 0.25,
+                                        child: StyledButton(
+                                          onPressed: () {
+                                            homeController.showAlertDialog(
+                                                context: context,
+                                                title: "ATTENTION!",
+                                                content:
+                                                    "Please Sign In To Continue This Action",
+                                                cancelActionText: "CANCEL",
+                                                defaultActionText: "LOG IN");
+                                          },
+                                          title: "Follow",
+                                          backgroundColor: Colors.white,
+                                          titleColor: darkBg,
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          fontSize: 14,
+                                        ),
+                                      )
                                     : Obx(
-                                      () => dataController.followList.contains(
-                                      int.parse(dataController
-                                          .podcastList[currentIndex]
-                                          .author
-                                          .authorId))
-                                      ? Container(
-                                    width: Get.width * 0.25,
-                                    child: StyledButton(
-                                      onPressed: () {
-                                        dataController.followList
-                                            .remove(int.parse(
-                                            dataController
-                                                .podcastList[
-                                            currentIndex]
-                                                .author
-                                                .authorId));
+                                        () => dataController.followList
+                                                .contains(int.parse(
+                                                    dataController
+                                                        .podcastList[
+                                                            currentIndex]
+                                                        .author
+                                                        .authorId))
+                                            ? Container(
+                                                width: Get.width * 0.25,
+                                                child: StyledButton(
+                                                  onPressed: () {
+                                                    dataController.followList
+                                                        .remove(int.parse(
+                                                            dataController
+                                                                .podcastList[
+                                                                    currentIndex]
+                                                                .author
+                                                                .authorId));
 
-                                        RemoteServices
-                                            .followOrUnfollow(
-                                          follow: false,
-                                          channelId: int.parse(
-                                              dataController
-                                                  .podcastList[
-                                              currentIndex]
-                                                  .author
-                                                  .authorId),
-                                        );
-                                      },
-                                      title: "Following",
-                                      backgroundColor:
-                                      backGroundColor,
-                                      titleColor: Colors.white,
-                                      borderRadius:
-                                      BorderRadius.circular(25),
-                                      fontSize: 14,
-                                    ),
-                                  )
-                                      : Container(
-                                    width: Get.width * 0.20,
-                                    child: StyledButton(
-                                      onPressed: () {
-                                        dataController.followList.add(
-                                            int.parse(dataController
-                                                .podcastList[
-                                            currentIndex]
-                                                .author
-                                                .authorId));
+                                                    RemoteServices
+                                                        .followOrUnfollow(
+                                                      follow: false,
+                                                      channelId: int.parse(
+                                                          dataController
+                                                              .podcastList[
+                                                                  currentIndex]
+                                                              .author
+                                                              .authorId),
+                                                    );
+                                                  },
+                                                  title: "Following",
+                                                  backgroundColor:
+                                                      backGroundColor,
+                                                  titleColor: darkBg,
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  fontSize: 14,
+                                                ),
+                                              )
+                                            : Container(
+                                                width: Get.width * 0.20,
+                                                child: StyledButton(
+                                                  onPressed: () {
+                                                    dataController.followList
+                                                        .add(int.parse(
+                                                            dataController
+                                                                .podcastList[
+                                                                    currentIndex]
+                                                                .author
+                                                                .authorId));
 
-                                        RemoteServices
-                                            .followOrUnfollow(
-                                          follow: true,
-                                          channelId: int.parse(
-                                              dataController
-                                                  .podcastList[
-                                              currentIndex]
-                                                  .author
-                                                  .authorId),
-                                        );
-                                      },
-                                      title: "Follow",
-                                      backgroundColor:
-                                      backGroundColor,
-                                      titleColor: Colors.white,
-                                      borderRadius:
-                                      BorderRadius.circular(25),
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50.0),
-                                  border: Border.all(
-                                    width: 1,
-                                    color: ThemeProvider.themeOf(context).id ==
-                                        "light"
-                                        ? Colors.grey.shade400
-                                        : darkTxt,
-                                  ),
-                                ),
-                                child: GestureDetector(
-                                  child: Icon(
-                                    Icons.ios_share,
-                                    color: (ThemeProvider.themeOf(context).id ==
-                                        "light")
-                                        ? Colors.grey.shade400
-                                        : darkTxt,
-                                  ),
-                                  onTap: () async {
-                                    Share.share(
-                                        ' ${dataController.podcastList[currentIndex].link}');
-                                  },
-                                ),
+                                                    RemoteServices
+                                                        .followOrUnfollow(
+                                                      follow: true,
+                                                      channelId: int.parse(
+                                                          dataController
+                                                              .podcastList[
+                                                                  currentIndex]
+                                                              .author
+                                                              .authorId),
+                                                    );
+                                                  },
+                                                  title: "Follow",
+                                                  backgroundColor:
+                                                      backGroundColor,
+                                                  titleColor: darkBg,
+                                                  borderRadius:
+                                                      BorderRadius.circular(25),
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                      ),
                               ),
                             ],
                           ),
                           SizedBox(
-                            height: Get.height * 0.02,
+                            height: Get.height * 0.01,
                           ),
                           Row(
                             children: [
@@ -554,10 +282,7 @@ class AuthorPodDetails extends StatelessWidget {
                                 style: TextStyle(
                                   fontFamily: 'Aeonik',
                                   fontSize: 15,
-                                  color:
-                                  ThemeProvider.themeOf(context).id == "light"
-                                      ? Color(0xffa4a4a4)
-                                      : darkTxt,
+                                  color: darkTxt,
                                   fontWeight: FontWeight.w300,
                                 ),
                                 textAlign: TextAlign.left,
@@ -569,10 +294,7 @@ class AuthorPodDetails extends StatelessWidget {
                                 style: TextStyle(
                                   fontFamily: 'Aeonik',
                                   fontSize: 15,
-                                  color:
-                                  ThemeProvider.themeOf(context).id == "light"
-                                      ? Color(0xffa4a4a4)
-                                      : darkTxt,
+                                  color: darkTxt,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 textAlign: TextAlign.left,
@@ -582,503 +304,465 @@ class AuthorPodDetails extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                           ),
                           SizedBox(
-                            height: Get.height * 0.01,
+                            height: Get.height * 0.03,
                           ),
                         ],
                       ),
                     ),
-
-                    Container(
-                      height: Get.height * 0.35,
-                      child: Column(
-                        children: [
-
-                          Container(
-                            height: Get.height * 0.35,
-                            width: Get.width,
-                            decoration: BoxDecoration(
-                              color: ThemeProvider.themeOf(context).id == "light"
-                                  ? Colors.white
-                                  : darkBg,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color(0x14000000),
-                                  offset: Offset(0, 5),
-                                  blurRadius: 20,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: Get.width * 0.03, top: 5),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      GroupButton(
+                  ),
+                ),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _SliverAppBarDelegate(
+                      homeController: homeController,
+                      dataController: dataController,
+                      currentIndex: currentIndex),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 5,
+                  ),
+                ),
+                homeController.selectedIndex.value == 0
+                    ? new SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                            (context, index) => GestureDetector(
+                                  onTap: () {
+                                    var podIndex = dataController
+                                        .podcastListMasterCopy
+                                        .indexWhere((w) =>
+                                            w.id ==
+                                            dataController
+                                                .currentPodCopy[index].id);
+                                    homeController.indexToPlayPod.value =
+                                        podIndex;
+                                    print(podIndex);
+                                    Get.to(SinglePodcastView());
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 3),
+                                    child: Container(
+                                      decoration: BoxDecoration(
                                         borderRadius:
-                                            BorderRadius.all(Radius.circular(20)),
-                                        selectedColor: backGroundColor,
-                                        selectedTextStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                            BorderRadius.circular(10.0),
+                                        border: Border.all(
+                                          color: ThemeProvider.themeOf(context)
+                                                      .id ==
+                                                  "light"
+                                              ? Colors.black26.withOpacity(0.1)
+                                              : darkTxt.withOpacity(0.2),
                                         ),
-                                        unselectedTextStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color:
-                                              ThemeProvider.themeOf(context).id ==
-                                                      "light"
-                                                  ? Colors.black
-                                                  : Colors.white,
-                                        ),
-                                        unselectedColor:
-                                            ThemeProvider.themeOf(context).id ==
-                                                    "light"
-                                                ? Colors.white
-                                                : Colors.black,
-                                        isRadio: true,
-                                        spacing: 10,
-                                        onSelected: (index, isSelected) {
-                                          if (index == 0) {
-                                            homeController.selectedIndex.value =
-                                                0;
-                                          } else {
-                                            homeController.selectedIndex.value =
-                                                1;
-                                          }
-                                        },
-                                        selectedButton: 0,
-                                        buttons: ["Podcast", "Radio"],
                                       ),
-                                    ],
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
+                                                    ),
+                                                    height: Get.height * 0.08,
+                                                    width: Get.width * 0.16,
+                                                    child:
+                                                        StyledCachedNetworkImage2(
+                                                      url: dataController
+                                                          .currentPodCopy[index]
+                                                          .thumbnail,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8, left: 5),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      width: Get.width * 0.70,
+                                                      child: Text(
+                                                        dataController
+                                                            .currentPodCopy[
+                                                                index]
+                                                            .title,
+                                                        maxLines: 4,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        softWrap: false,
+                                                        style: TextStyle(
+                                                          fontFamily: 'Aeonik',
+                                                          fontSize: 12,
+                                                          color: ThemeProvider.themeOf(
+                                                                          context)
+                                                                      .id ==
+                                                                  "light"
+                                                              ? Color(
+                                                                  0xffa4a4a4)
+                                                              : darkTxt,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: Get.height * 0.01,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          dataController
+                                                              .currentPodCopy[
+                                                                  index]
+                                                              .slug,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Aeonik',
+                                                            fontSize: 13,
+                                                            color: const Color(
+                                                                0xffa4a4a4),
+                                                            fontWeight:
+                                                                FontWeight.w300,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                        ),
+                                                        SizedBox(
+                                                          width:
+                                                              Get.width * 0.06,
+                                                        ),
+                                                        Container(
+                                                          height: 10,
+                                                          width: 10,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius: BorderRadius
+                                                                .all(Radius
+                                                                    .elliptical(
+                                                                        9999.0,
+                                                                        9999.0)),
+                                                            color: const Color(
+                                                                0xffa4a4a4),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width:
+                                                              Get.width * 0.02,
+                                                        ),
+                                                        Text(
+                                                          (dataController.currentPodCopy
+                                                                          .length -
+                                                                      index)
+                                                                  .toString() +
+                                                              "  Episode",
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Aeonik',
+                                                            fontSize: 13,
+                                                            color: const Color(
+                                                                0xffa4a4a4),
+                                                            fontWeight:
+                                                                FontWeight.w300,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                SizedBox(
-                                  height: Get.height * 0.01,
-                                ),
-                                homeController.selectedIndex.value == 0
-                                    ? Container(
-                                  height: Get.height * 0.35-64,
-                                        child: ListView.builder(
-                                          padding: EdgeInsets.zero,
-                                          itemCount: dataController
-                                              .currentPodCopy.length,
-                                          itemBuilder: (_, index) {
-                                            return Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10, vertical: 3),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10.0),
-                                                  border: Border.all(
-                                                    color: ThemeProvider.themeOf(
-                                                                    context)
-                                                                .id ==
-                                                            "light"
-                                                        ? Color(0xffF2F2F2)
-                                                        : darkTxt
-                                                            .withOpacity(0.2),
-                                                  ),
-                                                ),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    var podIndex = dataController
-                                                        .podcastListMasterCopy
-                                                        .indexWhere((w) =>
-                                                            w.id ==
-                                                            dataController
-                                                                .currentPodCopy[
-                                                                    index]
-                                                                .id);
-                                                    homeController.indexToPlayPod
-                                                        .value = podIndex;
-                                                    print(podIndex);
-                                                    Get.to(SinglePodcastView());
-                                                  },
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(5.0),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                              child: Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.0),
-                                                                ),
-                                                                height:
-                                                                    Get.height *
-                                                                        0.08,
-                                                                width: Get.width *
-                                                                    0.16,
-                                                                child:
-                                                                    StyledCachedNetworkImage2(
-                                                                  url: dataController
-                                                                      .currentPodCopy[
-                                                                          index]
-                                                                      .thumbnail,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 8,
-                                                                    left: 5),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Container(
-                                                                  width:
-                                                                      Get.width *
-                                                                          0.70,
-                                                                  child: Text(
-                                                                    dataController
-                                                                        .currentPodCopy[
-                                                                            index]
-                                                                        .title,
-                                                                    maxLines: 4,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    softWrap:
-                                                                        false,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Aeonik',
-                                                                      fontSize:
-                                                                          12,
-                                                                      color: ThemeProvider.themeOf(context).id ==
-                                                                              "light"
-                                                                          ? Color(
-                                                                              0xffa4a4a4)
-                                                                          : darkTxt,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height:
-                                                                      Get.height *
-                                                                          0.01,
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                      dataController
-                                                                          .currentPodCopy[
-                                                                              index]
-                                                                          .slug,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontFamily:
-                                                                            'Aeonik',
-                                                                        fontSize:
-                                                                            13,
-                                                                        color: const Color(
-                                                                            0xffa4a4a4),
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w300,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .left,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width:
-                                                                          Get.width *
-                                                                              0.06,
-                                                                    ),
-                                                                    Container(
-                                                                      height: 10,
-                                                                      width: 10,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius: BorderRadius.all(Radius.elliptical(
-                                                                            9999.0,
-                                                                            9999.0)),
-                                                                        color: const Color(
-                                                                            0xffa4a4a4),
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width:
-                                                                          Get.width *
-                                                                              0.02,
-                                                                    ),
-                                                                    Text(
-                                                                      (dataController.currentPodCopy.length -
-                                                                                  index)
-                                                                              .toString() +
-                                                                          "  Episode",
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontFamily:
-                                                                            'Aeonik',
-                                                                        fontSize:
-                                                                            13,
-                                                                        color: const Color(
-                                                                            0xffa4a4a4),
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w300,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .left,
-                                                                    ),
-                                                                  ],
-                                                                )
-                                                              ],
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          shrinkWrap: true,
+                            childCount: dataController.currentPodCopy.length),
+                      )
+                    : new SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                            (context, index) => GestureDetector(
+                                  onTap: () {
+                                    var radioIndex = dataController
+                                        .radioListMasterCopy
+                                        .indexWhere((w) =>
+                                            w.id ==
+                                            dataController
+                                                .currentRadioCopy[index].id);
+
+                                    homeController.indexToPlayRadio.value =
+                                        radioIndex;
+                                    Get.to(SingleRadioView());
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 3),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        border: Border.all(
+                                          color: ThemeProvider.themeOf(context)
+                                                      .id ==
+                                                  "light"
+                                              ? Colors.black26.withOpacity(0.1)
+                                              : darkTxt.withOpacity(0.5),
                                         ),
-
-
-                                      )
-                                    : Container(
-                                  height: Get.height * 0.35-64,
-                                        child: ListView.builder(
-                                          padding: EdgeInsets.zero,
-                                          itemCount: dataController
-                                              .currentRadioCopy.length,
-                                          itemBuilder: (_, index) {
-                                            return Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10, vertical: 3),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10.0),
-                                                  border: Border.all(
-                                                    color: ThemeProvider.themeOf(
-                                                                    context)
-                                                                .id ==
-                                                            "light"
-                                                        ? Color(0xffF2F2F2)
-                                                        : darkTxt
-                                                            .withOpacity(0.2),
-                                                  ),
-                                                ),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    var radioIndex = dataController
-                                                        .radioListMasterCopy
-                                                        .indexWhere((w) =>
-                                                            w.id ==
-                                                            dataController
-                                                                .currentRadioCopy[
-                                                                    index]
-                                                                .id);
-
-                                                    homeController
-                                                        .indexToPlayRadio
-                                                        .value = radioIndex;
-                                                    Get.to(SingleRadioView());
-                                                  },
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(5.0),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                              child: Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.0),
-                                                                ),
-                                                                height:
-                                                                    Get.height *
-                                                                        0.08,
-                                                                width: Get.width *
-                                                                    0.16,
-                                                                child:
-                                                                    StyledCachedNetworkImage2(
-                                                                  url: dataController
-                                                                      .currentRadioCopy[
-                                                                          index]
-                                                                      .thumbnail,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                              top: 8,
-                                                              left: 5,
-                                                            ),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Container(
-                                                                  width:
-                                                                      Get.width *
-                                                                          0.70,
-                                                                  child: Text(
-                                                                    dataController
-                                                                        .currentRadioCopy[
-                                                                            index]
-                                                                        .title,
-                                                                    maxLines: 4,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Aeonik',
-                                                                      fontSize:
-                                                                          15,
-                                                                      color: ThemeProvider.themeOf(context).id ==
-                                                                              "light"
-                                                                          ? Color(
-                                                                              0xffa4a4a4)
-                                                                          : darkTxt,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 5,
-                                                                ),
-                                                                Text(
-                                                                  dataController
-                                                                      .currentRadioCopy[
-                                                                          index]
-                                                                      .slug,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'Aeonik',
-                                                                    fontSize: 13,
-                                                                    color: const Color(
-                                                                        0xffa4a4a4),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w300,
-                                                                  ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .left,
-                                                                )
-                                                              ],
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          shrinkWrap: true,
-                                        ),
-
-
                                       ),
-
-                              ],
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                            ),
-                          ),
-
-                        ],
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
+                                                    ),
+                                                    height: Get.height * 0.08,
+                                                    width: Get.width * 0.16,
+                                                    child:
+                                                        StyledCachedNetworkImage2(
+                                                      url: dataController
+                                                          .currentRadioCopy[
+                                                              index]
+                                                          .thumbnail,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 8,
+                                                  left: 5,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      width: Get.width * 0.70,
+                                                      child: Text(
+                                                        dataController
+                                                            .currentRadioCopy[
+                                                                index]
+                                                            .title,
+                                                        maxLines: 4,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontFamily: 'Aeonik',
+                                                          fontSize: 15,
+                                                          color: ThemeProvider.themeOf(
+                                                                          context)
+                                                                      .id ==
+                                                                  "light"
+                                                              ? Color(
+                                                                  0xffa4a4a4)
+                                                              : darkTxt,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                      dataController
+                                                          .currentRadioCopy[
+                                                              index]
+                                                          .slug,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Aeonik',
+                                                        fontSize: 13,
+                                                        color: const Color(
+                                                            0xffa4a4a4),
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                      textAlign: TextAlign.left,
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            childCount: dataController.currentRadioCopy.length),
                       ),
-                    ),
-
-                  ],
-                )
-                    // : Padding(
-                    //     padding: EdgeInsets.only(top: Get.height * 0.45),
-                    //     child: Center(
-                    //       child: new CupertinoActivityIndicator(
-                    //         animating: true,
-                    //         radius: 30,
-                    //       ),
-                    //     ),
-                    //   ),
-                    ),
-              );
-            }),
-          ),
-          homeController.whoAccess.value != "none"
-              ? Positioned(
-                  bottom: 0,
-                  child: MiniPlayer(),
-                )
-              : SizedBox(),
-        ],
+                SliverToBoxAdapter(
+                  child: homeController.whoAccess.value != "none"
+                      ? SizedBox(
+                          height: Get.height * 0.12,
+                        )
+                      : SizedBox(
+                          height: 5,
+                        ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 0,
+              child: MiniPlayer(),
+            )
+          ],
+        ),
       ),
     );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(
+      {this.homeController, this.currentIndex, this.dataController});
+
+  double scrollAnimationValue(double shrinkOffset) {
+    double maxScrollAllowed = maxExtent - minExtent;
+    return ((maxScrollAllowed - shrinkOffset) / maxScrollAllowed)
+        .clamp(0, 1)
+        .toDouble();
+  }
+
+  final homeController;
+  final currentIndex;
+  final dataController;
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final double visibleMainHeight = max(maxExtent - shrinkOffset, minExtent);
+    return Container(
+      height: visibleMainHeight,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+        color: ThemeProvider.themeOf(context).id != "light" ? darkBg : darkTxt,
+        child: Padding(
+          padding: EdgeInsets.only(left: 10, right: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              GroupButton(
+                buttonHeight: Get.height * 0.040,
+                buttonWidth: Get.height * 0.080,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                selectedColor: backGroundColor,
+                selectedTextStyle: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                unselectedTextStyle: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: ThemeProvider.themeOf(context).id == "light"
+                      ? Colors.black
+                      : Colors.white,
+                ),
+                elevation: 5.0,
+                unselectedColor: ThemeProvider.themeOf(context).id == "light"
+                    ? Colors.white
+                    : Colors.black,
+                isRadio: true,
+                spacing: 10,
+                onSelected: (index, isSelected) {
+                  if (index == 0) {
+                    homeController.selectedIndex.value = 0;
+                  } else {
+                    homeController.selectedIndex.value = 1;
+                  }
+                },
+                selectedButton: 0,
+                buttons: ["Podcast", "Radio"],
+              ),
+              Spacer(),
+              GestureDetector(
+                  onTap: () {
+                    print(currentIndex);
+                    print(dataController.currentPodCopy.length);
+                    if (homeController.selectedIndex.value == 0) {
+                      if (dataController.currentPodCopy.length != 0) {
+                        Get.to(AuthorMediaListPodView(
+                          title: dataController
+                              .currentPodCopy[0].author.displayName,
+                        ));
+                      }
+                    } else {
+                      print(currentIndex);
+                      if (dataController.currentRadioCopy.length != 0) {
+                        Get.to(
+                          AuthorMediaListRadioView(
+                            title: dataController
+                                .currentRadioCopy[0].author.displayName,
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: AutoSizeText(
+                    "View All",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontFamily: "Aeonik-medium",
+                      color: ThemeProvider.themeOf(context).id == "light"
+                          ? backGroundColor
+                          : darkTxt,
+                    ),
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => 70.0;
+
+  @override
+  double get minExtent => 56.0;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
   }
 }

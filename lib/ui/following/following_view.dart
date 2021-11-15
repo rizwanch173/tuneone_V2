@@ -3,17 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:day_night_switcher/day_night_switcher.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/controllers/data_controller.dart';
 import 'package:tuneone/controllers/follow_controller.dart';
+import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
-import 'package:tuneone/ui/styled_widgets/masking.dart';
+
 import 'package:tuneone/ui/styled_widgets/styled_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,7 +23,7 @@ import 'package:url_launcher/url_launcher.dart';
 class FollowingView extends StatelessWidget {
   final DataController dataController = Get.find();
   final FollowController followController = Get.put(FollowController());
-
+  final HomeController homeController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -47,27 +49,57 @@ class FollowingView extends StatelessWidget {
                     bottomLeft: Radius.circular(15),
                   ),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: Get.height * 0.07,
+                child: Container(
+                  height: Get.height * 0.13,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: Get.width * 0.05,
+                      right: Get.width * 0.05,
+                      top: Get.height * 0.03,
+                    ),
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(),
+                          AutoSizeText(
+                            "Settings",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          dataController.islogin.isTrue
+                              ? GestureDetector(
+                                  onTap: () async {
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.remove("islogin");
+                                    dataController.islogin(false);
+                                  },
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                          "assets/logout-svgrepo-com.svg",
+                                          height: 26,
+                                          color: Colors.white),
+                                      AutoSizeText(
+                                        "Log out",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : SizedBox()
+                        ],
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: AutoSizeText(
-                          "Follow",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w800),
-                        ),
-                      ),
-                      SizedBox(
-                        height: Get.height * 0.03,
-                      )
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -315,179 +347,195 @@ class FollowingView extends StatelessWidget {
                 ),
               ),
               SizedBox(height: Get.height * 0.02),
-              Container(
-                decoration: BoxDecoration(
-                  color: ThemeProvider.themeOf(context).id == "light"
-                      ? Colors.white
-                      : darkBg,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0x14000000),
-                      offset: Offset(0, 5),
-                      blurRadius: 20,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    ListTile(
-                      dense: true,
-                      leading: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: AutoSizeText(
-                          "Help And Feedback",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: ThemeProvider.themeOf(context).id == "light"
-                                ? darkBg
-                                : darkTxt,
-                          ),
-                        ),
+              Padding(
+                padding: EdgeInsets.only(
+                    bottom: homeController.whoAccess.value != "none"
+                        ? Get.height * 0.10
+                        : 0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: ThemeProvider.themeOf(context).id == "light"
+                        ? Colors.white
+                        : darkBg,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0x14000000),
+                        offset: Offset(0, 5),
+                        blurRadius: 20,
                       ),
-                    ),
-                    ListTile(
-                      onTap: () async {
-                        String uri = Uri.encodeFull(
-                            'mailto:support@tuneoneradio.com?subject=AboutTuneOne&body=');
-                        await launch(uri);
-                      },
-                      dense: true,
-                      leading: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: AutoSizeText(
-                          "Help",
-                          style: TextStyle(
-                            color: ThemeProvider.themeOf(context).id == "light"
-                                ? Color(0xffA4A4A4)
-                                : darkTxt,
-                          ),
-                        ),
-                      ),
-                      trailing: Container(
-                        width: Get.width * 0.25,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: ThemeProvider.themeOf(context).id == "dark"
-                                  ? Color(0x48000000)
-                                  : Color(0xfffffff),
-                              offset: Offset(0, 5),
-                              blurRadius: 50,
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        dense: true,
+                        leading: Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: AutoSizeText(
+                            "Help And Feedback",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  ThemeProvider.themeOf(context).id == "light"
+                                      ? darkBg
+                                      : darkTxt,
                             ),
-                          ],
-                        ),
-                        child: Icon(Icons.arrow_forward_ios,
-                            color: ThemeProvider.themeOf(context).id == "light"
-                                ? Color(0x48000000)
-                                : darkTxt),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () async {
-                        await canLaunch(
-                          'https://tuneoneradio.com/about/',
-                        )
-                            ? await launch('https://tuneoneradio.com/about/')
-                            : throw 'Could not launch ${'https://tuneoneradio.com/about/'}';
-                      },
-                      dense: true,
-                      leading: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: AutoSizeText(
-                          "About Us",
-                          style: TextStyle(
-                            color: ThemeProvider.themeOf(context).id == "light"
-                                ? Color(0xffA4A4A4)
-                                : darkTxt,
                           ),
                         ),
                       ),
-                      trailing: Container(
-                        width: Get.width * 0.25,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: ThemeProvider.themeOf(context).id == "dark"
-                                  ? Color(0x48000000)
-                                  : Color(0xfffffff),
-                              offset: Offset(0, 5),
-                              blurRadius: 50,
+                      ListTile(
+                        onTap: () async {
+                          String uri = Uri.encodeFull(
+                              'mailto:support@tuneoneradio.com?subject=AboutTuneOne&body=');
+                          await launch(uri);
+                        },
+                        dense: true,
+                        leading: Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: AutoSizeText(
+                            "Help",
+                            style: TextStyle(
+                              color:
+                                  ThemeProvider.themeOf(context).id == "light"
+                                      ? Color(0xffA4A4A4)
+                                      : darkTxt,
                             ),
-                          ],
-                        ),
-                        child: Icon(Icons.arrow_forward_ios,
-                            color: ThemeProvider.themeOf(context).id == "light"
-                                ? Color(0x48000000)
-                                : darkTxt),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        // LaunchReview.launch();
-                        LaunchReview.launch(
-                            androidAppId: "org.tuneoneradio",
-                            iOSAppId: "1588979954");
-                      },
-                      dense: true,
-                      leading: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: AutoSizeText(
-                          "Rate Us",
-                          style: TextStyle(
-                            color: ThemeProvider.themeOf(context).id == "light"
-                                ? Color(0xffA4A4A4)
-                                : darkTxt,
                           ),
                         ),
-                      ),
-                      trailing: Container(
-                        width: Get.width * 0.25,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: ThemeProvider.themeOf(context).id == "dark"
-                                  ? Color(0x48000000)
-                                  : Color(0xfffffff),
-                              offset: Offset(0, 5),
-                              blurRadius: 50,
-                            ),
-                          ],
+                        trailing: Container(
+                          width: Get.width * 0.25,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    ThemeProvider.themeOf(context).id == "dark"
+                                        ? Color(0x48000000)
+                                        : Color(0xfffffff),
+                                offset: Offset(0, 5),
+                                blurRadius: 50,
+                              ),
+                            ],
+                          ),
+                          child: Icon(Icons.arrow_forward_ios,
+                              color:
+                                  ThemeProvider.themeOf(context).id == "light"
+                                      ? Color(0x48000000)
+                                      : darkTxt),
                         ),
-                        child: Icon(Icons.arrow_forward_ios,
-                            color: ThemeProvider.themeOf(context).id == "light"
-                                ? Color(0x48000000)
-                                : darkTxt),
                       ),
-                    ),
-                    SizedBox(height: Get.height * 0.02),
-                  ],
+                      ListTile(
+                        onTap: () async {
+                          await canLaunch(
+                            'https://tuneoneradio.com/about/',
+                          )
+                              ? await launch('https://tuneoneradio.com/about/')
+                              : throw 'Could not launch ${'https://tuneoneradio.com/about/'}';
+                        },
+                        dense: true,
+                        leading: Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: AutoSizeText(
+                            "About Us",
+                            style: TextStyle(
+                              color:
+                                  ThemeProvider.themeOf(context).id == "light"
+                                      ? Color(0xffA4A4A4)
+                                      : darkTxt,
+                            ),
+                          ),
+                        ),
+                        trailing: Container(
+                          width: Get.width * 0.25,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    ThemeProvider.themeOf(context).id == "dark"
+                                        ? Color(0x48000000)
+                                        : Color(0xfffffff),
+                                offset: Offset(0, 5),
+                                blurRadius: 50,
+                              ),
+                            ],
+                          ),
+                          child: Icon(Icons.arrow_forward_ios,
+                              color:
+                                  ThemeProvider.themeOf(context).id == "light"
+                                      ? Color(0x48000000)
+                                      : darkTxt),
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () {
+                          // LaunchReview.launch();
+                          LaunchReview.launch(
+                              androidAppId: "org.tuneoneradio",
+                              iOSAppId: "1588979954");
+                        },
+                        dense: true,
+                        leading: Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: AutoSizeText(
+                            "Rate Us",
+                            style: TextStyle(
+                              color:
+                                  ThemeProvider.themeOf(context).id == "light"
+                                      ? Color(0xffA4A4A4)
+                                      : darkTxt,
+                            ),
+                          ),
+                        ),
+                        trailing: Container(
+                          width: Get.width * 0.25,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    ThemeProvider.themeOf(context).id == "dark"
+                                        ? Color(0x48000000)
+                                        : Color(0xfffffff),
+                                offset: Offset(0, 5),
+                                blurRadius: 50,
+                              ),
+                            ],
+                          ),
+                          child: Icon(Icons.arrow_forward_ios,
+                              color:
+                                  ThemeProvider.themeOf(context).id == "light"
+                                      ? Color(0x48000000)
+                                      : darkTxt),
+                        ),
+                      ),
+                      SizedBox(height: Get.height * 0.02),
+                    ],
+                  ),
                 ),
               ),
-              dataController.islogin.isTrue
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Get.width * 00.35,
-                        vertical: Get.width * 0.040,
-                      ),
-                      child: StyledButton(
-                        onPressed: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          prefs.remove("islogin");
-                          dataController.islogin(false);
-                        },
-                        title: "Log out",
-                        backgroundColor:
-                            ThemeProvider.themeOf(context).id == "light"
-                                ? backGroundColor
-                                : Colors.black26,
-                        titleColor: darkTxt,
-                        borderRadius: BorderRadius.circular(5),
-                        fontSize: 16,
-                      ),
-                    )
-                  : SizedBox(),
+              // dataController.islogin.isTrue
+              //     ? Padding(
+              //         padding: EdgeInsets.symmetric(
+              //           horizontal: Get.width * 00.35,
+              //           vertical: Get.width * 0.040,
+              //         ),
+              //         child: StyledButton(
+              //           onPressed: () async {
+              //             SharedPreferences prefs =
+              //                 await SharedPreferences.getInstance();
+              //             prefs.remove("islogin");
+              //             dataController.islogin(false);
+              //           },
+              //           title: "Log out",
+              //           backgroundColor:
+              //               ThemeProvider.themeOf(context).id == "light"
+              //                   ? backGroundColor
+              //                   : Colors.black26,
+              //           titleColor: darkTxt,
+              //           borderRadius: BorderRadius.circular(5),
+              //           fontSize: 16,
+              //         ),
+              //       )
+              //     : SizedBox(),
             ],
           ),
         ),

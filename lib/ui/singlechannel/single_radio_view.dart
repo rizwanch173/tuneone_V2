@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,8 +13,6 @@ import 'package:tuneone/controllers/radio_controller.dart';
 import 'package:tuneone/ui/authar_page/author_radio.dart';
 import 'package:tuneone/ui/shared/styles.dart';
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
-import 'package:rxdart/rxdart.dart' as rxt;
-import '../../common.dart';
 import '../../main.dart';
 import 'package:share/share.dart';
 
@@ -24,20 +21,20 @@ class SingleRadioView extends StatelessWidget {
   final RadioController radioController = Get.find();
   final HomeController homeController = Get.find();
 
-  Stream<Duration> get _bufferedPositionStream => audioHandler.playbackState
-      .map((state) => state.bufferedPosition)
-      .distinct();
+  // Stream<Duration> get _bufferedPositionStream => audioHandler.playbackState
+  //     .map((state) => state.bufferedPosition)
+  //     .distinct();
 
-  Stream<Duration?> get _durationStream =>
-      audioHandler.mediaItem.map((item) => item?.duration).distinct();
+  // Stream<Duration?> get _durationStream =>
+  //     audioHandler.mediaItem.map((item) => item?.duration).distinct();
 
-  Stream<PositionData> get _positionDataStream =>
-      rxt.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-          AudioService.position,
-          _bufferedPositionStream,
-          _durationStream,
-          (position, bufferedPosition, duration) => PositionData(
-              position, bufferedPosition, duration ?? Duration.zero));
+  // Stream<PositionData> get _positionDataStream =>
+  //     rxt.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+  //         AudioService.position,
+  //         _bufferedPositionStream,
+  //         _durationStream,
+  //         (position, bufferedPosition, duration) => PositionData(
+  //             position, bufferedPosition, duration ?? Duration.zero));
 
   @override
   Widget build(BuildContext context) {
@@ -151,15 +148,13 @@ class SingleRadioView extends StatelessWidget {
                                   SizedBox(
                                     height: kToolbarHeight,
                                   ),
-
                                   Obx(
                                     () => Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Container(
-                                    height: Get.height * 0.40,
-
+                                          height: Get.height * 0.40,
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10),

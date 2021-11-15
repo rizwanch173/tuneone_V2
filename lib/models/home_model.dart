@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:get/get.dart';
-
 // List<Product> productFromJson(String str) =>
 //     List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
 //
@@ -14,12 +11,9 @@ class Product {
 
   var name;
 
-
   Product({
     this.id,
     this.brand,
     this.name,
-
   });
-
 }

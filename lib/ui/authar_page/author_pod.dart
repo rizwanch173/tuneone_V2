@@ -576,6 +576,7 @@ class AuthorPodcast extends StatelessWidget {
                           child: Center(
                             child: ListTile(
                               onTap: () {
+                                print(currentIndex);
                                 Get.to(AuthorPodDetails(
                                   currentIndex: currentIndex,
                                 ));
@@ -714,7 +715,6 @@ class AuthorPodcast extends StatelessWidget {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-
                         Container(
                           height: Get.height * 0.24,
                           width: Get.width,
@@ -1021,7 +1021,14 @@ class AuthorPodcast extends StatelessWidget {
                                                 // if (await canLaunch(whatsApp)) launch(whatsApp)
 
                                                 if (Platform.isIOS) {
-                                                  launchWhatsApp(phone:dataController.podcastList[currentIndex].author.whatsapp.replaceAll(" ", ""),message: "Hi" );
+                                                  launchWhatsApp(
+                                                      phone: dataController
+                                                          .podcastList[
+                                                              currentIndex]
+                                                          .author
+                                                          .whatsapp
+                                                          .replaceAll(" ", ""),
+                                                      message: "Hi");
 
                                                   // String uri = Uri.encodeFull(
                                                   //     "whatsapp://wa.me/${dataController.podcastList[currentIndex].author.whatsapp}/?text=kjkjkj}");
@@ -1050,208 +1057,219 @@ class AuthorPodcast extends StatelessWidget {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        Container(
-                          width: Get.width,
-                          decoration: BoxDecoration(
-                            color: ThemeProvider.themeOf(context).id == "light"
-                                ? Colors.white
-                                : darkBg,
-                            borderRadius: BorderRadius.circular(10.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0x14000000),
-                                offset: Offset(0, 5),
-                                blurRadius: 20,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Get.width * 0.05,
-                                    vertical: Get.height * 0.02),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    AutoSizeText(
-                                      "More from: " +
-                                          dataController
-                                              .podcastList[currentIndex]
-                                              .author
-                                              .displayName,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: "Aeonik-medium",
-                                        color:
-                                            ThemeProvider.themeOf(context).id ==
-                                                    "light"
-                                                ? darkBg
-                                                : darkTxt,
-                                      ),
-                                    ),
-                                    // GestureDetector(
-                                    //     onTap: () {
-                                    //       Get.to(() => MediaListRadioView(
-                                    //             title: "Top Stations",
-                                    //             fromLibrary: false,
-                                    //           ));
-                                    //       print("MediaListRadioView");
-                                    //     },
-                                    //     child: AutoSizeText(
-                                    //       "View All",
-                                    //       style: TextStyle(
-                                    //         fontWeight: FontWeight.w600,
-                                    //         fontFamily: "Aeonik-medium",
-                                    //         color:
-                                    //             ThemeProvider.themeOf(context)
-                                    //                         .id ==
-                                    //                     "light"
-                                    //                 ? backGroundColor
-                                    //                 : darkTxt,
-                                    //       ),
-                                    //     )),
-                                  ],
+                        Padding(
+                          padding: EdgeInsets.only(
+                              bottom: homeController.whoAccess.value != "none"
+                                  ? Get.height * 0.05
+                                  : 0),
+                          child: Container(
+                            width: Get.width,
+                            decoration: BoxDecoration(
+                              color:
+                                  ThemeProvider.themeOf(context).id == "light"
+                                      ? Colors.white
+                                      : darkBg,
+                              borderRadius: BorderRadius.circular(10.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0x14000000),
+                                  offset: Offset(0, 5),
+                                  blurRadius: 20,
                                 ),
-                              ),
-                              Container(
-                                height: Get.height * 0.21,
-                                child: ListView.builder(
-                                    itemCount:
-                                        dataController.morefromList.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return dataController
-                                                  .morefromList[index].id ==
-                                              dataController
-                                                  .podcastList[currentIndex].id
-                                          ? SizedBox()
-                                          : GestureDetector(
-                                              onTap: () {
-                                                if (dataController
-                                                        .morefromList[index]
-                                                        .duration ==
-                                                    0) {
-                                                  var radioIndex =
-                                                      dataController
-                                                          .radioListMasterCopy
-                                                          .indexWhere((w) =>
-                                                              w.id ==
-                                                              dataController
-                                                                  .morefromList[
-                                                                      index]
-                                                                  .id);
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: Get.width * 0.05,
+                                      vertical: Get.height * 0.02),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      AutoSizeText(
+                                        "More from: " +
+                                            dataController
+                                                .podcastList[currentIndex]
+                                                .author
+                                                .displayName,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: "Aeonik-medium",
+                                          color: ThemeProvider.themeOf(context)
+                                                      .id ==
+                                                  "light"
+                                              ? darkBg
+                                              : darkTxt,
+                                        ),
+                                      ),
+                                      // GestureDetector(
+                                      //     onTap: () {
+                                      //       Get.to(() => MediaListRadioView(
+                                      //             title: "Top Stations",
+                                      //             fromLibrary: false,
+                                      //           ));
+                                      //       print("MediaListRadioView");
+                                      //     },
+                                      //     child: AutoSizeText(
+                                      //       "View All",
+                                      //       style: TextStyle(
+                                      //         fontWeight: FontWeight.w600,
+                                      //         fontFamily: "Aeonik-medium",
+                                      //         color:
+                                      //             ThemeProvider.themeOf(context)
+                                      //                         .id ==
+                                      //                     "light"
+                                      //                 ? backGroundColor
+                                      //                 : darkTxt,
+                                      //       ),
+                                      //     )),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: Get.height * 0.21,
+                                  child: ListView.builder(
+                                      itemCount:
+                                          dataController.morefromList.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return dataController
+                                                    .morefromList[index].id ==
+                                                dataController
+                                                    .podcastList[currentIndex]
+                                                    .id
+                                            ? SizedBox()
+                                            : GestureDetector(
+                                                onTap: () {
+                                                  if (dataController
+                                                          .morefromList[index]
+                                                          .duration ==
+                                                      0) {
+                                                    var radioIndex =
+                                                        dataController
+                                                            .radioListMasterCopy
+                                                            .indexWhere((w) =>
+                                                                w.id ==
+                                                                dataController
+                                                                    .morefromList[
+                                                                        index]
+                                                                    .id);
 
-                                                  homeController
-                                                      .indexToPlayRadio
-                                                      .value = radioIndex;
-                                                  dataController
-                                                          .radioList.value =
-                                                      dataController
-                                                          .radioListMasterCopy;
-                                                  Get.to(SingleRadioView());
-                                                  print("radioIndex");
-                                                  print(radioIndex);
-                                                } else {
-                                                  var podIndex = dataController
-                                                      .podcastListMasterCopy
-                                                      .indexWhere((w) =>
-                                                          w.id ==
-                                                          dataController
-                                                              .morefromList[
-                                                                  index]
-                                                              .id);
-                                                  homeController.indexToPlayPod
-                                                      .value = podIndex;
-                                                  print("podIndex");
-                                                  print(podIndex);
-                                                  dataController
-                                                          .podcastList.value =
-                                                      dataController
-                                                          .podcastListMasterCopy;
-                                                  Get.to(SinglePodcastView());
-                                                }
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                  border: Border.all(
-                                                    color:
-                                                        ThemeProvider.themeOf(
-                                                                        context)
-                                                                    .id ==
-                                                                "light"
-                                                            ? Color(0xffF2F2F2)
-                                                            : darkTxt
-                                                                .withOpacity(
-                                                                    0.2),
-                                                  ),
-                                                ),
-                                                margin: EdgeInsets.only(
-                                                    left: index == 0
-                                                        ? Get.width * 0.05
-                                                        : Get.width * 0.03,
-                                                    bottom: Get.height * 0.03),
+                                                    homeController
+                                                        .indexToPlayRadio
+                                                        .value = radioIndex;
+                                                    dataController
+                                                            .radioList.value =
+                                                        dataController
+                                                            .radioListMasterCopy;
+                                                    Get.to(SingleRadioView());
+                                                    print("radioIndex");
+                                                    print(radioIndex);
+                                                  } else {
+                                                    var podIndex = dataController
+                                                        .podcastListMasterCopy
+                                                        .indexWhere((w) =>
+                                                            w.id ==
+                                                            dataController
+                                                                .morefromList[
+                                                                    index]
+                                                                .id);
+                                                    homeController
+                                                        .indexToPlayPod
+                                                        .value = podIndex;
+                                                    print("podIndex");
+                                                    print(podIndex);
+                                                    dataController
+                                                            .podcastList.value =
+                                                        dataController
+                                                            .podcastListMasterCopy;
+                                                    Get.to(SinglePodcastView());
+                                                  }
+                                                },
                                                 child: Container(
-                                                  width: Get.width * 0.25,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .stretch,
-                                                    children: [
-                                                      Expanded(
-                                                        child: ClipRRect(
-                                                            borderRadius: BorderRadius.only(
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        10.0),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        10.0)),
-                                                            child:
-                                                                StyledCachedNetworkImage(
-                                                              url: dataController
-                                                                  .morefromList[
-                                                                      index]
-                                                                  .thumbnail,
-                                                              height:
-                                                                  Get.height *
-                                                                      0.4,
-                                                            )),
-                                                        flex: 2,
-                                                      ),
-                                                      Expanded(
-                                                        child: AutoSizeText(
-                                                          dataController
-                                                              .morefromList[
-                                                                  index]
-                                                              .title,
-                                                          style: TextStyle(
-                                                            color: Color(
-                                                                0xffA4A4A4),
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 2,
-                                                          // presetFontSizes: [22, 20],
-                                                          textAlign:
-                                                              TextAlign.center,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                    border: Border.all(
+                                                      color: ThemeProvider
+                                                                      .themeOf(
+                                                                          context)
+                                                                  .id ==
+                                                              "light"
+                                                          ? Color(0xffF2F2F2)
+                                                          : darkTxt
+                                                              .withOpacity(0.2),
+                                                    ),
+                                                  ),
+                                                  margin: EdgeInsets.only(
+                                                      left: index == 0
+                                                          ? Get.width * 0.05
+                                                          : Get.width * 0.03,
+                                                      bottom:
+                                                          Get.height * 0.03),
+                                                  child: Container(
+                                                    width: Get.width * 0.25,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .stretch,
+                                                      children: [
+                                                        Expanded(
+                                                          child: ClipRRect(
+                                                              borderRadius: BorderRadius.only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          10.0),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          10.0)),
+                                                              child:
+                                                                  StyledCachedNetworkImage(
+                                                                url: dataController
+                                                                    .morefromList[
+                                                                        index]
+                                                                    .thumbnail,
+                                                                height:
+                                                                    Get.height *
+                                                                        0.4,
+                                                              )),
+                                                          flex: 2,
                                                         ),
-                                                        flex: 1,
-                                                      )
-                                                    ],
+                                                        Expanded(
+                                                          child: AutoSizeText(
+                                                            dataController
+                                                                .morefromList[
+                                                                    index]
+                                                                .title,
+                                                            style: TextStyle(
+                                                              color: Color(
+                                                                  0xffA4A4A4),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 2,
+                                                            // presetFontSizes: [22, 20],
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                          flex: 1,
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            );
-                                    }),
-                              )
-                            ],
+                                              );
+                                      }),
+                                )
+                              ],
+                            ),
                           ),
                         )
                       ],

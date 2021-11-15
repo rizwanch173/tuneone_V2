@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +8,8 @@ import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/controllers/radio_controller.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:tuneone/ui/shared/styles.dart';
-
 import 'package:tuneone/ui/styled_widgets/cached_network_image.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:rxdart/rxdart.dart' as Rxt;
-import 'package:audio_session/audio_session.dart';
 import 'package:tuneone/ui/styled_widgets/mini_player.dart';
-
 import '../../main.dart';
 
 class MediaListRadioView extends StatelessWidget {

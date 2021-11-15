@@ -4,7 +4,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:marquee_text/marquee_text.dart';
 import 'package:share/share.dart';
@@ -160,7 +159,6 @@ class SinglePodcastView extends StatelessWidget {
                                   SizedBox(
                                     height: kToolbarHeight,
                                   ),
-
                                   Obx(
                                     () => Column(
                                       mainAxisAlignment:
@@ -545,7 +543,7 @@ class SinglePodcastView extends StatelessWidget {
                                                           .id)
                                                   ? GestureDetector(
                                                       onTap: () async {
-                                                        var response = await RemoteServices.likeDislike(
+                                                        await RemoteServices.likeDislike(
                                                             like: true,
                                                             postId: dataController
                                                                 .podcastList[
@@ -563,7 +561,7 @@ class SinglePodcastView extends StatelessWidget {
                                                     )
                                                   : GestureDetector(
                                                       onTap: () async {
-                                                        var response = await RemoteServices.likeDislike(
+                                                        await RemoteServices.likeDislike(
                                                             like: false,
                                                             postId: dataController
                                                                 .podcastList[

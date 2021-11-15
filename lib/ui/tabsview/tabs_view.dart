@@ -1,8 +1,6 @@
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:line_icons/line_icon.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:tuneone/controllers/home_controllers.dart';
 import 'package:tuneone/ui/shared/styles.dart';
@@ -94,13 +92,14 @@ class TabsView extends StatelessWidget {
               label: "Library",
             ),
             BottomNavigationBarItem(
-              icon: SvgPicture.asset("assets/Group 92.svg",
+              icon: SvgPicture.asset("assets/settings-svgrepo-com.svg",
+                  height: 26,
                   color: _.index == 4
                       ? ThemeProvider.themeOf(context).id == "light"
                           ? backGroundColor
                           : Colors.white
                       : Colors.grey.withOpacity(0.8)),
-              label: "Following",
+              label: "Settings",
             ),
           ],
         ),
