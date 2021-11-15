@@ -123,9 +123,9 @@ class FollowingView extends StatelessWidget {
                             ),
                             SizedBox(height: Get.height * 0.02),
                             AutoSizeText(
-                              dataController.userList.userMeta.firstName +
+                              " ${dataController.userList.userMeta.firstName} " +
                                   " " +
-                                  dataController.userList.userMeta.lastName,
+                                  "${dataController.userList.userMeta.lastName}",
                               style: TextStyle(
                                 color:
                                     ThemeProvider.themeOf(context).id == "light"

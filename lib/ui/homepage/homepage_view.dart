@@ -77,9 +77,7 @@ class HomePageView extends StatelessWidget {
                                     AutoSizeText(
                                       dataController.islogin.isTrue
                                           ? "Dear, " +
-                                              dataController
-                                                  .userList.userMeta.firstName
-                                                  .split("@")[0]
+                                              "${dataController.userList.userMeta.firstName}"
                                           : "Dear,",
                                       presetFontSizes: [18, 20],
                                       style: TextStyle(
